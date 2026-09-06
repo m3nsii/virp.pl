@@ -83,10 +83,10 @@
     {
       "id": "tuszol",
       "name": "tuszol",
-      "platform": "twitch",
+      "platform": "kick",
       "channelLogin": "tuszol",
-      "channelUrl": "https://twitch.tv/tuszol",
-      "avatar": "img/streamers/tuszol.png"
+      "channelUrl": "https://kick.com/tuszol",
+      "avatar": "img/streamers/tuszol.webp"
     },
     {
       "id": "mrdzinold",
