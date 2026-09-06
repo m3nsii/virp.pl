@@ -1,61 +1,2163 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
+  <!-- ============================================================
+       VIRP.pl — Polski Hub i Katalog Społeczności GTA Roleplay
+       Statyczna aplikacja SPA | HTML5 + Tailwind + Vanilla JS
+       ============================================================ -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VIRP.pl — Wkrótce</title>
-  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://*.spotify.com https://open.spotifycdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: https://buycoffee.to; connect-src 'self' https://virp-proxy.chojmarcel.workers.dev https://challenges.cloudflare.com https://frontend.cfx-services.net https://cdn.rage.mp https://api.strefarp.gg https://stream.nightride.fm https://*.spotify.com https://*.spotifycdn.com https://*.scdn.co https://unpkg.com https://cdnjs.cloudflare.com; media-src 'self' https://stream.nightride.fm https: data: blob:; frame-src 'self' https://challenges.cloudflare.com https://open.spotify.com https://*.spotify.com https://*.scdn.co https://*.youtube.com https://*.youtube-nocookie.com https://clips.twitch.tv https://*.twitch.tv; object-src 'none'; base-uri 'self';">
+  <title>VIRP.pl — Polski Hub Społeczności GTA VI Roleplay i nie tylko</title>
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <!-- Cloudflare Turnstile Anti-Bot API (Explicit Render) -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+
+  <!-- SEO Meta -->
+  <meta name="description" content="VIRP.pl to największy polski katalog serwerów GTA Roleplay. Znajdź serwer RP, stwórz postać, poznaj kody radiowe i dołącz do społeczności.">
+  <meta name="keywords" content="GTA RP, Roleplay, serwery RP, FiveM, RAGEMP, Voice RP, Text RP, Polska, katalog serwerów">
+  <meta name="author" content="VIRP.pl">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://virp.pl">
+
+  <!-- OpenGraph (Facebook, Discord, Messenger, LinkedIn) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="VIRP.pl — Polski Hub Społeczności GTA Roleplay &amp; GTA VI">
+  <meta property="og:description" content="Największy polski katalog serwerów GTA RP, rankingi na żywo, baza twórców, kody radiowe, generator postaci i portal GTA VI w stanie Leonida.">
+  <meta property="og:url" content="https://virp.pl/">
+  <meta property="og:site_name" content="VIRP.pl">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:image" content="https://virp.pl/img/hero-vice.jpg">
+  <meta property="og:image:secure_url" content="https://virp.pl/img/hero-vice.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="VIRP.pl — Hub Społeczności GTA Roleplay">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VIRP.pl — Polski Hub Społeczności GTA Roleplay &amp; GTA VI">
+  <meta name="twitter:description" content="Największy polski katalog serwerów GTA RP, rankingi na żywo, baza streamerów i narzędzia RP Toolkit.">
+  <meta name="twitter:image" content="https://virp.pl/img/hero-vice.jpg">
+  <meta name="twitter:image:alt" content="VIRP.pl — Hub Społeczności GTA Roleplay">
+
+  <!-- Motyw Przeglądarki i Favicon -->
+  <meta name="theme-color" content="#FF1F7D">
+  <meta name="msapplication-TileColor" content="#06080F">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/logo-vi.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/logo-vi.png">
+
+  <!-- Tailwind CSS (Play CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      background-color: #0b0f17;
-      color: #e2e8f0;
-      font-family: system-ui, -apple-system, sans-serif;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bg-primary': '#06080F',
+            'bg-secondary': '#0D111D',
+            'bg-tertiary': '#141A29',
+            'neon-pink': '#FF1F7D',
+            'neon-amber': '#FF9E00',
+            'neon-cyan': '#00F0FF',
+            'status-green': '#00FF66',
+            'accent-pink': '#FF1F7D',
+            'accent-purple': '#a855f7',
+            'accent-amber': '#FF9E00',
+            'accent-cyan': '#00F0FF',
+            'accent-green': '#00FF66',
+          },
+          fontFamily: {
+            'display': ['Teko', 'sans-serif'],
+            'data': ['Space Mono', 'monospace'],
+            'sans': ['Space Mono', 'system-ui', 'sans-serif'],
+            'mono': ['Space Mono', 'JetBrains Mono', 'monospace'],
+          }
+        }
+      }
     }
-    .neon-text {
-      text-shadow: 0 0 25px rgba(236, 72, 153, 0.5), 0 0 50px rgba(168, 85, 247, 0.3);
-    }
-  </style>
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js"></script>
+
+  <!-- Google Fonts: Space Mono & Teko -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Teko:wght@500;600;700&display=swap">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="min-h-screen flex flex-col justify-between items-center p-6 text-center">
+<body>
 
-  <!-- Header Placeholder -->
-  <header class="w-full max-w-4xl py-6 flex justify-center">
-    <span class="text-xs tracking-widest uppercase bg-slate-800/60 border border-slate-700/60 text-slate-400 px-4 py-1.5 rounded-full">
-      Projekt w fazie przygotowania
-    </span>
-  </header>
+  <!-- ============================================================
+       VICE CITY 2026 // SPLASH GATEWAY
+       ============================================================ -->
+  <div id="splash-gate" class="splash-overlay">
+    <div class="splash-bg-glow"></div>
+    <div class="splash-grid"></div>
 
-  <!-- Main Hero -->
-  <main class="max-w-xl mx-auto flex flex-col items-center justify-center flex-grow py-12">
-    <!-- Logo Brand -->
-    <h1 class="text-6xl md:text-8xl font-black tracking-tight mb-4 select-none">
-      <span class="bg-gradient-to-r from-fuchsia-500 via-pink-500 to-amber-400 bg-clip-text text-transparent neon-text">
-        VIRP
-      </span>
-      <span class="text-slate-500 font-light">.pl</span>
-    </h1>
+    <div class="splash-content">
+      <!-- Status telemetryczny -->
+      <div class="splash-sys-bar">
+        <span class="pulse-dot"></span>
+        <span class="font-mono text-xs text-neon-cyan">SYS_READY // LEONIDA_STATE_NET</span>
+      </div>
 
-    <p class="text-slate-400 text-base md:text-lg mb-8 max-w-md font-light leading-relaxed">
-      Nowy wymiar polskiej społeczności Roleplay. Premiera wkrótce.
-    </p>
+      <!-- Tarcza Logo VI -->
+      <div class="logo-badge-vi splash-logo">
+        <span class="logo-text-vi text-3xl">VI</span>
+        <div class="logo-scanlines"></div>
+      </div>
 
-    <!-- Status Badge -->
-    <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-lg bg-slate-900/80 border border-slate-800 text-xs font-mono text-slate-300">
-      <span class="w-2 h-2 rounded-full bg-fuchsia-500 animate-pulse"></span>
-      Status: Rozwój platformy w toku
+      <!-- Tytuł i Podtytuł -->
+      <h1 class="font-display text-4xl sm:text-5xl text-white tracking-widest uppercase mb-2">
+        VIRP<span class="text-neon-pink">.PL</span>
+      </h1>
+      <p class="font-data text-xs text-slate-400 mb-8 max-w-sm mx-auto leading-relaxed">
+        POLSKI HUB SPOŁECZNOŚCI GTA, GTA VI &amp; SERWERÓW ROLEPLAY i ONLINE
+      </p>
+
+      <!-- Przycisk Wejścia -->
+      <button id="splash-enter-btn" class="btn-vice text-base py-3 px-8 splash-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2 flex-shrink-0">
+          <path d="M12 2v10"></path>
+          <path d="M18.4 6.6a9 9 0 1 1-12.77.04"></path>
+        </svg>
+        <span>INICJUJ POŁĄCZENIE</span>
+      </button>
+
+      <!-- Prompt informacyjny -->
+      <div class="font-mono text-[10px] text-slate-500 mt-6 tracking-widest uppercase">
+        // KLIKNIJ ABY AKTYWOWAĆ INTERFEJS &amp; AUDIO
+      </div>
     </div>
-  </main>
+  </div>
 
-  <!-- Minimal Legal Footer -->
-  <footer class="w-full max-w-2xl py-6 text-[11px] text-slate-600 border-t border-slate-900/80 space-y-2">
-    <p>
-      Nieoficjalny projekt społecznościowy. Strona nie jest powiązana z Take-Two Interactive ani Rockstar Games.
-    </p>
-    <p class="font-mono text-slate-700">
-      © 2026 VIRP.pl • Wszelkie prawa zastrzeżone.
-    </p>
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+  <nav id="navbar" class="nav-glass fixed top-0 left-0 right-0 z-50">
+    <!-- ============================================================
+         TOP ANNOUNCEMENT / TICKER BAR
+         ============================================================ -->
+    <!-- ============================================================
+         TOP ANNOUNCEMENT / ANIMATED MARQUEE TICKER (RUCH W PRAWO)
+         ============================================================ -->
+    <div id="top-announcement-bar" class="w-full bg-gradient-to-r from-[#06080F] via-[#0D1322] to-[#06080F] border-b border-cyan-500/25 py-1.5 text-slate-300 font-mono text-[11px] relative overflow-hidden transition-all duration-300 shadow-[0_2px_15px_rgba(0,0,0,0.5)]">
+      <div class="ticker-container">
+        <div class="ticker-track">
+          <!-- Zestaw 1 -->
+          <div class="ticker-items flex items-center gap-6 pr-8 whitespace-nowrap">
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-pink-500/15 border border-pink-500/30 text-neon-pink font-bold text-[10px] uppercase tracking-wider">
+              <span class="w-1.5 h-1.5 rounded-full bg-neon-pink animate-pulse"></span>
+              LIVE HUB
+            </span>
+            <span class="text-slate-300 font-semibold">🔥 11 Serwerów RP Online</span>
+            <span class="text-slate-600">•</span>
+            <a href="#streamers" class="ticker-streamers-link inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-cyan-500/15 border border-cyan-500/35 text-neon-cyan hover:text-white hover:bg-cyan-500/25 transition-all font-semibold cursor-pointer shadow-[0_0_10px_rgba(0,240,255,0.15)] group">
+              <i data-lucide="tv" class="w-3 h-3 text-neon-cyan group-hover:scale-110 transition-transform"></i>
+              <span>Sprawdź zakładkę streamerów &amp; klipy!</span>
+              <i data-lucide="arrow-right" class="w-3 h-3 transition-transform group-hover:translate-x-0.5"></i>
+            </a>
+            <span class="text-slate-600">•</span>
+            <span class="text-slate-300">🌴 Premiera GTA VI: 19 listopada 2026 roku (Stan Leonida)</span>
+            <span class="text-slate-600">•</span>
+            <span class="text-slate-400">🎮 Społeczność Discord: discord.gg/nwXxZybY9R</span>
+            <span class="text-slate-600">•</span>
+          </div>
+
+          <!-- Zestaw 2 (Duplikat dla nieskończonej płynnej pętli) -->
+          <div class="ticker-items flex items-center gap-6 pr-8 whitespace-nowrap" aria-hidden="true">
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-pink-500/15 border border-pink-500/30 text-neon-pink font-bold text-[10px] uppercase tracking-wider">
+              <span class="w-1.5 h-1.5 rounded-full bg-neon-pink animate-pulse"></span>
+              LIVE HUB
+            </span>
+            <span class="text-slate-300 font-semibold">🔥 11 Serwerów RP Online</span>
+            <span class="text-slate-600">•</span>
+            <a href="#streamers" class="ticker-streamers-link inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-cyan-500/15 border border-cyan-500/35 text-neon-cyan hover:text-white hover:bg-cyan-500/25 transition-all font-semibold cursor-pointer shadow-[0_0_10px_rgba(0,240,255,0.15)] group">
+              <i data-lucide="tv" class="w-3 h-3 text-neon-cyan group-hover:scale-110 transition-transform"></i>
+              <span>Sprawdź zakładkę streamerów &amp; klipy!</span>
+              <i data-lucide="arrow-right" class="w-3 h-3 transition-transform group-hover:translate-x-0.5"></i>
+            </a>
+            <span class="text-slate-600">•</span>
+            <span class="text-slate-300">🌴 Premiera GTA VI: 19 listopada 2026 roku (Stan Leonida)</span>
+            <span class="text-slate-600">•</span>
+            <span class="text-slate-400">🎮 Społeczność Discord: discord.gg/nwXxZybY9R</span>
+            <span class="text-slate-600">•</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Przycisk zamknięcia paska (przyklejony po prawej stronie) -->
+      <button type="button" id="ticker-close-btn" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 text-slate-400 hover:text-neon-pink transition-colors p-1 cursor-pointer bg-[#06080F]/80 rounded hover:bg-[#06080F]" title="Ukryj pasek" aria-label="Ukryj pasek">
+        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+      </button>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo & Brand Group -->
+        <div class="flex items-center gap-3">
+          <a href="#hero" class="flex items-center gap-3 group" id="nav-logo">
+            <!-- Neonowa kasetka VI z pasami scanlines -->
+            <div class="logo-badge-vi">
+              <span class="logo-text-vi">VI</span>
+              <div class="logo-scanlines"></div>
+            </div>
+
+            <!-- Tytuł i Subtitle -->
+            <div class="flex flex-col">
+              <span class="font-display text-2xl font-black text-white tracking-wider leading-none uppercase">
+                VIRP<span class="text-neon-pink">.PL</span>
+              </span>
+              <span class="font-data text-[8.5px] text-neon-cyan tracking-widest uppercase font-bold mt-0.5">
+                GTA COMMUNITY HUB
+              </span>
+            </div>
+          </a>
+
+          <!-- Tag Autora z efektem Vice Glitch -->
+          <div class="hidden sm:flex items-center ml-2 pl-3 border-l border-white/10">
+            <span class="author-glitch" data-text="M3NSI">M3NSI</span>
+          </div>
+        </div>
+
+        <!-- Desktop Nav Links -->
+        <div class="hidden md:flex items-center gap-5">
+          <a href="#servers" class="nav-link">Serwery</a>
+          <a href="#streamers" class="nav-link">Streamerzy</a>
+          <a href="#gta6" class="nav-link nav-link-gta6 flex items-center gap-1.5 font-bold text-neon-pink">
+            <span class="hud-pill hud-pill-pink text-[9px] px-1.5 py-0.5">VI</span>
+            <span>GTA VI</span>
+          </a>
+          <a href="#toolkit" class="nav-link">RP Toolkit</a>
+          <a href="#about" class="nav-link">O Projekcie</a>
+          <button type="button" id="nav-contact-btn" class="nav-link flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-neon-cyan transition-colors" title="Kontakt &amp; Biznes" aria-label="Kontakt &amp; Biznes">
+            <i data-lucide="mail" class="w-3.5 h-3.5 text-neon-cyan"></i>
+            <span>Kontakt</span>
+          </button>
+          <button id="nav-add-server-btn" class="btn-primary text-sm py-2 px-4">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Dodaj Serwer
+          </button>
+
+          <!-- Discord & BuyCoffee Icons -->
+          <div class="flex items-center gap-2 pl-2 border-l border-white/10">
+            <a href="https://discord.gg/nwXxZybY9R" target="_blank" rel="noopener noreferrer" class="nav-icon-btn nav-icon-discord" title="Dołącz do oficjalnego Discorda VIRP.pl" aria-label="Discord VIRP.pl">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
+            </a>
+            <a href="https://buycoffee.to/m3nsi" target="_blank" rel="noopener noreferrer" class="nav-icon-btn nav-icon-coffee" title="Postaw kawę dla twórcy (buycoffee.to/m3nsi)" aria-label="Postaw kawę">
+              <i data-lucide="coffee" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-btn" class="md:hidden btn-icon" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu md:hidden bg-bg-secondary border-t border-white/5">
+      <div class="px-4 py-4 space-y-3">
+        <a href="#servers" class="block py-2 nav-link">Serwery</a>
+        <a href="#streamers" class="block py-2 nav-link">Streamerzy</a>
+        <a href="#gta6" class="block py-2 nav-link nav-link-gta6 flex items-center gap-2 text-neon-pink font-bold">
+          <span class="hud-pill hud-pill-pink text-[9px] px-1.5 py-0.5">VI</span>
+          <span>GTA VI</span>
+        </a>
+        <a href="#toolkit" class="block py-2 nav-link">RP Toolkit</a>
+        <a href="#about" class="block py-2 nav-link">O Projekcie</a>
+        <button type="button" id="mobile-contact-btn" class="block w-full text-left py-2 nav-link flex items-center gap-2 cursor-pointer text-slate-300 hover:text-neon-cyan transition-colors" aria-label="Kontakt &amp; Biznes">
+          <i data-lucide="mail" class="w-4 h-4 text-neon-cyan"></i>
+          <span>Kontakt &amp; Biznes</span>
+        </button>
+        <button id="mobile-add-server-btn" class="btn-primary w-full text-sm py-2.5 mt-2">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          Dodaj Serwer
+        </button>
+
+        <!-- Mobile Social Links -->
+        <div class="flex items-center gap-3 pt-3 border-t border-white/10">
+          <a href="https://discord.gg/nwXxZybY9R" target="_blank" rel="noopener noreferrer" class="btn-secondary flex-1 py-2 text-xs flex items-center justify-center gap-2 text-[#5865F2] border-[#5865F2]/40">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+            </svg>
+            <span>Discord VIRP</span>
+          </a>
+          <a href="https://buycoffee.to/m3nsi" target="_blank" rel="noopener noreferrer" class="btn-secondary flex-1 py-2 text-xs flex items-center justify-center gap-2 text-emerald-400 border-emerald-500/40">
+            <i data-lucide="coffee" class="w-4 h-4"></i>
+            <span>Postaw Kawę</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ============================================================
+       HERO SECTION
+       ============================================================ -->
+  <section id="hero" class="hero-section">
+    <div class="hero-grid"></div>
+    <div class="hero-grid-3d">
+      <div class="hero-grid-plane"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Lewa kolumna: Teksty i CTA -->
+        <div class="lg:col-span-7">
+          <!-- Badge -->
+          <div class="mb-6 animate-slide-up">
+            <span class="hero-badge animate-float">
+              <span class="pulse-dot"></span>
+              Społeczność GTA RP
+            </span>
+          </div>
+
+          <!-- Heading -->
+          <h1 class="glitch-title text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-tight animate-slide-up stagger-1" data-text="Twój Hub do Świata GTA RP">
+            Twój Hub do Świata
+            <span class="gradient-text">GTA RP</span>
+          </h1>
+
+          <!-- Subheading -->
+          <p class="text-lg sm:text-xl text-slate-400 mb-8 max-w-2xl leading-relaxed animate-slide-up stagger-2">
+            Odkryj najlepsze polskie serwery RP i Online, stwórz unikalną postać, poznaj stronę i dołącz do społeczności tysięcy graczy.
+          </p>
+
+          <!-- CTA Buttons -->
+          <div class="flex flex-wrap gap-4 mb-12 animate-slide-up stagger-3">
+            <a href="#servers" class="btn-primary text-base py-3 px-6">
+              <i data-lucide="gamepad-2" class="w-5 h-5"></i>
+              Przeglądaj Serwery
+            </a>
+            <a href="#toolkit" class="btn-secondary text-base py-3 px-6">
+              <i data-lucide="wrench" class="w-5 h-5"></i>
+              RP Toolkit
+            </a>
+          </div>
+
+          <!-- Stats -->
+          <div class="hero-stats animate-slide-up stagger-4">
+            <div class="hero-stat">
+              <div class="stat-value" id="stat-servers">0</div>
+              <div class="stat-label">Serwerów</div>
+            </div>
+            <div class="hero-stat">
+              <div class="stat-value" id="stat-slots">0</div>
+              <div class="stat-label">Graczy Online</div>
+            </div>
+            <div class="hero-stat">
+              <div class="stat-value" id="stat-votes">0</div>
+              <div class="stat-label">Głosów</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prawa kolumna: Karta Zachodu Słońca Vice City (HUD Display) -->
+        <div class="lg:col-span-5 hidden lg:flex justify-center lg:justify-end animate-slide-up stagger-2 w-full">
+          <div class="hero-sunset-card animate-float">
+            <!-- Górna belka telemetryczna -->
+            <div class="hero-sunset-header">
+              <div class="flex items-center gap-2">
+                <span class="pulse-dot"></span>
+                <span class="font-bold text-white tracking-wider font-display text-lg">VIRP.PL 2026</span>
+              </div>
+              <span class="text-neon-cyan font-mono text-xs tracking-widest font-semibold">LIVE_FEED // 25°N</span>
+            </div>
+
+            <!-- Podgląd grafiki zachodu słońca -->
+            <div class="hero-sunset-image-wrap">
+              <img src="img/hero-vice.jpg" alt="VIRP.PL 2026 — Vice City" class="hero-sunset-img" loading="eager">
+              <div class="hero-sunset-overlay"></div>
+              
+              <!-- Odznaka na grafice -->
+              <div class="hero-sunset-caption">
+                <div class="flex items-center gap-2">
+                  <span class="hud-pill hud-pill-pink text-xs font-bold px-2.5 py-0.5">LEONIDA STATE</span>
+                  <span class="hud-pill hud-pill-cyan text-xs font-bold px-2.5 py-0.5">SUNSET DRIVE</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dolna belka statusowa -->
+            <div class="hero-sunset-footer">
+              <span class="font-mono text-xs text-slate-400">FPS: 144 // PING: 12ms</span>
+              <span class="font-display text-sm tracking-widest text-neon-pink uppercase font-bold">ONLINE FEED</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SERVERS CATALOG
+       ============================================================ -->
+  <section id="servers" class="py-20 lg:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Header -->
+      <div class="text-center mb-12 animate-slide-up">
+        <span class="section-badge">
+          <i data-lucide="server" class="w-3.5 h-3.5"></i>
+          Katalog
+        </span>
+        <h2 class="section-title">
+          Znajdź Swój <span class="gradient-text">Serwer RP i Nie Tylko</span>
+        </h2>
+        <p class="section-subtitle mx-auto">
+          Przeglądaj zweryfikowane serwery GTA Roleplay i inne. Filtruj, szukaj i głosuj na ulubione.
+        </p>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="mb-8 space-y-4 animate-slide-up stagger-1">
+        <!-- Search Bar (jedna jedyna wyszukiwarka) -->
+        <div class="search-container max-w-2xl mx-auto">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="server-search" class="search-input" placeholder="Szukaj serwera po nazwie, tagach lub platformie..." autocomplete="off" maxlength="100" aria-label="Szukaj serwera">
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          <button class="filter-chip active" data-filter="all">
+            <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+            Wszystkie
+          </button>
+          <button class="filter-chip" data-filter="gtav">
+            <i data-lucide="gamepad" class="w-3.5 h-3.5 text-neon-cyan"></i>
+            GTA V
+          </button>
+          <button class="filter-chip" data-filter="roleplay">
+            <i data-lucide="users" class="w-3.5 h-3.5 text-neon-pink"></i>
+            Roleplay
+          </button>
+          <button class="filter-chip" data-filter="drift">
+            <i data-lucide="flame" class="w-3.5 h-3.5 text-neon-amber"></i>
+            Drift &amp; Tuning
+          </button>
+          <button class="filter-chip" data-filter="pvp">
+            <i data-lucide="crosshair" class="w-3.5 h-3.5 text-red-500"></i>
+            PvP &amp; Arena
+          </button>
+          <button class="filter-chip" data-filter="freeroam">
+            <i data-lucide="gamepad-2" class="w-3.5 h-3.5 text-neon-cyan"></i>
+            Freeroam &amp; Mini-gry
+          </button>
+          <button class="filter-chip" data-filter="upcoming">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-400"></i>
+            W Budowie / GTA VI
+          </button>
+
+          <div class="hidden sm:block w-px h-6 bg-white/10 mx-1"></div>
+
+          <!-- Sort -->
+          <select id="server-sort" class="sort-select" aria-label="Sortuj serwery">
+            <option value="votes">Najpopularniejsze</option>
+            <option value="slots">Najwięcej slotów</option>
+            <option value="newest">Najnowsze</option>
+            <option value="name">Alfabetycznie</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Results Count + View Toggle -->
+      <div class="flex items-center justify-between mb-6 text-sm">
+        <p class="text-slate-500">
+          Znaleziono: <span id="results-count" class="text-slate-300 font-semibold">0</span> serwerów
+        </p>
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" data-view="grid" title="Widok kafelkowy">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            GRID
+          </button>
+          <button class="view-toggle-btn" data-view="table" title="Widok MTA Server Browser">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            MTA
+          </button>
+        </div>
+      </div>
+
+      <!-- Server Grid -->
+      <div id="server-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+      <!-- Empty State z Radarem Taktycznym -->
+      <div id="empty-state" class="hidden text-center py-16">
+        <div class="radar-scan-box">
+          <div class="radar-sweep"></div>
+          <div class="radar-crosshair"></div>
+          <div class="radar-dot dot-1"></div>
+          <div class="radar-dot dot-2"></div>
+        </div>
+        <h3 class="font-display text-2xl text-white tracking-wider uppercase mb-2">
+          BRAK SYGNAŁU // SCAN_FAILED
+        </h3>
+        <p class="font-mono text-xs text-slate-400 max-w-sm mx-auto">
+          Radar nie wykrył żadnego serwera spełniającego podane kryteria. Zmień filtry lub zresetuj zapytanie.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       RP TOOLKIT
+       ============================================================ -->
+  <section id="toolkit" class="py-20 lg:py-28 bg-bg-secondary/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Header -->
+      <div class="text-center mb-12 animate-slide-up">
+        <span class="section-badge">
+          <i data-lucide="wrench" class="w-3.5 h-3.5"></i>
+          Narzędzia
+        </span>
+        <h2 class="section-title">
+          RP <span class="gradient-text-secondary">Toolkit</span>
+        </h2>
+        <p class="section-subtitle mx-auto">
+          Zestaw narzędzi dla każdego gracza RP. Stwórz postać, poznaj kody radiowe, przelicz zarobki.
+        </p>
+      </div>
+
+      <!-- Toolkit Nav Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10 animate-slide-up stagger-1">
+        <button class="toolkit-card card-pink active" data-toolkit="character" id="toolkit-btn-character">
+          <div class="toolkit-icon icon-pink">
+            <i data-lucide="user-plus" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-semibold text-white mb-1">Generator Postaci</h3>
+          <p class="text-sm text-slate-400">Stwórz biografię postaci do podania WL</p>
+        </button>
+
+        <button class="toolkit-card card-purple" data-toolkit="codes" id="toolkit-btn-codes">
+          <div class="toolkit-icon icon-cyan">
+            <i data-lucide="radio" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-semibold text-white mb-1">Kody Radiowe</h3>
+          <p class="text-sm text-slate-400">10-codes, procedury policyjne i medyczne</p>
+        </button>
+
+        <button class="toolkit-card card-amber relative overflow-hidden" data-toolkit="calculator" id="toolkit-btn-calculator">
+          <div class="caution-tape-badge">W BUDOWIE</div>
+          <div class="toolkit-icon icon-amber">
+            <i data-lucide="calculator" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-semibold text-white mb-1">Kalkulator Ekonomii</h3>
+          <p class="text-sm text-slate-400">Przelicz zarobki z prac i napadów</p>
+        </button>
+      </div>
+
+      <!-- ============ TOOLKIT PANEL: Character Generator ============ -->
+      <div id="panel-character" class="toolkit-panel active animate-slide-up stagger-2">
+        <div class="glass-card p-6 lg:p-8">
+          <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
+            <h3 class="text-xl font-bold flex items-center gap-2">
+              <i data-lucide="user-plus" class="w-5 h-5 text-accent-pink"></i>
+              Generator Karty Postaci &amp; ID Leonida
+            </h3>
+            <span class="hud-pill hud-pill-cyan text-xs">LEONIDA DMV // VIRP.PL</span>
+          </div>
+
+          <!-- Pasek Szybkich Archetypów & Losowania -->
+          <div class="mb-6 p-3.5 bg-[#0B0F19]/90 border border-pink-500/25 rounded-lg shadow-lg">
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-2.5">
+              <span class="text-xs font-mono text-neon-pink font-bold flex items-center gap-1.5">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> GOTOWE ARCHETYPY &amp; 1-CLICK PRESETS
+              </span>
+              <button type="button" id="char-random-btn" class="btn-primary py-1 px-3 text-xs flex items-center gap-1.5 cursor-pointer">
+                <i data-lucide="dice-5" class="w-3.5 h-3.5"></i> Wylosuj Postać
+              </button>
+            </div>
+            <div class="flex items-center gap-1.5 flex-wrap" id="char-archetypes-bar">
+              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="cop">
+                <i data-lucide="shield" class="w-3.5 h-3.5 text-blue-400"></i>
+                <span>Szeryf / LSPD</span>
+              </button>
+              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="medic">
+                <i data-lucide="heart-pulse" class="w-3.5 h-3.5 text-red-400"></i>
+                <span>Paramedyk / EMS</span>
+              </button>
+              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="mechanic">
+                <i data-lucide="wrench" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>Tuner / Mechanik</span>
+              </button>
+              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="gang">
+                <i data-lucide="skull" class="w-3.5 h-3.5 text-purple-400"></i>
+                <span>Kartel / Crime</span>
+              </button>
+              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="business">
+                <i data-lucide="briefcase" class="w-3.5 h-3.5 text-emerald-400"></i>
+                <span>Biznesmen</span>
+              </button>
+              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="driver">
+                <i data-lucide="gauge" class="w-3.5 h-3.5 text-neon-pink"></i>
+                <span>Kierowca / Getaway</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Formularz tworzenia postaci -->
+            <div class="space-y-4">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="char-name">Imię i Nazwisko <span class="required">*</span></label>
+                  <input type="text" id="char-name" class="form-input" placeholder="np. Marco Valentino" maxlength="50" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="char-avatar-type">Styl Wizualny / Zdjęcie ID</label>
+                  <select id="char-avatar-type" class="form-select">
+                    <option value="police">Mundur Policyjny / Służby</option>
+                    <option value="medic">Kombinezon Medyczny / EMS</option>
+                    <option value="street">Streetwear / Luźny</option>
+                    <option value="suit">Garnitur / Biznes</option>
+                    <option value="racer">Kask / Kombinezon Rajdowy</option>
+                    <option value="crime">Skórzana Kurtka / Crime</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="char-age">Wiek</label>
+                  <input type="number" id="char-age" class="form-input" placeholder="np. 28" min="16" max="85" value="28">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="char-gender">Płeć</label>
+                  <select id="char-gender" class="form-select">
+                    <option value="Mężczyzna">Mężczyzna</option>
+                    <option value="Kobieta">Kobieta</option>
+                    <option value="Inna">Inna</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="char-origin">Pochodzenie / Miejsce Urodzenia</label>
+                  <input type="text" id="char-origin" class="form-input" placeholder="np. Vice City, Leonida, Włochy">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="char-job">Zawód / Rola Społeczna</label>
+                  <input type="text" id="char-job" class="form-input" placeholder="np. Detektyw LSPD, Mechanik, Inwestor">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="char-traits">Zalety i Mocne Strony (oddziel przecinkami)</label>
+                <input type="text" id="char-traits" class="form-input" placeholder="np. Opanowany, lojalny, szybki refleks">
+              </div>
+
+              <!-- Klucz do zdania Whitelist: Wady, Fobie, Ograniczenia -->
+              <div class="p-3 bg-red-950/20 border border-red-500/20 rounded-md space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono text-red-400 font-bold flex items-center gap-1">
+                    <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> ZBALANSOWANIE POSTACI (ANTI-POWERGAMING)
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-mono">WYMÓG WHITELIST</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label text-slate-300" for="char-flaws">Wady Charakteru <span class="text-red-400">*</span></label>
+                  <input type="text" id="char-flaws" class="form-input border-red-500/30" placeholder="np. Hazardzista, impulsywny, pamiętliwy, chciwy">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label text-slate-300" for="char-phobias">Fobie i Ograniczenia Fizyczne</label>
+                  <input type="text" id="char-phobias" class="form-input border-red-500/30" placeholder="np. Lęk wysokości, astma, blizna po postrzale, problem z zaufaniem">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label text-slate-300" for="char-features">Znaki Szczególne &amp; Styl</label>
+                  <input type="text" id="char-features" class="form-input border-red-500/30" placeholder="np. Tatuaż z wężem na szyi, południowy akcent, garnitury retro">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="char-backstory">Historia / Backstory <span class="required">*</span></label>
+                <textarea id="char-backstory" class="form-textarea" rows="4" placeholder="Opisz historię życia postaci, dlaczego przyjechała do Vice City / stanu Leonida..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="char-goals">Cele i Motywacje</label>
+                <textarea id="char-goals" class="form-textarea" rows="2" placeholder="Co postać chce osiągnąć w mieście? Jakie ma plany?"></textarea>
+              </div>
+
+              <div class="flex gap-3">
+                <button type="button" id="char-generate-btn" class="btn-primary flex-1 py-3">
+                  <i data-lucide="sparkles" class="w-4 h-4"></i>
+                  Generuj Kartę &amp; Dokument ID
+                </button>
+                <button type="button" id="char-clear-btn" class="btn-secondary px-4" title="Wyczyść formularz">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Podgląd Karty Tożsamości i Podania -->
+            <div class="flex flex-col">
+              <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+                <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="contact" class="w-4 h-4 text-neon-cyan"></i>
+                  Podgląd ID Stanu Leonida
+                </h4>
+                
+                <!-- Przyciski Eksportu -->
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <button type="button" id="char-export-png-btn" class="btn-ghost text-xs py-1 px-2 text-neon-cyan hover:bg-cyan-500/10 border border-cyan-500/30" title="Pobierz Kartę ID jako obraz PNG">
+                    <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                    Pobierz ID (.PNG)
+                  </button>
+                  <button type="button" id="char-export-pdf-btn" class="btn-ghost text-xs py-1 px-2 text-neon-pink hover:bg-pink-500/10 border border-pink-500/30" title="Pobierz Kompletne Podanie w formacie PDF">
+                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                    Pobierz PDF
+                  </button>
+                  <button type="button" id="char-copy-discord-btn" class="btn-ghost text-xs py-1 px-2 text-indigo-400 hover:bg-indigo-500/10 border border-indigo-500/30" title="Kopiuj z formatowaniem pod Discord Markdown">
+                    <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                    Kopiuj na Discord
+                  </button>
+                  <button type="button" id="char-copy-btn" class="btn-ghost text-xs py-1 px-2" title="Kopiuj zwykły tekst">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    Kopiuj TXT
+                  </button>
+                  <button type="button" id="char-export-btn" class="btn-ghost text-xs py-1 px-2" title="Pobierz plik .txt">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    .TXT
+                  </button>
+                </div>
+              </div>
+
+              <!-- Interaktywny Canvas: Prawo Jazdy / Karta ID Stanu Leonida -->
+              <div class="relative mb-4 bg-black/40 rounded-lg overflow-hidden border border-cyan-500/25 p-1 flex justify-center">
+                <canvas id="char-id-canvas" width="856" height="540" class="w-full max-w-[500px] h-auto rounded shadow-2xl block"></canvas>
+              </div>
+
+              <!-- Zakładki wyboru widoku podglądu tekstu -->
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono text-slate-400 uppercase">Treść podania Whitelist:</span>
+                <span class="text-[10px] font-mono text-neon-cyan font-bold">VIRP.PL</span>
+              </div>
+
+              <div id="char-output" class="character-output flex-1 min-h-[180px]">
+<span class="text-slate-500">// Wypełnij formularz lub kliknij "Wylosuj Postać" aby wygenerować dokument...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ TOOLKIT PANEL: Radio Codes ============ -->
+      <div id="panel-codes" class="toolkit-panel">
+        <div class="glass-card p-6 lg:p-8">
+          <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+            <i data-lucide="radio" class="w-5 h-5 text-accent-cyan"></i>
+            Kody Radiowe &amp; Procedury
+          </h3>
+
+          <!-- Tabs -->
+          <div class="tab-nav mb-6">
+            <button class="tab-btn active" data-codes-tab="10codes">10-Codes</button>
+            <button class="tab-btn" data-codes-tab="police">Procedury Policyjne</button>
+            <button class="tab-btn" data-codes-tab="medical">Procedury Medyczne</button>
+          </div>
+
+          <!-- Search -->
+          <div class="search-container mb-6">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="codes-search" class="search-input" placeholder="Szukaj kodu lub opisu..." autocomplete="off" aria-label="Szukaj kodu lub opisu">
+          </div>
+
+          <!-- Codes Content -->
+          <div id="codes-content" class="overflow-x-auto" style="max-height: 500px; overflow-y: auto;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ TOOLKIT PANEL: Economy Calculator ============ -->
+      <div id="panel-calculator" class="toolkit-panel">
+        <div class="glass-card p-6 lg:p-8">
+          <div class="flex items-center justify-between flex-wrap gap-2 mb-6">
+            <h3 class="text-xl font-bold flex items-center gap-2">
+              <i data-lucide="calculator" class="w-5 h-5 text-accent-amber"></i>
+              Kalkulator Ekonomii RP
+            </h3>
+            <span class="hud-pill hud-pill-amber text-[10px]">MODUŁ W TRAKCIE ROZBUDOWY</span>
+          </div>
+
+          <!-- Pasek Ostrzegawczy: Moduł w trakcie budowy -->
+          <div class="hazard-stripe-banner mb-6 flex items-start gap-3">
+            <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0 mt-0.5">
+              <i data-lucide="hard-hat" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-amber-300 uppercase tracking-wider font-display">
+                MODUŁ W TRAKCIE BUDOWY &amp; KALIBRACJI STAWEK // UNDER CONSTRUCTION
+              </h4>
+              <p class="text-xs text-slate-300 font-mono leading-relaxed mt-0.5">
+                Trwają prace nad zaktualizowaniem realnych stawek gospodarczych (prace dorywcze, frakcje państwowe, czarny rynek i napady) z najpopularniejszych polskich serwerów RP. Poniższy kalkulator prezentuje wersję poglądową.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Inputs -->
+            <div class="space-y-5">
+              <div class="form-group">
+                <label class="form-label" for="calc-activity">Typ Aktywności</label>
+                <select id="calc-activity" class="form-select">
+                  <option value="">Wybierz aktywność...</option>
+                  <optgroup label="Prace Legalne">
+                    <option value="mechanic" data-rate="250" data-unit="h">Mechanik ($250/h)</option>
+                    <option value="trucker" data-rate="180" data-unit="kurs">Kierowca TIR ($180/kurs)</option>
+                    <option value="taxi" data-rate="120" data-unit="kurs">Taksówkarz ($120/kurs)</option>
+                    <option value="fisherman" data-rate="90" data-unit="h">Rybak ($90/h)</option>
+                    <option value="miner" data-rate="200" data-unit="h">Górnik ($200/h)</option>
+                    <option value="lumberjack" data-rate="150" data-unit="h">Drwal ($150/h)</option>
+                    <option value="medic" data-rate="350" data-unit="zmiana">Paramedyk ($350/zmianę)</option>
+                    <option value="police" data-rate="400" data-unit="zmiana">Policjant ($400/zmianę)</option>
+                  </optgroup>
+                  <optgroup label="Nielegalne">
+                    <option value="store-rob" data-rate="2500" data-unit="napad">Napad na sklep ($2,500)</option>
+                    <option value="bank-small" data-rate="15000" data-unit="napad">Mały bank ($15,000)</option>
+                    <option value="bank-big" data-rate="50000" data-unit="napad">Duży bank ($50,000)</option>
+                    <option value="jewelry" data-rate="25000" data-unit="napad">Jubiler ($25,000)</option>
+                    <option value="drugs" data-rate="500" data-unit="sprzedaż">Sprzedaż narkotyków ($500/szt.)</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="calc-quantity">Ilość (godzin / kursów / napadów)</label>
+                <input type="number" id="calc-quantity" class="form-input" placeholder="np. 8" min="1" max="100" value="1">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="calc-multiplier">Mnożnik serwera (x)</label>
+                <div class="flex items-center gap-3">
+                  <input type="range" id="calc-multiplier" min="0.5" max="5" step="0.1" value="1" aria-label="Mnożnik serwera">
+                  <span id="calc-multiplier-value" class="text-sm font-mono font-semibold text-accent-amber min-w-[3rem] text-right">1.0x</span>
+                </div>
+              </div>
+
+              <button id="calc-btn" class="btn-primary w-full">
+                <i data-lucide="calculator" class="w-4 h-4"></i>
+                Oblicz Zarobek
+              </button>
+            </div>
+
+            <!-- Result -->
+            <div class="flex flex-col justify-center">
+              <div class="calc-result">
+                <p class="text-sm text-slate-400 mb-2 uppercase tracking-wider font-semibold">Szacowany Zarobek</p>
+                <div class="calc-amount" id="calc-result-amount">$0</div>
+                <p class="text-sm text-slate-500 mt-2" id="calc-result-desc">Wybierz aktywność i oblicz</p>
+              </div>
+
+              <div class="mt-6 p-4 rounded-lg bg-bg-primary/50 border border-white/5">
+                <p class="text-xs text-slate-500 flex items-start gap-2">
+                  <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 flex-shrink-0"></i>
+                  Wartości są orientacyjne i mogą różnić się w zależności od serwera. Sprawdź ekonomię na swoim serwerze RP.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       STREAMERS & CONTENT CREATORS SPA PORTAL (TRANSLUCENT VIEW)
+       ============================================================ -->
+  <section id="streamers" class="sr-only" aria-hidden="true"></section>
+  <div id="streamers-portal" class="streamers-portal-overlay hidden" role="dialog" aria-modal="true" aria-label="Streamerzy Społeczności">
+    <!-- Tło portalowe: neonowy blask i siatka 3D -->
+    <div class="streamers-portal-bg"></div>
+    <div class="streamers-portal-glow"></div>
+    <div class="streamers-portal-grid"></div>
+
+    <div class="streamers-portal-container">
+      
+      <!-- Górna belka telemetryczna z przyciskiem powrotu -->
+      <div class="streamers-portal-header">
+        <div class="flex items-center gap-3">
+          <div class="logo-badge-vi scale-90">
+            <span class="logo-text-vi text-base">VI</span>
+            <div class="logo-scanlines"></div>
+          </div>
+          <div>
+            <span class="font-display text-lg font-black text-white tracking-wider uppercase block">
+              STREAMERS<span class="text-neon-pink">.HUB</span>
+            </span>
+            <span class="text-[9px] font-mono text-neon-cyan tracking-widest uppercase block">
+              LIVE_BROADCAST_NET // LEONIDA STATE
+            </span>
+          </div>
+        </div>
+
+        <button id="streamers-close-btn" class="btn-vice text-xs py-2.5 px-5 flex items-center gap-2 cursor-pointer" title="Powrót do strony głównej">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>POWRÓT DO GŁÓWNEJ</span>
+        </button>
+      </div>
+
+      <!-- Pasek Telemetrii i Statystyk na Żywo -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">ŁĄCZNIE WIDZÓW</span>
+          <div class="streamer-stat-value text-neon-pink flex items-center gap-2">
+            <span class="pulse-dot"></span>
+            <span id="streamers-total-viewers">0</span>
+          </div>
+        </div>
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">NA ŻYWO (LIVE)</span>
+          <div class="streamer-stat-value text-neon-cyan" id="streamers-active-count">0</div>
+        </div>
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">PLATFORMY</span>
+          <div class="streamer-stat-value text-neon-amber">TWITCH / KICK / YT</div>
+        </div>
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">STATUS SYSTEMU</span>
+          <div class="streamer-stat-value text-status-green flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-status-green animate-ping"></span>
+            <span>FEED ONLINE</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spotlight: Wyróżniony Live Stream -->
+      <div id="streamers-spotlight" class="mb-8">
+        <!-- Renderowane przez streamers.js -->
+      </div>
+
+      <!-- Baner Zgłoszeniowy dla Twórców -->
+      <div class="streamer-apply-banner mb-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 p-5 rounded-xl bg-gradient-to-r from-pink-950/40 via-[#0d121f] to-cyan-950/40 border border-pink-500/30 backdrop-blur-md shadow-xl">
+          <div class="flex items-center gap-4 text-left w-full md:w-auto">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-pink to-neon-cyan p-[1px] flex-shrink-0 flex items-center justify-center shadow-lg shadow-pink-500/20">
+              <div class="w-full h-full bg-[#0b0f19] rounded-[11px] flex items-center justify-center">
+                <i data-lucide="radio" class="w-6 h-6 text-neon-pink animate-pulse"></i>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-display text-base sm:text-lg font-bold text-white tracking-wide uppercase flex items-center gap-2">
+                <span>Chcesz być na liście streamerów na naszej stronie?</span>
+                <span class="hud-pill hud-pill-pink text-[10px] hidden sm:inline-block">REKRUTACJA</span>
+              </h4>
+              <p class="text-xs sm:text-sm text-slate-300 font-mono mt-0.5">
+                Streamujesz GTA V RP, FiveM lub inne gry? Zgłoś swój kanał i zyskaj automatyczne wykrywanie LIVE w katalogu!
+              </p>
+            </div>
+          </div>
+          <button type="button" id="open-streamer-modal-btn" class="btn-primary py-2.5 px-6 text-xs sm:text-sm whitespace-nowrap flex items-center gap-2 cursor-pointer shadow-lg shadow-pink-500/25 w-full md:w-auto justify-center">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>ZGŁOŚ SIĘ</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Belka Filtrów i Wyszukiwarki -->
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-8 bg-bg-panel/80 p-4 border border-white/10 rounded-lg backdrop-blur-md">
+        <div class="flex flex-wrap items-center gap-2">
+          <button class="filter-chip active" data-streamer-filter="all">
+            <i data-lucide="layers" class="w-3.5 h-3.5"></i> Wszystkie
+          </button>
+          <button class="filter-chip" data-streamer-filter="live">
+            <span class="pulse-dot"></span> NA ŻYWO
+          </button>
+          <button class="filter-chip" data-streamer-filter="twitch">
+            <i data-lucide="tv" class="w-3.5 h-3.5 text-[#9146FF]"></i> Twitch
+          </button>
+          <button class="filter-chip" data-streamer-filter="kick">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-[#53FC18]"></i> Kick
+          </button>
+          <button class="filter-chip" data-streamer-filter="youtube">
+            <i data-lucide="video" class="w-3.5 h-3.5 text-[#FF0000]"></i> YouTube
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <div class="flex items-center gap-2">
+            <label for="streamer-sort-select" class="text-xs font-mono text-slate-400 whitespace-nowrap hidden sm:inline">SORTUJ:</label>
+            <select id="streamer-sort-select" class="form-select text-xs py-1.5 px-3 bg-[#0d121f] border border-white/15 rounded-md font-mono text-slate-200 cursor-pointer focus:border-neon-pink transition-colors" aria-label="Sortuj streamerów">
+              <option value="viewers">🔥 Najwięcej Widzów (GTA V)</option>
+              <option value="live">🔴 Status: Tylko LIVE</option>
+              <option value="name">🔤 Alfabetycznie (A-Z)</option>
+              <option value="kick">🟢 Najpierw KICK</option>
+              <option value="twitch">🟣 Najpierw TWITCH</option>
+            </select>
+          </div>
+
+          <div class="search-container flex-1 sm:w-64">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="streamer-search" class="search-input text-xs py-2 pl-9" placeholder="Szukaj twórcy, roli lub gry..." autocomplete="off" aria-label="Szukaj twórcy">
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Sekcja 1: Siatka Twórców i Streamerów -->
+      <div class="mb-14">
+        <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-2">
+          <h3 class="font-display text-xl text-white uppercase tracking-wider flex items-center gap-2">
+            <i data-lucide="radio" class="w-5 h-5 text-neon-pink"></i>
+            KANAŁY I TRANSMISJE SPOŁECZNOŚCI
+          </h3>
+          <span class="text-xs font-mono text-slate-400" id="streamers-count-label">0 TWÓRCÓW</span>
+        </div>
+
+        <div id="streamers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <!-- Renderowane przez streamers.js -->
+        </div>
+
+        <!-- Pusty stan dla streamerów -->
+        <div id="streamers-empty" class="empty-state hidden py-12 text-center">
+          <p class="font-mono text-xs text-slate-400">// Radar nie wykrył streamerów spełniających podane kryteria.</p>
+        </div>
+      </div>
+
+      <!-- Sekcja 2: Najlepsze Klipy i Akcje Społeczności -->
+      <div class="mb-12">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-white/10 pb-4">
+          <div>
+            <h3 class="font-display text-xl text-white uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="film" class="w-5 h-5 text-neon-cyan"></i>
+              TOP KLIPY &amp; AKCJE Z SERWERÓW RP
+            </h3>
+            <p class="text-xs text-slate-400 font-mono mt-0.5">
+              Głosuj na najlepsze akcje tygodnia i miesiąca ze streamów GTA RP!
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5">
+            <!-- Filtry Czasowe Klipów -->
+            <div class="flex items-center gap-1 bg-[#0b0f19] p-1 rounded-lg border border-white/10">
+              <button type="button" class="clip-time-btn active" data-clip-time="all">Wszystkie</button>
+              <button type="button" class="clip-time-btn" data-clip-time="3days">3 Dni</button>
+              <button type="button" class="clip-time-btn" data-clip-time="month">Ten Miesiąc</button>
+            </div>
+
+            <!-- Przycisk Zgłoś Klip -->
+            <button type="button" id="open-clip-modal-btn" class="btn-primary py-2 px-4 text-xs flex items-center gap-2 cursor-pointer shadow-lg shadow-cyan-500/20 bg-gradient-to-r from-neon-cyan to-blue-600 border-none text-black font-bold hover:brightness-110">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>ZGŁOŚ KLIP</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- BANER INFORMACYJNY: STREFA TWÓRCÓW & NAGRODY DLA TOP 3 -->
+        <div class="mb-6 p-4 sm:p-5 rounded-xl bg-gradient-to-r from-[#0d121f]/95 via-[#131929]/95 to-[#0d121f]/95 border border-cyan-500/30 shadow-[0_4px_25px_rgba(0,0,0,0.6)] backdrop-blur-md relative overflow-hidden">
+          <div class="absolute -top-12 -right-12 w-48 h-48 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-neon-pink/10 rounded-full blur-2xl pointer-events-none"></div>
+
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-start gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-cyan/20 to-blue-600/20 border border-neon-cyan/40 flex items-center justify-center text-neon-cyan flex-shrink-0 mt-0.5 shadow-[0_0_15px_rgba(0,240,255,0.25)]">
+                <i data-lucide="trophy" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap mb-1">
+                  <span class="hud-pill hud-pill-cyan text-[10px] font-bold tracking-wider uppercase">CIEKAWOSTKA &amp; PLANY SPOŁECZNOŚCI</span>
+                  <span class="text-[10px] font-mono text-neon-pink font-semibold flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-neon-pink animate-pulse"></span>
+                    NAGRODY DLA TOP 3 KLIPÓW
+                  </span>
+                </div>
+                <h4 class="font-display text-base sm:text-lg text-white tracking-wide uppercase">
+                  Wrzucasz klipy z serwerów RP? W przyszłości czekają nagrody dla najlepszych twórców!
+                </h4>
+                <p class="text-xs text-slate-300 font-mono mt-1 leading-relaxed max-w-3xl">
+                  Wraz z rozwojem VIRP.pl i pozyskaniem partnerów sponsorskich, dla autorów <strong class="text-neon-cyan font-bold">TOP 3</strong> najwyżej ocenianych klipów planujemy nagrody.
+                </p>
+                <div class="flex items-center gap-2 mt-2.5 text-[11px] font-mono text-slate-300 flex-wrap">
+                  <span class="inline-flex items-center gap-1.5 text-amber-400 bg-amber-950/40 border border-amber-500/30 px-2 py-0.5 rounded font-semibold">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                    Zasada weryfikacji autorstwa:
+                  </span>
+                  <span class="text-slate-400">
+                    Wymagana będzie <strong class="text-slate-200">zgodność nicku</strong> z Twitch/Kick i oficjalnego Discorda VIRP.pl oraz potwierdzenie, że to Twój klip.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-shrink-0 self-start md:self-center">
+              <button type="button" id="banner-clip-submit-btn" class="btn-ghost text-xs py-2 px-3.5 border border-cyan-500/40 text-neon-cyan hover:bg-cyan-500/10 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition-colors" aria-label="Zgłoś Swój Klip">
+                <i data-lucide="video" class="w-3.5 h-3.5"></i>
+                <span>Zgłoś Swój Klip</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="clips-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Renderowane przez streamers.js -->
+        </div>
+
+        <div id="clips-empty" class="empty-state hidden py-12 text-center">
+          <p class="font-mono text-xs text-slate-400">// Brak klipów spełniających wybrane kryteria czasowe.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       GTA VI & LEONIDA FUTURE HUB SPA PORTAL (TRANSLUCENT VIEW)
+       ============================================================ -->
+  <section id="gta6" class="sr-only" aria-hidden="true"></section>
+  <div id="gta6-portal" class="streamers-portal-overlay hidden" role="dialog" aria-modal="true" aria-label="GTA VI &amp; Leonida Online Hub">
+    <div class="streamers-portal-bg"></div>
+    <div class="streamers-portal-glow"></div>
+    <div class="streamers-portal-grid"></div>
+
+    <div class="streamers-portal-container max-w-6xl">
+      <!-- Górna belka telemetryczna z przyciskiem powrotu -->
+      <div class="streamers-portal-header">
+        <div class="flex items-center gap-3">
+          <div class="logo-badge-vi">
+            <span class="logo-text-vi">VI</span>
+            <div class="logo-scanlines"></div>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-display text-2xl font-black text-white tracking-wider leading-none uppercase">
+              VIRP<span class="text-neon-pink">.PL</span>
+            </span>
+            <span class="font-data text-[8.5px] text-neon-cyan tracking-widest uppercase font-bold mt-0.5">
+              GTA COMMUNITY HUB
+            </span>
+          </div>
+          <div class="hidden sm:flex items-center ml-2 pl-3 border-l border-white/10">
+            <span class="author-glitch" data-text="M3NSI">M3NSI</span>
+          </div>
+        </div>
+
+        <button id="gta6-close-btn" class="btn-vice text-xs py-2.5 px-5 flex items-center gap-2 cursor-pointer" title="Powrót do strony głównej">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>POWRÓT DO STRONY GŁÓWNEJ</span>
+        </button>
+      </div>
+
+      <!-- Pasek Telemetrii i Statystyk GTA VI -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">LOKALIZACJA</span>
+          <div class="streamer-stat-value text-neon-pink">VICE CITY &amp; LEONIDA</div>
+        </div>
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">STATUS SERWERÓW</span>
+          <div class="streamer-stat-value text-neon-amber">W PRZYGOTOWANIU</div>
+        </div>
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">AKTUALNA BAZA</span>
+          <div class="streamer-stat-value text-neon-cyan">GTA V (FIVEM &amp; RAGE)</div>
+        </div>
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">ARCHITEKTURA VIRP</span>
+          <div class="streamer-stat-value text-status-green flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-status-green animate-ping"></span>
+            <span>GOTOWA NA PREMIERĘ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Główny Baner Hero ze wspaniałą grafiką Vice City -->
+      <div class="relative rounded-2xl overflow-hidden border border-pink-500/30 shadow-2xl mb-10 bg-[#0a0d16]">
+        <div class="relative h-72 sm:h-96 w-full overflow-hidden">
+          <img src="img/gta6-vice-city.jpg" alt="GTA VI Vice City Skyline" class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0a0d16] via-[#0a0d16]/60 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-[#0a0d16]/95 via-[#0a0d16]/50 to-transparent"></div>
+          
+          <div class="absolute bottom-6 left-6 right-6 max-w-3xl">
+            <div class="flex items-center gap-2 mb-2 flex-wrap">
+              <span class="hud-pill hud-pill-pink text-[10px] uppercase tracking-widest font-bold">ZAPOWIEDŹ &amp; PRZYSZŁOŚĆ VIRP.PL</span>
+              <span class="hud-pill hud-pill-cyan text-[10px] uppercase tracking-widest font-bold">LEONIDA ONLINE 2026</span>
+            </div>
+            <h2 class="font-display text-2xl sm:text-4xl font-black text-white tracking-wide uppercase leading-tight mb-2">
+              PRZYSZŁOŚĆ POLSKIEGO ROLEPLAYU W <span class="gradient-text">VICE CITY</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-200 font-mono leading-relaxed max-w-2xl">
+              Gdy tylko Rockstar Games wyda Grand Theft Auto VI oraz uruchomi platformy sieciowe i dedykowane serwery społecznościowe (kontynuacja ekosystemu Cfx.re / Rockstar), <strong>VIRP.pl stanie się głównym polskim centrum serwerów GTA 6 Online i Vice City Roleplay!</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kafelki Informacyjne (Status, Co Wiemy, Aktualne Serwery) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <!-- Karta 1: Obecny stan serwerów GTA V -->
+        <div class="glass-card p-6 flex flex-col justify-between border-t-2 border-t-neon-cyan">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-10 h-10 rounded-xl bg-neon-cyan/15 flex items-center justify-center text-neon-cyan">
+                <i data-lucide="server" class="w-5 h-5"></i>
+              </div>
+              <span class="hud-pill hud-pill-green text-[10px]">DOSTĘPNE TERAZ</span>
+            </div>
+            <h3 class="font-display text-lg font-bold text-white uppercase mb-2">
+              Serwery GTA V (FiveM / Rage)
+            </h3>
+            <p class="text-xs text-slate-300 font-mono leading-relaxed mb-4">
+              Na ten moment na VIRP.pl znajdziesz dziesiątki zweryfikowanych polskich serwerów do GTA V. Monitorujemy statusy live graczy, organizujemy comiesięczne głosowania społeczności i publikujemy statystyki najpopularniejszych projektów.
+            </p>
+          </div>
+          <button type="button" id="gta6-browse-servers-btn" class="btn-secondary w-full text-xs py-2.5 flex items-center justify-center gap-2 cursor-pointer">
+            <i data-lucide="compass" class="w-4 h-4"></i>
+            <span>Przeglądaj Serwery GTA V</span>
+          </button>
+        </div>
+
+        <!-- Karta 2: Czego spodziewać się po GTA 6 RP -->
+        <div class="glass-card p-6 flex flex-col justify-between border-t-2 border-t-neon-pink">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-10 h-10 rounded-xl bg-neon-pink/15 flex items-center justify-center text-neon-pink">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+              </div>
+              <span class="hud-pill hud-pill-pink text-[10px]">NOWA GENERACJA</span>
+            </div>
+            <h3 class="font-display text-lg font-bold text-white uppercase mb-2">
+              Co Zmieni GTA VI w Świecie RP?
+            </h3>
+            <p class="text-xs text-slate-300 font-mono leading-relaxed mb-4">
+              Nowy silnik, gigantyczna nowa mapa stanu Leonida, tętniące życiem neonowe miasto Vice City, zaawansowane zachowania i reakcje NPC oraz ulepszona fizyka pojazdów przeniosą roleplay na zupełnie inny poziom.
+            </p>
+          </div>
+          <div class="p-3 bg-pink-950/20 border border-pink-500/20 rounded-lg text-[11px] font-mono text-pink-300">
+            ⚡ Pełna integracja z nowym silnikiem społecznościowym Cfx.re / Rockstar Community.
+          </div>
+        </div>
+
+        <!-- Karta 3: Strefa dla Developerów i Twórców Serwerów -->
+        <div class="glass-card p-6 flex flex-col justify-between border-t-2 border-t-neon-amber">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-10 h-10 rounded-xl bg-neon-amber/15 flex items-center justify-center text-neon-amber">
+                <i data-lucide="cpu" class="w-5 h-5"></i>
+              </div>
+              <span class="hud-pill hud-pill-amber text-[10px]">DLA WŁAŚCICIELI</span>
+            </div>
+            <h3 class="font-display text-lg font-bold text-white uppercase mb-2">
+              Planujesz Serwer w GTA 6?
+            </h3>
+            <p class="text-xs text-slate-300 font-mono leading-relaxed mb-4">
+              Jeśli Twój zespół już teraz planuje tworzenie serwera RP lub sieciowego w świecie GTA VI, VIRP.pl umożliwi Ci promowanie projektu, budowanie bazy graczy na Discordzie i rekrutację do frakcji przed premierą.
+            </p>
+          </div>
+          <button type="button" id="gta6-add-project-btn" class="btn-primary w-full text-xs py-2.5 flex items-center justify-center gap-2 cursor-pointer">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>Zgłoś Swój Projekt Serwera</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pasek FAQ / Bezpieczeństwo informacyjne -->
+      <div class="p-5 rounded-xl bg-[#0d121f]/90 border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 flex-shrink-0 mt-0.5">
+            <i data-lucide="info" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider font-display">
+              Oficjalne Informacje &amp; Niezależność Społeczności
+            </h4>
+            <p class="text-[11px] text-slate-400 font-mono leading-relaxed mt-0.5">
+              VIRP.pl jest niezależnym portalem fanowskim i nie jest powiązany z Rockstar Games ani Take-Two Interactive. Prezentowane materiały mają charakter informacyjny dla polskiej społeczności graczy.
+            </p>
+          </div>
+        </div>
+        <a href="https://discord.gg/nwXxZybY9R" target="_blank" rel="noopener noreferrer" class="btn-ghost text-xs py-2.5 px-4 whitespace-nowrap flex items-center gap-2 flex-shrink-0 text-white bg-[#5865F2]/20 border border-[#5865F2]/40 hover:bg-[#5865F2] hover:text-white transition-all shadow-lg shadow-indigo-500/20">
+          <svg class="w-4 h-4 fill-current text-[#5865F2]" viewBox="0 0 24 24">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+          <span>Dołącz do Discorda VIRP</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       ABOUT / CONTACT
+       ============================================================ -->
+  <section id="about" class="py-20 lg:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12 animate-slide-up">
+        <span class="section-badge">
+          <i data-lucide="heart" class="w-3.5 h-3.5"></i>
+          Społeczność
+        </span>
+        <h2 class="section-title">
+          O <span class="gradient-text">Projekcie</span>
+        </h2>
+        <p class="section-subtitle mx-auto">
+          VIRP.pl powstał z pasji do polskiej sceny GTA Roleplay.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-up stagger-1">
+        <div class="glass-card p-6 text-center">
+          <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-accent-pink/10 flex items-center justify-center">
+            <i data-lucide="users" class="w-6 h-6 text-accent-pink"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-2">Społecznościowy</h3>
+          <p class="text-sm text-slate-400">Tworzony przez graczy, dla graczy. Każdy może dodać swój serwer.</p>
+        </div>
+
+        <div class="glass-card p-6 text-center">
+          <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-accent-purple/10 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-6 h-6 text-accent-purple"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-2">Zweryfikowany</h3>
+          <p class="text-sm text-slate-400">Każdy serwer jest weryfikowany przez administrację przed publikacją.</p>
+        </div>
+
+        <div class="glass-card p-6 text-center">
+          <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-accent-cyan/10 flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-6 h-6 text-accent-cyan"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-2">Nowoczesny</h3>
+          <p class="text-sm text-slate-400">Dedykowany ekosystem pod FiveM, alt:V oraz nadchodzącą premierę GTA VI i stan Leonida.</p>
+        </div>
+      </div>
+
+      <!-- Wesprzyj Projekt / Postaw mi kawę -->
+      <div class="mt-10 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-[#0d121f] to-cyan-950/40 border border-emerald-500/30 backdrop-blur-md shadow-2xl animate-slide-up stagger-2 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-5 text-left w-full md:w-auto">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-400 p-[1px] flex-shrink-0 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+            <div class="w-full h-full bg-[#0b0f19] rounded-[15px] flex items-center justify-center">
+              <i data-lucide="coffee" class="w-7 h-7 text-emerald-400"></i>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-1 flex-wrap">
+              <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-wide uppercase">
+                PODOBA CI SIĘ PROJEKT VIRP.PL?
+              </h3>
+              <span class="hud-pill hud-pill-green text-[10px]">WESPRZYJ ROZWÓJ</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 font-mono leading-relaxed max-w-2xl">
+              VIRP.pl jest w 100% bezpłatnym projektem społecznościowym. Jeśli doceniasz stronę, katalog serwerów i narzędzia – możesz postawić wirtualną kawę dla twórcy! Każda kawa pomaga utrzymać serwery i rozwijać stronę.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex-shrink-0 flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto justify-end">
+          <a href="https://buycoffee.to/m3nsi" target="_blank" rel="noopener noreferrer" class="hover:scale-105 transition-transform duration-200 inline-block drop-shadow-[0_0_15px_rgba(16,185,129,0.35)]" title="Postaw kawę dla m3nsi na buycoffee.to">
+            <img src="https://buycoffee.to/static/img/share/share-button-dark--pl.png" alt="Postaw kawę dla m3nsi na buycoffee.to" style="width: 220px; height: auto;" class="rounded-xl border border-emerald-500/40">
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       ADD SERVER MODAL
+       ============================================================ -->
+  <div id="add-server-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title" class="modal-title gradient-text">Dodaj Serwer</h2>
+        <button id="modal-close-btn" class="btn-icon" aria-label="Zamknij">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="add-server-form" action="javascript:void(0);" novalidate>
+          <!-- Honeypot antybotowy (niewidoczny dla ludzi) -->
+          <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1; overflow: hidden;" aria-hidden="true">
+            <label for="form-server-hp">Leave this field empty</label>
+            <input type="text" id="form-server-hp" name="website_hp_check" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-server-name">Nazwa Serwera <span class="required">*</span></label>
+            <input type="text" id="form-server-name" class="form-input" placeholder="np. Eclipse Roleplay" maxlength="60" required>
+            <p class="form-error hidden" id="error-server-name"></p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="form-server-category">Kategoria Rozgrywki <span class="required">*</span></label>
+              <select id="form-server-category" class="form-select" required>
+                <option value="">Wybierz kategorię...</option>
+                <option value="roleplay">Roleplay (RP)</option>
+                <option value="drift">Drift &amp; Tuning</option>
+                <option value="pvp">PvP &amp; Arena</option>
+                <option value="freeroam">Freeroam &amp; Mini-gry</option>
+                <option value="survival">Survival &amp; Post-Apo</option>
+                <option value="upcoming">W Budowie / GTA VI</option>
+              </select>
+              <p class="form-error hidden" id="error-server-category"></p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-server-type">Komunikacja <span class="required">*</span></label>
+              <select id="form-server-type" class="form-select" required>
+                <option value="">Wybierz...</option>
+                <option value="voice">Voice (Głosowy)</option>
+                <option value="text">Text (Tekstowy)</option>
+              </select>
+              <p class="form-error hidden" id="error-server-type"></p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="form-server-platform">Platforma <span class="required">*</span></label>
+              <select id="form-server-platform" class="form-select" required>
+                <option value="fivem">FiveM</option>
+                <option value="altv">alt:V</option>
+                <option value="gta6">GTA VI</option>
+                <option value="mta">MTA / SA-MP</option>
+                <option value="rage">RAGEMP</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-server-wl">Whitelist</label>
+              <select id="form-server-wl" class="form-select">
+                <option value="false">Bez Whitelist (Open)</option>
+                <option value="true">Whitelist ON</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="form-server-slots">Sloty <span class="required">*</span></label>
+              <input type="number" id="form-server-slots" class="form-input" placeholder="np. 128" min="1" max="1000" required>
+              <p class="form-error hidden" id="error-server-slots"></p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-server-discord">Link Discord <span class="required">*</span></label>
+              <input type="url" id="form-server-discord" class="form-input" placeholder="https://discord.gg/..." required>
+              <p class="form-error hidden" id="error-server-discord"></p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-server-website">Strona WWW</label>
+            <input type="url" id="form-server-website" class="form-input" placeholder="https://twojserwer.pl">
+            <p class="form-error hidden" id="error-server-website"></p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-server-direct">Adres IP / Direct Connect (opcjonalnie)</label>
+            <input type="text" id="form-server-direct" class="form-input font-mono" placeholder="np. play.vicestories.pl lub cfx.re/join/xxx" maxlength="80">
+            <p class="form-hint">Adres do szybkiego kopiowania przez graczy na liście serwerów.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-server-desc">Opis Serwera <span class="required">*</span></label>
+            <textarea id="form-server-desc" class="form-textarea" rows="4" placeholder="Opisz swój serwer — czym się wyróżnia, jakie ma funkcje..." maxlength="500" required></textarea>
+            <p class="form-hint"><span id="form-desc-count">0</span>/500 znaków</p>
+            <p class="form-error hidden" id="error-server-desc"></p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-tags-input">Tagi</label>
+            <div class="form-tags-input" id="form-tags-container">
+              <input type="text" id="form-tags-input" placeholder="Wpisz tag i naciśnij Enter..." maxlength="20">
+            </div>
+            <p class="form-hint">Maks. 5 tagów. Naciśnij Enter aby dodać.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-server-banner">URL Banera (opcjonalnie)</label>
+            <input type="url" id="form-server-banner" class="form-input" placeholder="https://i.imgur.com/...">
+            <p class="form-error hidden" id="error-server-banner"></p>
+          </div>
+
+          <!-- Cloudflare Turnstile Anti-Bot Protection (Lazy Render) -->
+          <div id="turnstile-server-container" class="my-3 flex justify-center min-h-[65px] items-center"></div>
+
+          <button type="submit" id="form-submit-btn" class="btn-primary w-full py-3 mt-2">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            Wyślij do Weryfikacji
+          </button>
+
+          <p class="text-xs text-slate-500 text-center mt-3">
+            Serwer zostanie przesłany do administracji na Discordzie do weryfikacji.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       ADD STREAMER MODAL (DISCORD_WEBHOOK_2)
+       ============================================================ -->
+  <div id="add-streamer-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="streamer-modal-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="text-[10px] font-mono text-neon-pink tracking-widest uppercase block mb-0.5">
+            REKRUTACJA TWÓRCÓW // VIRP.PL
+          </span>
+          <h2 id="streamer-modal-title" class="modal-title gradient-text text-xl sm:text-2xl">
+            Zgłoszenie Streamera
+          </h2>
+        </div>
+        <button id="streamer-modal-close-btn" class="btn-icon" aria-label="Zamknij">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Pasek powitalny -->
+        <div class="mb-5 p-3.5 rounded-lg bg-pink-950/30 border border-pink-500/25 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-neon-pink/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i data-lucide="sparkles" class="w-4 h-4 text-neon-pink"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-white uppercase font-display mb-1">
+              Chcesz być na liście streamerów na naszej stronie? Zgłoś się!
+            </h4>
+            <p class="text-[11px] text-slate-300 font-mono leading-relaxed">
+              Wypełnij formularz zgłoszeniowy. Po akceptacji przez administrację Twój kanał trafi do katalogu i zyska automatyczne śledzenie statusu LIVE (Twitch &amp; Kick).
+            </p>
+          </div>
+        </div>
+
+        <form id="add-streamer-form" action="javascript:void(0);" novalidate>
+          <!-- Honeypot antybotowy -->
+          <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1; overflow: hidden;" aria-hidden="true">
+            <label for="form-streamer-hp">Leave this field empty</label>
+            <input type="text" id="form-streamer-hp" name="streamer_hp_check" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="form-streamer-name">Nick Twórcy / Nazwa Kanału <span class="required">*</span></label>
+              <input type="text" id="form-streamer-name" class="form-input" placeholder="np. AspenTV, Frytkaa" maxlength="60" required>
+              <p class="form-error hidden" id="error-streamer-name"></p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-streamer-platform">Główna Platforma <span class="required">*</span></label>
+              <select id="form-streamer-platform" class="form-select" required>
+                <option value="kick">🟢 Kick</option>
+                <option value="twitch">🟣 Twitch</option>
+                <option value="youtube">🔴 YouTube</option>
+                <option value="other">⚪ Inna Platforma</option>
+              </select>
+              <p class="form-error hidden" id="error-streamer-platform"></p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="form-streamer-game">Główna Kategoria / Gra <span class="required">*</span></label>
+              <input type="text" id="form-streamer-game" class="form-input" placeholder="np. GTA V RP, Just Chatting" maxlength="60" required>
+              <p class="form-error hidden" id="error-streamer-game"></p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-streamer-viewers">Średnia Liczba Widzów</label>
+              <input type="text" id="form-streamer-viewers" class="form-input" placeholder="np. 20-50 widzów (opcjonalnie)" maxlength="40">
+              <p class="form-error hidden" id="error-streamer-viewers"></p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-streamer-url">Link do Kanału <span class="required">*</span></label>
+            <input type="url" id="form-streamer-url" class="form-input" placeholder="https://kick.com/twojnick lub https://twitch.tv/twojnick" required>
+            <p class="form-hint">Na podstawie linku automatycznie wykryjemy login Twojego kanału.</p>
+            <p class="form-error hidden" id="error-streamer-url"></p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-streamer-desc">O Sobie / Serwery RP (opcjonalnie)</label>
+            <textarea id="form-streamer-desc" class="form-textarea" rows="3" placeholder="Na jakich serwerach grasz? W jakich frakcjach? Jakie akcje prowadzisz?" maxlength="400"></textarea>
+            <p class="form-hint"><span id="form-streamer-desc-count">0</span>/400 znaków</p>
+            <p class="form-error hidden" id="error-streamer-desc"></p>
+          </div>
+
+          <!-- Cloudflare Turnstile Anti-Bot Protection (Lazy Render) -->
+          <div id="turnstile-streamer-container" class="my-3 flex justify-center min-h-[65px] items-center"></div>
+
+          <button type="submit" id="form-streamer-submit-btn" class="btn-primary w-full py-3 mt-2 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-pink-500/25">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span>Wyślij Zgłoszenie Twórcy</span>
+          </button>
+
+          <p class="text-xs text-slate-500 text-center mt-3 font-mono">
+            Zgłoszenie trafi bezpośrednio do administracji VIRP na Discordzie.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       ADD CLIP MODAL (DISCORD_WEBHOOK_3)
+       ============================================================ -->
+  <div id="add-clip-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="clip-modal-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="text-[10px] font-mono text-neon-cyan tracking-widest uppercase block mb-0.5">
+            COMMUNITY CLIPS // VIRP.PL
+          </span>
+          <h2 id="clip-modal-title" class="modal-title gradient-text text-xl sm:text-2xl">
+            Zgłoś Klip z Akcji
+          </h2>
+        </div>
+        <button id="clip-modal-close-btn" class="btn-icon" aria-label="Zamknij">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Pasek powitalny -->
+        <div class="mb-5 p-3.5 rounded-lg bg-cyan-950/30 border border-cyan-500/25 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-neon-cyan/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i data-lucide="film" class="w-4 h-4 text-neon-cyan"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-white uppercase font-display mb-1">
+              Widziałeś epicką akcję na streamie? Zgłoś klip!
+            </h4>
+            <p class="text-[11px] text-slate-300 font-mono leading-relaxed">
+              Wklej link do klipu (Twitch, Kick, YouTube, Medal, Streamable, TikTok). Po akceptacji moderacji klip pojawi się na stronie z możliwością głosowania!
+            </p>
+          </div>
+        </div>
+
+        <form id="add-clip-form" action="javascript:void(0);" novalidate>
+          <!-- Honeypot antybotowy -->
+          <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1; overflow: hidden;" aria-hidden="true">
+            <label for="form-clip-hp">Leave this field empty</label>
+            <input type="text" id="form-clip-hp" name="clip_hp_check" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-clip-url">Bezpośredni Link do Klipu <span class="required">*</span></label>
+            <input type="url" id="form-clip-url" class="form-input" placeholder="https://clips.twitch.tv/... lub https://kick.com/... lub https://youtube.com/..." required>
+            <p class="form-hint">Obsługiwane: Twitch Clips, Kick Clips, YouTube Shorts/Clips, Medal.tv, Streamable, TikTok.</p>
+            <p class="form-error hidden" id="error-clip-url"></p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-clip-title">Tytuł Akcji / Klipu <span class="required">*</span></label>
+            <input type="text" id="form-clip-title" class="form-input" placeholder="np. Pościg 10-80 przez autostradę w Los Santos" maxlength="90" required>
+            <p class="form-error hidden" id="error-clip-title"></p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="form-clip-streamer">Streamer / Twórca <span class="required">*</span></label>
+              <input type="text" id="form-clip-streamer" class="form-input" placeholder="np. MrDzinold, AspenTV, EWROON" maxlength="60" required>
+              <p class="form-error hidden" id="error-clip-streamer"></p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-clip-server">Serwer RP / Gra</label>
+              <input type="text" id="form-clip-server" class="form-input" placeholder="np. StrefaRP, 5City, Nopixel" maxlength="60">
+              <p class="form-error hidden" id="error-clip-server"></p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-clip-submitter">Twój Nick / Discord (opcjonalnie)</label>
+            <input type="text" id="form-clip-submitter" class="form-input" placeholder="np. TwójNick z Twitch/Kick lub Discord" maxlength="50">
+            <p class="form-hint text-[10px] text-slate-400 mt-1">💡 <strong>Wskazówka dla autorów:</strong> Jeśli to Twój własny klip, podaj spójny nick z Twitch/Kick i Discorda, aby w przyszłości zakwalifikować się do nagród dla TOP 3!</p>
+            <p class="form-error hidden" id="error-clip-submitter"></p>
+          </div>
+
+          <!-- Cloudflare Turnstile Anti-Bot Protection (Lazy Render) -->
+          <div id="turnstile-clip-container" class="my-3 flex justify-center min-h-[65px] items-center"></div>
+
+          <button type="submit" id="form-clip-submit-btn" class="btn-primary w-full py-3 mt-2 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-500/25 bg-gradient-to-r from-neon-cyan to-blue-600 text-black font-bold">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span>Wyślij Klip do Weryfikacji</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       CLIP VIEWER MODAL
+       ============================================================ -->
+  <div id="clip-viewer-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Odtwarzacz Klipu">
+    <div class="modal-content max-w-3xl">
+      <div class="modal-header">
+        <div>
+          <span class="text-[10px] font-mono text-neon-cyan tracking-widest uppercase block mb-0.5">
+            VIRP.PL // COMMUNITY CLIP PLAYER
+          </span>
+          <h3 id="clip-viewer-title" class="font-display text-lg text-white font-bold truncate">
+            Odtwarzacz Klipu
+          </h3>
+        </div>
+        <button id="clip-viewer-close-btn" class="btn-icon" aria-label="Zamknij">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="modal-body p-0">
+        <div id="clip-viewer-player-container" class="aspect-video w-full bg-black relative flex items-center justify-center overflow-hidden">
+          <!-- Renderowany odtwarzacz iframe lub wideo -->
+        </div>
+        <div class="p-4 bg-[#0d121f] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-white/10">
+          <div class="flex items-center gap-3">
+            <div id="clip-viewer-streamer" class="text-xs text-slate-300 font-mono"></div>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <button type="button" id="clip-viewer-vote-btn" class="btn-vice text-xs py-2 px-4 flex items-center gap-2 cursor-pointer">
+              <i data-lucide="flame" class="w-4 h-4 text-neon-pink"></i>
+              <span id="clip-viewer-vote-count">0</span> Głosów
+            </button>
+            <a id="clip-viewer-external-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary text-xs py-2 px-3 flex items-center gap-1.5">
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              <span>Otwórz Źródło</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       CONTACT & BUSINESS MODAL (kontakt@virp.pl)
+       ============================================================ -->
+  <div id="contact-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
+    <div class="modal-content max-w-xl">
+      <div class="modal-header">
+        <div>
+          <span class="text-[10px] font-mono text-neon-cyan tracking-widest uppercase block mb-0.5">
+            VIRP.PL // OFICJALNY KONTAKT &amp; WSPÓŁPRACA
+          </span>
+          <h2 id="contact-modal-title" class="modal-title gradient-text text-xl sm:text-2xl font-display font-black">
+            Kontakt &amp; Biznes
+          </h2>
+        </div>
+        <button id="contact-modal-close-btn" class="btn-icon" aria-label="Zamknij">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="modal-body space-y-6">
+        <!-- Banner wprowadzający -->
+        <div class="p-4 rounded-xl bg-gradient-to-r from-bg-tertiary to-slate-900 border border-white/10 flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-neon-cyan/20 border border-neon-cyan/30 flex items-center justify-center flex-shrink-0 text-neon-cyan mt-0.5">
+            <i data-lucide="briefcase" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-white font-display uppercase tracking-wider mb-1">
+              Dedykowany Kanał Partnerski i Techniczny
+            </h4>
+            <p class="text-xs text-slate-300 font-mono leading-relaxed">
+              Skontaktuj się z administracją VIRP.pl w sprawach patronatów serwerów GTA RP, partnerstw ze streamerami, propozycji biznesowych lub uwag technicznych.
+            </p>
+          </div>
+        </div>
+
+        <!-- Karta Bezpiecznego Adresu E-mail -->
+        <div class="p-5 rounded-xl bg-[#080d19] border border-cyan-500/30 shadow-[0_0_20px_rgba(0,240,255,0.08)] relative overflow-hidden">
+          <div class="flex items-center justify-between gap-2 mb-3">
+            <span class="text-[10px] font-mono text-neon-cyan tracking-widest uppercase bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-500/30 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-status-green animate-pulse"></span>
+              OFICJALNY ADRES E-MAIL
+            </span>
+          </div>
+
+          <!-- Chroniony kontener e-mail -->
+          <div class="bg-black/60 border border-white/10 rounded-lg p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-md bg-neon-pink/20 flex items-center justify-center text-neon-pink flex-shrink-0">
+                <i data-lucide="mail" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <span id="contact-email-display" class="font-mono text-sm sm:text-base font-bold text-white tracking-wide select-all" data-user="kontakt" data-domain="virp.pl">
+                  kontakt@virp.pl
+                </span>
+              </div>
+            </div>
+
+            <!-- Akcje e-mail: Kopiuj i Napisz -->
+            <div class="flex items-center gap-2">
+              <button type="button" id="contact-copy-email-btn" class="btn-secondary text-xs py-2 px-3 flex items-center gap-1.5 cursor-pointer" title="Skopiuj adres do schowka">
+                <i data-lucide="copy" class="w-3.5 h-3.5 text-neon-cyan"></i>
+                <span id="contact-copy-label">Kopiuj</span>
+              </button>
+              <a id="contact-mailto-btn" href="mailto:kontakt@virp.pl?subject=VIRP.PL%20-%20Zapytanie%20Biznesowe%20/%20Współpraca" class="btn-primary text-xs py-2 px-3 flex items-center gap-1.5">
+                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                <span>Napisz</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Kafelki zakresu kontaktu -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-left">
+            <div class="p-2.5 rounded-lg bg-white/5 border border-white/5">
+              <div class="text-neon-pink font-display font-bold text-xs uppercase tracking-wider mb-1 flex items-center gap-1">
+                <i data-lucide="shield" class="w-3 h-3"></i> Patronaty Serwerów
+              </div>
+              <p class="text-[11px] text-slate-400 font-mono">Weryfikacja serwerów RP, promocja i patronat medialny VIRP.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-white/5 border border-white/5">
+              <div class="text-neon-cyan font-display font-bold text-xs uppercase tracking-wider mb-1 flex items-center gap-1">
+                <i data-lucide="tv" class="w-3 h-3"></i> Współpraca Twórców
+              </div>
+              <p class="text-[11px] text-slate-400 font-mono">Dołączenie do katalogu streamerów, promocja transmisji Twitch/Kick.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-white/5 border border-white/5">
+              <div class="text-neon-amber font-display font-bold text-xs uppercase tracking-wider mb-1 flex items-center gap-1">
+                <i data-lucide="wrench" class="w-3 h-3"></i> Uwagi Techniczne
+              </div>
+              <p class="text-[11px] text-slate-400 font-mono">Zgłaszanie uwag do serwisu, propozycje narzędzi i poprawek.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       PRIVACY POLICY MODAL (RODO / GDPR)
+       ============================================================ -->
+  <div id="privacy-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="privacy-modal-title">
+    <div class="modal-content max-w-2xl max-h-[85vh] flex flex-col">
+      <div class="modal-header flex-shrink-0">
+        <div>
+          <span class="text-[10px] font-mono text-neon-pink tracking-widest uppercase block mb-0.5">
+            DOKUMENT INFORMACYJNY // RODO
+          </span>
+          <h2 id="privacy-modal-title" class="modal-title gradient-text text-xl sm:text-2xl font-display font-black">
+            Polityka Prywatności &amp; Pliki Cookies
+          </h2>
+        </div>
+        <button id="privacy-modal-close-btn" class="btn-icon" aria-label="Zamknij">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="modal-body overflow-y-auto space-y-5 text-slate-300 text-xs sm:text-sm leading-relaxed pr-2 font-mono">
+        <div class="p-3 rounded-lg bg-white/5 border border-white/10 text-xs">
+          <strong>Data aktualizacji:</strong> 6 września 2026 r. | <strong>Wersja:</strong> 1.1.0
+        </div>
+
+        <div>
+          <h3 class="text-base font-bold text-white uppercase font-display tracking-wider mb-2 flex items-center gap-2">
+            <span class="text-neon-cyan">1.</span> Administrator Danych i Kontakt
+          </h3>
+          <p>
+            Serwis <strong>VIRP.pl</strong> jest niezależnym, nieoficjalnym portalem społecznościowym tworzonym przez fanów dla polskiej społeczności GTA Roleplay.
+          </p>
+          <p class="mt-1">
+            W sprawach związanych z prywatnością, ochroną danych oraz modyfikacją lub usunięciem wpisów z katalogu możesz skontaktować się z nami pod adresem: 
+            <a href="mailto:kontakt@virp.pl" class="text-neon-cyan hover:underline font-bold">kontakt@virp.pl</a>.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-base font-bold text-white uppercase font-display tracking-wider mb-2 flex items-center gap-2">
+            <span class="text-neon-cyan">2.</span> Pamięć Lokalna Przeglądarki (Local Storage)
+          </h3>
+          <p>
+            VIRP.pl jest statyczną aplikacją internetową (SPA), która nie wymaga tworzenia kont użytkowników ani podawania haseł. Do prawidłowego działania wybrane funkcje zapisują dane lokalnie w Twojej przeglądarce:
+          </p>
+          <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-400">
+            <li><strong class="text-slate-200">Ulubione serwery</strong> (lista ID serwerów oznaczonych gwiazdką).</li>
+            <li><strong class="text-slate-200">Oddane głosy</strong> na serwery i klipy społecznościowe (ochrona przed wielokrotnym głosowaniem).</li>
+            <li><strong class="text-slate-200">Ustawienia Radia Vice FM</strong> (wyciszenie, poziom głośności, wybór stacji VICE/Spotify).</li>
+            <li><strong class="text-slate-200">Akceptacja plików cookies</strong> (zapamiętanie zgody na wyświetlanie serwisu).</li>
+            <li><strong class="text-slate-200">Cooldown formularzy</strong> (ochrona przed przypadkowym powieleniem zgłoszenia).</li>
+          </ul>
+          <p class="mt-2 text-[11px] text-slate-500">
+            W każdej chwili możesz usunąć te dane, czyszcząc pamięć podręczną (dane witryn) w ustawieniach swojej przeglądarki.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-base font-bold text-white uppercase font-display tracking-wider mb-2 flex items-center gap-2">
+            <span class="text-neon-cyan">3.</span> Zabezpieczenia i Usługi Zewnętrzne
+          </h3>
+          <p>
+            W celu ochrony serwisu przed atakami typu DDoS, złośliwym spamem oraz osadzania multimediów, serwis współpracuje ze sprawdzonymi dostawcami:
+          </p>
+          <ul class="list-disc pl-5 mt-2 space-y-1 text-slate-400">
+            <li><strong class="text-slate-200">Cloudflare Inc. (Turnstile &amp; CDN)</strong>: system weryfikacji antybotowej przy formularzach zgłoszeniowych. Cloudflare przetwarza sygnały sesyjne w celu ochrony infrastruktury.</li>
+            <li><strong class="text-slate-200">Discord Inc.</strong>: formularze zgłoszeniowe przesyłają dane za pośrednictwem szyfrowanych Webhooków do weryfikacji przez zespół administracyjny.</li>
+            <li><strong class="text-slate-200">Spotify AB, Google/YouTube, Twitch Interactive</strong>: odtwarzacze multimedialne mogą wykorzystywać niezbędne pliki cookies zgodnie z regulaminami tych platform.</li>
+            <li><strong class="text-slate-200">Nightride FM</strong>: strumień radiowy synthwave pobierany jest bezpośrednio z serwera audio stacji.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-base font-bold text-white uppercase font-display tracking-wider mb-2 flex items-center gap-2">
+            <span class="text-neon-cyan">4.</span> Dane Podawane w Formularzach
+          </h3>
+          <p>
+            Wszelkie dane podawane w formularzu „Dodaj Serwer”, „Zgłoś Streamera” oraz w korespondencji e-mail podawane są w sposób całkowicie dobrowolny w celu weryfikacji i publikacji w publicznym katalogu.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-base font-bold text-white uppercase font-display tracking-wider mb-2 flex items-center gap-2">
+            <span class="text-neon-cyan">5.</span> Twoje Prawa
+          </h3>
+          <p>
+            Każdy twórca, właściciel serwera lub użytkownik ma prawo do żądania wglądu, aktualizacji, sprostowania lub trwałego usunięcia danych swojego serwera/kanału z serwisu VIRP.pl. Wystarczy przesłać zgłoszenie na adres: 
+            <a href="mailto:kontakt@virp.pl" class="text-neon-cyan hover:underline font-bold">kontakt@virp.pl</a>.
+          </p>
+        </div>
+      </div>
+
+      <div class="modal-footer p-4 border-t border-white/10 flex justify-end flex-shrink-0 bg-[#0d121f]">
+        <button type="button" id="privacy-modal-ok-btn" class="btn-primary text-xs py-2 px-5 cursor-pointer">
+          Rozumiem i Zamykam
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <!-- Logo & Description -->
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="logo-badge-vi scale-90 origin-left">
+              <span class="logo-text-vi text-xl">VI</span>
+              <div class="logo-scanlines"></div>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-display text-xl font-black text-white tracking-wider leading-none uppercase">
+                VIRP<span class="text-neon-pink">.PL</span>
+              </span>
+              <span class="font-data text-[8px] text-neon-cyan tracking-widest uppercase font-bold -mt-0.5">GTA COMMUNITY HUB</span>
+            </div>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Polski Hub i Katalog Społeczności GTA Roleplay. Znajdź swój serwer, stwórz postać i dołącz do gry.
+          </p>
+        </div>
+
+        <!-- Links -->
+        <div>
+          <h4 class="font-semibold text-white mb-3 text-sm uppercase tracking-wider">Nawigacja</h4>
+          <ul class="space-y-2">
+            <li><a href="#servers" class="text-sm text-slate-400 hover:text-white transition-colors">Katalog Serwerów</a></li>
+            <li><a href="#streamers" class="text-sm text-slate-400 hover:text-white transition-colors">Streamerzy &amp; Media</a></li>
+            <li><a href="#gta6" class="text-sm text-slate-400 hover:text-white transition-colors">GTA VI Hub (Leonida)</a></li>
+            <li><a href="#toolkit" class="text-sm text-slate-400 hover:text-white transition-colors">RP Toolkit</a></li>
+            <li><a href="#about" class="text-sm text-slate-400 hover:text-white transition-colors">O Projekcie</a></li>
+            <li><button type="button" id="footer-contact-btn" class="text-sm text-slate-400 hover:text-neon-cyan transition-colors flex items-center gap-1.5 cursor-pointer"><i data-lucide="mail" class="w-3.5 h-3.5 text-neon-cyan"></i> Kontakt &amp; Biznes</button></li>
+            <li><button type="button" id="footer-privacy-btn" class="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-slate-400"></i> Polityka Prywatności</button></li>
+            <li><a href="https://discord.gg/nwXxZybY9R" target="_blank" rel="noopener noreferrer" class="text-sm text-[#5865F2] hover:text-white transition-colors flex items-center gap-1.5"><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg> Społeczność Discord</a></li>
+          </ul>
+        </div>
+
+        <!-- Toolkit Links -->
+        <div>
+          <h4 class="font-semibold text-white mb-3 text-sm uppercase tracking-wider">Narzędzia</h4>
+          <ul class="space-y-2">
+            <li><a href="#toolkit" class="text-sm text-slate-400 hover:text-white transition-colors" data-toolkit-link="character">Generator Postaci</a></li>
+            <li><a href="#toolkit" class="text-sm text-slate-400 hover:text-white transition-colors" data-toolkit-link="codes">Kody Radiowe</a></li>
+            <li><a href="#toolkit" class="text-sm text-slate-400 hover:text-white transition-colors" data-toolkit-link="calculator">Kalkulator Ekonomii</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="divider"></div>
+
+      <!-- Legal Notice -->
+      <div class="footer-legal text-center mx-auto">
+        <p class="mb-2">
+          &copy; 2024–2026 <strong class="text-slate-300">VIRP.pl</strong> — Wszelkie prawa zastrzeżone.
+          <span class="inline-block mx-2 text-slate-600">|</span>
+          <button type="button" id="footer-cookie-settings-btn" class="text-slate-400 hover:text-white underline cursor-pointer">Ustawienia Cookies</button>
+        </p>
+        <p>
+          VIRP.pl jest <strong class="text-slate-300">nieoficjalnym projektem społecznościowym</strong> tworzonym przez fanów. 
+          Nie jest powiązany, sponsorowany, ani zatwierdzony przez 
+          <strong class="text-slate-300">Take-Two Interactive Software, Inc.</strong>, 
+          <strong class="text-slate-300">Rockstar Games, Inc.</strong> ani żadną z ich spółek zależnych. 
+          Grand Theft Auto oraz GTA są zarejestrowanymi znakami towarowymi Take-Two Interactive. 
+          Wszystkie znaki towarowe należą do ich właścicieli.
+        </p>
+      </div>
+    </div>
   </footer>
+
+
+  <!-- ============================================================
+       VICE CITY DUAL RADIO HUD (STREAM / SPOTIFY)
+       ============================================================ -->
+  <div id="vice-radio-hud" class="fixed bottom-4 left-4 right-4 sm:right-auto sm:bottom-6 sm:left-6 z-[70] transition-all duration-300 max-w-[calc(100vw-2rem)]">
+
+    <!-- Przycisk minimalizacji (widoczny gdy panel zwinięty) -->
+    <button id="radio-minimize-btn" class="radio-mini-btn hidden" title="Rozwiń radio" aria-label="Rozwiń radio">
+      <div class="hud-equalizer flex items-end gap-0.5 h-3 cursor-pointer">
+        <div class="hud-eq-bar bg-neon-pink" style="height:40%"></div>
+        <div class="hud-eq-bar bg-neon-cyan" style="height:70%"></div>
+        <div class="hud-eq-bar bg-neon-amber" style="height:55%"></div>
+      </div>
+    </button>
+
+    <!-- Główny panel sterowania HUD -->
+    <div id="radio-full-panel" class="hud-panel p-2.5 bg-[#0D111D]/95 border border-cyan-500/30 shadow-[0_0_25px_rgba(0,0,0,0.85)] backdrop-blur-md hud-cut flex flex-col gap-2 w-full sm:w-80 max-w-full">
+      
+      <!-- Górna belka: Przełącznik Źródła + Minimize -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-2 px-1">
+        <div class="flex items-center gap-1.5">
+          <button id="src-stream-btn" class="radio-source-btn active" data-source="stream">
+            <i data-lucide="radio" class="w-3 h-3"></i> VICE FM
+          </button>
+          <button id="src-spotify-btn" class="radio-source-btn" data-source="spotify">
+            <i data-lucide="disc" class="w-3 h-3"></i> SPOTIFY
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1">
+          <button id="radio-expand-btn" class="text-slate-400 hover:text-white transition-colors p-1 cursor-pointer" title="Zwiń / Rozwiń panel" aria-label="Zwiń lub rozwiń radio">
+            <i data-lucide="chevron-down" id="radio-expand-arrow" class="w-4 h-4 transition-transform duration-300"></i>
+          </button>
+          <button id="radio-collapse-btn" class="text-slate-400 hover:text-neon-pink transition-colors p-1 cursor-pointer" title="Minimalizuj radio" aria-label="Minimalizuj radio">
+            <i data-lucide="minus" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Środkowy pasek: Kontroler i Equalizer -->
+      <div class="flex items-center justify-between gap-2 px-1">
+        <div class="flex items-center gap-2.5 cursor-pointer" id="radio-track-info-click" role="button" tabindex="0" aria-label="Włącz lub zatrzymaj radio">
+          <button id="radio-master-play" class="w-8 h-8 rounded bg-gradient-to-br from-[#FF1F7D] to-[#FF9E00] flex items-center justify-center text-white hover:scale-105 transition-transform shadow-[0_0_12px_rgba(255,31,125,0.5)] cursor-pointer" aria-label="Odtwarzaj / Zatrzymaj">
+            <i data-lucide="play" class="w-4 h-4" id="radio-master-icon"></i>
+          </button>
+
+          <div class="flex flex-col">
+            <span class="font-display text-sm text-white uppercase tracking-wider leading-none" id="radio-track-title">CHILLSYNTH // NIGHTRIDE FM</span>
+            <span class="text-[9px] text-neon-cyan font-mono tracking-wider mt-0.5" id="radio-track-status">STACJA GOTOWA</span>
+          </div>
+        </div>
+
+        <!-- Animowany Equalizer (klikalny) -->
+        <div class="hud-equalizer flex items-end gap-0.5 h-4 px-1 cursor-pointer" id="radio-eq" role="button" tabindex="0" title="Kliknij, aby włączyć/wyłączyć" aria-label="Włącz lub zatrzymaj radio">
+          <div class="hud-eq-bar bg-neon-pink"></div>
+          <div class="hud-eq-bar bg-neon-cyan"></div>
+          <div class="hud-eq-bar bg-neon-amber"></div>
+          <div class="hud-eq-bar bg-status-green"></div>
+        </div>
+      </div>
+
+      <!-- Regulator Głośności -->
+      <div class="flex items-center gap-2 px-1 pt-1.5 border-t border-white/5">
+        <button id="radio-mute-btn" class="text-slate-400 hover:text-neon-cyan transition-colors cursor-pointer" title="Wycisz / Włącz dźwięk" aria-label="Wycisz lub włącz dźwięk">
+          <i data-lucide="volume-2" id="radio-volume-icon" class="w-3.5 h-3.5"></i>
+        </button>
+        <input type="range" id="radio-volume-slider" min="0" max="1" step="0.05" value="0.2" class="w-full accent-[#FF1F7D] h-1.5 bg-slate-800 rounded-lg cursor-pointer transition-all hover:bg-slate-700" title="Regulacja głośności" aria-label="Głośność radia">
+        <span id="radio-volume-val" class="text-[9px] font-mono text-neon-cyan w-7 text-right">20%</span>
+      </div>
+
+      <!-- Rozwijany odtwarzacz Spotify (Playlista GTA Vice City) -->
+      <div id="radio-spotify-container" class="hidden pt-2 border-t border-white/10 mt-1">
+        <div class="flex items-center justify-between mb-2 px-1">
+          <span class="text-[10px] text-neon-cyan font-mono font-bold tracking-wider">SPOTIFY // FLASH FM VICE CITY</span>
+          <span class="hud-pill hud-pill-pink text-[9px]">PLAYLISTA</span>
+        </div>
+
+        <div id="spotify-embed-root">
+          <iframe 
+            data-testid="embed-iframe" 
+            title="Spotify Web Player - Flash FM Vice City"
+            style="border-radius:12px; border:0;" 
+            src="https://open.spotify.com/embed/playlist/7dKunw6i8S8cqF8DOANExj?utm_source=generator&theme=0" 
+            width="100%" 
+            height="352" 
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bezpieczny strumień radia internetowego -->
+    <audio id="bg-audio" loop preload="none">
+      <source src="https://stream.nightride.fm/chillsynth.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+
+  <!-- ============================================================
+       COOKIE CONSENT BANNER
+       ============================================================ -->
+  <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-[80] transition-all duration-500 translate-y-24 opacity-0 pointer-events-none" role="region" aria-label="Zgoda na pliki cookies">
+    <div class="p-4 rounded-xl bg-[#0d121f]/95 border border-cyan-500/30 shadow-[0_10px_35px_rgba(0,0,0,0.85)] backdrop-blur-md">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-neon-pink/20 border border-neon-pink/30 flex items-center justify-center text-neon-pink flex-shrink-0 mt-0.5">
+          <i data-lucide="cookie" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <h4 class="text-xs font-bold text-white uppercase font-display tracking-wider">
+            Pliki Cookies &amp; Pamięć Lokalna
+          </h4>
+          <p class="text-[11px] text-slate-300 font-mono mt-1 leading-relaxed">
+            VIRP.pl korzysta z pamięci lokalnej (Local Storage) oraz niezbędnych cookies w celu zapamiętania Twoich ulubionych serwerów, głosów, ustawień radia i ochrony anty-botowej Cloudflare. Nie stosujemy inwazyjnych ciasteczek śledzących.
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center justify-between gap-2 pt-2.5 border-t border-white/10">
+        <button type="button" id="cookie-privacy-btn" class="text-[11px] text-slate-400 hover:text-neon-cyan underline font-mono cursor-pointer transition-colors">
+          Polityka Prywatności
+        </button>
+        <button type="button" id="cookie-accept-btn" class="btn-primary text-xs py-1.5 px-4 cursor-pointer shadow-md shadow-pink-500/20">
+          Rozumiem i Akceptuję
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       TOAST CONTAINER
+       ============================================================ -->
+  <div id="toast-container" class="toast-container"></div>
+
+
+  <!-- ============================================================
+       SCRIPTS (modular, ES6+)
+       ============================================================ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/servers.js"></script>
+  <script src="js/streamers.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/toolkit.js"></script>
 
 </body>
 </html>
+

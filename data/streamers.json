@@ -1,0 +1,189 @@
+{
+  "streamers": [
+    {
+      "id": "aspentv",
+      "name": "AspenTV",
+      "platform": "kick",
+      "channelLogin": "aspentv",
+      "channelUrl": "https://kick.com/aspentv",
+      "avatar": "img/streamers/aspentv.webp"
+    },
+    {
+      "id": "frytkaa",
+      "name": "Frytkaa",
+      "platform": "kick",
+      "channelLogin": "frytkaa",
+      "channelUrl": "https://kick.com/frytkaa",
+      "avatar": "img/streamers/frytkaa.webp"
+    },
+    {
+      "id": "xn0rth",
+      "name": "xN0rth",
+      "platform": "kick",
+      "channelLogin": "xn0rth",
+      "channelUrl": "https://kick.com/xn0rth",
+      "avatar": "img/streamers/xn0rth.webp"
+    },
+    {
+      "id": "pelcuu",
+      "name": "Pelcuu",
+      "platform": "kick",
+      "channelLogin": "pelcuu",
+      "channelUrl": "https://kick.com/pelcuu",
+      "avatar": "img/streamers/pelcuu.webp"
+    },
+    {
+      "id": "miirine",
+      "name": "Miirine",
+      "platform": "kick",
+      "channelLogin": "miirine",
+      "channelUrl": "https://kick.com/miirine",
+      "avatar": "img/streamers/miirine.webp"
+    },
+    {
+      "id": "takuu",
+      "name": "takuu",
+      "platform": "kick",
+      "channelLogin": "takuu",
+      "channelUrl": "https://kick.com/takuu",
+      "avatar": "img/streamers/takuu.webp"
+    },
+    {
+      "id": "pisicela",
+      "name": "Pisicela",
+      "platform": "kick",
+      "channelLogin": "pisicela",
+      "channelUrl": "https://kick.com/pisicela",
+      "avatar": "img/streamers/pisicela.png"
+    },
+    {
+      "id": "ewroon",
+      "name": "EWROON",
+      "platform": "twitch",
+      "channelLogin": "ewroon",
+      "channelUrl": "https://twitch.tv/ewroon",
+      "avatar": "img/streamers/ewroon.png"
+    },
+    {
+      "id": "pago3",
+      "name": "PAGO3",
+      "platform": "twitch",
+      "channelLogin": "pago3",
+      "channelUrl": "https://twitch.tv/pago3",
+      "avatar": "img/streamers/pago3.jpg"
+    },
+    {
+      "id": "banduracartel",
+      "name": "BanduraCartel",
+      "platform": "twitch",
+      "channelLogin": "banduracartel",
+      "channelUrl": "https://twitch.tv/banduracartel",
+      "avatar": "img/streamers/banduracartel.png"
+    },
+    {
+      "id": "tuszol",
+      "name": "tuszol",
+      "platform": "twitch",
+      "channelLogin": "tuszol",
+      "channelUrl": "https://twitch.tv/tuszol",
+      "avatar": "img/streamers/tuszol.png"
+    },
+    {
+      "id": "mrdzinold",
+      "name": "MrDzinold",
+      "platform": "twitch",
+      "channelLogin": "mrdzinold",
+      "channelUrl": "https://twitch.tv/mrdzinold",
+      "avatar": "img/streamers/mrdzinold.png"
+    },
+    {
+      "id": "parisplatynov",
+      "name": "parisplatynov",
+      "platform": "twitch",
+      "channelLogin": "parisplatynov",
+      "channelUrl": "https://twitch.tv/parisplatynov",
+      "avatar": "img/streamers/parisplatynov.png"
+    },
+    {
+      "id": "mariospzoo",
+      "name": "MARIOspzoo",
+      "platform": "twitch",
+      "channelLogin": "mariospzoo",
+      "channelUrl": "https://twitch.tv/mariospzoo",
+      "avatar": "img/streamers/mariospzoo.png"
+    },
+    {
+      "id": "achtenwlodar",
+      "name": "achtenWlodar",
+      "platform": "kick",
+      "channelLogin": "achtenwlodar",
+      "channelUrl": "https://kick.com/achtenwlodar",
+      "avatar": "img/streamers/achtenwlodar.webp"
+    },
+    {
+      "id": "xmerghani",
+      "name": "xmerghani",
+      "platform": "kick",
+      "channelLogin": "xmerghani",
+      "channelUrl": "https://kick.com/xmerghani",
+      "avatar": "img/streamers/xmerghani.webp"
+    },
+    {
+      "id": "rybsonlol",
+      "name": "RybsonLoL",
+      "platform": "kick",
+      "channelLogin": "rybsonlol",
+      "channelUrl": "https://kick.com/rybsonlol",
+      "avatar": "img/streamers/rybsonlol.webp"
+    },
+    {
+      "id": "neexcsgo",
+      "name": "NEEXcsgo",
+      "platform": "kick",
+      "channelLogin": "neexcsgo",
+      "channelUrl": "https://kick.com/neexcsgo",
+      "avatar": "img/streamers/neexcsgo.webp"
+    },
+    {
+      "id": "niter",
+      "name": "niter",
+      "platform": "kick",
+      "channelLogin": "niter",
+      "channelUrl": "https://kick.com/niter",
+      "avatar": "img/streamers/niter.webp"
+    },
+    {
+      "id": "lequ",
+      "name": "LeQu",
+      "platform": "kick",
+      "channelLogin": "lequ",
+      "channelUrl": "https://kick.com/lequ",
+      "avatar": "img/streamers/lequ.webp"
+    },
+    {
+      "id": "rockalone",
+      "name": "RockAlone",
+      "platform": "twitch",
+      "channelLogin": "rockalone",
+      "channelUrl": "https://twitch.tv/rockalone",
+      "avatar": "img/streamers/rockalone.png"
+    },
+    {
+      "id": "leh_tv",
+      "name": "Leh_TV",
+      "platform": "twitch",
+      "channelLogin": "leh_tv",
+      "channelUrl": "https://twitch.tv/leh_tv",
+      "avatar": "img/streamers/leh_tv.png"
+    },
+    {
+      "id": "izakooo",
+      "name": "IzakOOO",
+      "platform": "twitch",
+      "channelLogin": "izakooo",
+      "channelUrl": "https://twitch.tv/izakooo",
+      "avatar": "img/streamers/izakooo.png"
+    }
+  ],
+  "clips": []
+}
