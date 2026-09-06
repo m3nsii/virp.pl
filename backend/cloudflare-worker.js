@@ -59,6 +59,8 @@ async function verifyTurnstile(token, clientIP, secretKey) {
   if (!token) {
     return { success: false, error: 'Wymagana weryfikacja anty-bot Turnstile' };
   }
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timeoutId = controller ? setTimeout(() => controller.abort(), 6000) : null;
   try {
     const formData = new FormData();
     formData.append('secret', secretKey);
@@ -70,7 +72,7 @@ async function verifyTurnstile(token, clientIP, secretKey) {
     const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
       body: formData,
-      signal: AbortSignal.timeout(6000)
+      signal: controller ? controller.signal : undefined
     });
     const outcome = await res.json();
     return {
@@ -80,6 +82,239 @@ async function verifyTurnstile(token, clientIP, secretKey) {
   } catch (err) {
     console.error('[Worker Turnstile Verify Error]:', err);
     return { success: false, error: 'Błąd połączenia z serwerem Turnstile' };
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
+/**
+ * Pobiera aktywne streamy z Twitch Helix API
+ */
+async function fetchTwitchStreams(twitchParam, env, debugData, activeStreams) {
+  if (!twitchParam || !env || !env.TWITCH_CLIENT_ID || !env.TWITCH_CLIENT_SECRET) {
+    if (debugData && twitchParam) debugData.twitchSkipped = 'Brak poświadczeń Twitch API w env';
+    return false;
+  }
+
+  const tClientId = String(env.TWITCH_CLIENT_ID).trim();
+  const tClientSecret = String(env.TWITCH_CLIENT_SECRET).trim();
+
+  let tAppToken = null;
+  const nowMs = Date.now();
+  if (cachedTwitchToken && nowMs < twitchTokenExpiry) {
+    tAppToken = cachedTwitchToken;
+  } else {
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timeoutId = controller ? setTimeout(() => controller.abort(), 6000) : null;
+    try {
+      const tTokenRes = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${tClientId}&client_secret=${tClientSecret}&grant_type=client_credentials`, {
+        method: 'POST',
+        signal: controller ? controller.signal : undefined
+      });
+      if (tTokenRes.ok) {
+        const tTokenData = await tTokenRes.json();
+        tAppToken = tTokenData.access_token;
+        if (tAppToken) {
+          cachedTwitchToken = tAppToken;
+          twitchTokenExpiry = nowMs + Math.max(0, ((tTokenData.expires_in || 3600) - 300)) * 1000;
+        }
+      } else {
+        const errText = await tTokenRes.text().catch(() => '');
+        console.error('[Worker Twitch Token Error]:', tTokenRes.status, errText);
+      }
+    } catch (tokenErr) {
+      console.error('[Worker Twitch Token Exception]:', tokenErr);
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+    }
+  }
+
+  if (debugData) {
+    debugData.twitchTokenOk = Boolean(tAppToken);
+  }
+
+  if (!tAppToken) return false;
+
+  const tLogins = twitchParam.split(',').map(l => l.trim().toLowerCase()).filter(Boolean);
+  if (tLogins.length === 0) return true;
+
+  const queryParams = tLogins.slice(0, 100).map(l => `user_login=${encodeURIComponent(l)}`).join('&');
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timeoutId = controller ? setTimeout(() => controller.abort(), 6000) : null;
+
+  try {
+    const helixRes = await fetch(`https://api.twitch.tv/helix/streams?${queryParams}`, {
+      headers: {
+        'Client-ID': tClientId,
+        'Authorization': `Bearer ${tAppToken}`
+      },
+      signal: controller ? controller.signal : undefined
+    });
+
+    if (helixRes.status === 401) {
+      cachedTwitchToken = null;
+      twitchTokenExpiry = 0;
+      return false;
+    }
+
+    if (helixRes.ok) {
+      const helixData = await helixRes.json();
+      if (debugData) {
+        debugData.twitchStreamsCount = helixData.data?.length || 0;
+      }
+      if (helixData.data && Array.isArray(helixData.data)) {
+        helixData.data.forEach(stream => {
+          const thumb = stream.thumbnail_url
+            ? stream.thumbnail_url.replace('{width}', '640').replace('{height}', '360')
+            : null;
+          activeStreams[stream.user_login.toLowerCase()] = {
+            platform: 'twitch',
+            isLive: true,
+            game: stream.game_name,
+            title: stream.title,
+            viewers: stream.viewer_count,
+            thumbnail: thumb
+          };
+        });
+      }
+      return true;
+    }
+    return false;
+  } catch (tErr) {
+    console.error('[Worker] Błąd pobierania Twitch Helix:', tErr);
+    if (debugData) debugData.twitchError = tErr.message;
+    return false;
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
+/**
+ * Pobiera aktywne streamy z Kick Official API (OpenAPI v1)
+ */
+async function fetchKickStreams(kickParam, env, debugData, activeStreams) {
+  if (!kickParam || !env || !env.KICK_CLIENT_ID || !env.KICK_CLIENT_SECRET) {
+    if (debugData && kickParam) debugData.kickSkipped = 'Brak poświadczeń Kick API w env';
+    return false;
+  }
+
+  const kClientId = String(env.KICK_CLIENT_ID).trim();
+  const kClientSecret = String(env.KICK_CLIENT_SECRET).trim();
+
+  let kAppToken = null;
+  const nowKickMs = Date.now();
+  if (cachedKickToken && nowKickMs < kickTokenExpiry) {
+    kAppToken = cachedKickToken;
+  } else {
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timeoutId = controller ? setTimeout(() => controller.abort(), 6000) : null;
+    try {
+      const kTokenRes = await fetch('https://id.kick.com/oauth/token', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
+        },
+        body: new URLSearchParams({
+          grant_type: 'client_credentials',
+          client_id: kClientId,
+          client_secret: kClientSecret
+        }),
+        signal: controller ? controller.signal : undefined
+      });
+
+      if (kTokenRes.ok) {
+        const kTokenData = await kTokenRes.json();
+        kAppToken = kTokenData.access_token;
+        if (kAppToken) {
+          cachedKickToken = kAppToken;
+          kickTokenExpiry = nowKickMs + Math.max(0, ((kTokenData.expires_in || 3600) - 300)) * 1000;
+        }
+      } else {
+        const errText = await kTokenRes.text().catch(() => '');
+        console.error('[Worker Kick Token HTTP Error]:', kTokenRes.status, errText);
+      }
+    } catch (kErr) {
+      console.error('[Worker Kick Token Exception]:', kErr);
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+    }
+  }
+
+  if (debugData) {
+    debugData.kickTokenOk = Boolean(kAppToken);
+    if (!kAppToken) debugData.kickTokenError = 'Failed to acquire Kick access token';
+  }
+
+  if (!kAppToken) return false;
+
+  const kLogins = kickParam.split(',').map(l => l.trim().toLowerCase()).filter(Boolean);
+  if (kLogins.length === 0) return true;
+
+  const queryParams = kLogins.slice(0, 50).map(l => `slug=${encodeURIComponent(l)}`).join('&');
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timeoutId = controller ? setTimeout(() => controller.abort(), 7000) : null;
+
+  try {
+    const kickRes = await fetch(`https://api.kick.com/public/v1/channels?${queryParams}`, {
+      headers: {
+        'Authorization': `Bearer ${kAppToken}`,
+        'Accept': 'application/json'
+      },
+      signal: controller ? controller.signal : undefined
+    });
+
+    if (debugData) {
+      debugData.kickChannelsStatus = kickRes.status;
+    }
+
+    if (kickRes.status === 401) {
+      // Unieważnij token, aby kolejne zapytanie pobrało świeży token
+      cachedKickToken = null;
+      kickTokenExpiry = 0;
+      return false;
+    }
+
+    if (kickRes.ok) {
+      const kickJson = await kickRes.json();
+      const channels = Array.isArray(kickJson.data) ? kickJson.data : (kickJson.data ? [kickJson.data] : []);
+
+      if (debugData) {
+        debugData.kickChannelsCount = channels.length;
+      }
+
+      for (const ch of channels) {
+        if (ch && ch.slug) {
+          const slug = ch.slug.toLowerCase();
+          const stream = ch.stream;
+          if (stream && (stream.is_live || stream.viewer_count > 0)) {
+            const kickThumb = (stream.thumbnail && !stream.thumbnail.includes('default-thumbnail'))
+              ? stream.thumbnail
+              : (ch.banner_picture || null);
+            activeStreams[slug] = {
+              platform: 'kick',
+              isLive: true,
+              game: ch.category?.name || 'Grand Theft Auto V',
+              title: ch.stream_title || '',
+              viewers: Number(stream.viewer_count) || 0,
+              thumbnail: kickThumb
+            };
+          }
+        }
+      }
+      return true;
+    } else {
+      const kickErrText = await kickRes.text().catch(() => '');
+      console.error('[Worker Kick Channels Error]:', kickRes.status, kickErrText);
+      if (debugData) debugData.kickChannelsError = `Channels HTTP ${kickRes.status}`;
+      return false;
+    }
+  } catch (kErr) {
+    console.error('[Worker] Błąd pobierania Kick Channels:', kErr);
+    if (debugData) debugData.kickError = kErr.message;
+    return false;
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
   }
 }
 
@@ -167,7 +402,7 @@ export default {
     }
 
     // =========================================================================
-    // 2. PROXY STATYSTYK GRACZY NA ŻYWO (GET /api/stats) — ZABEZPIECZONE SSRF
+    // 2. PROXY STATYSTYK GRACZY NA ŻYWO (GET /api/stats) — ZABEZPIECZONE SSRF & CACHED
     // =========================================================================
     if (request.method === 'GET' && normalizedPath === '/api/stats') {
       const rawTargetUrl = url.searchParams.get('url') || 'https://api.strefarp.gg/api/stats';
@@ -191,6 +426,16 @@ export default {
           });
         }
 
+        // Sprawdź cache Cloudflare Edge (30 sekund) — chroni serwery i CFX przed limitem 429
+        const cacheKey = new Request(url.toString(), request);
+        const cache = typeof caches !== 'undefined' ? caches.default : null;
+        if (cache) {
+          try {
+            const cachedRes = await cache.match(cacheKey);
+            if (cachedRes) return cachedRes;
+          } catch (_) {}
+        }
+
         // Bezpieczny timeout kompatybilny ze wszystkimi środowiskami Cloudflare Workers
         const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
         const timeoutId = controller ? setTimeout(() => controller.abort(), 6500) : null;
@@ -200,7 +445,7 @@ export default {
           statsRes = await fetch(parsedTarget.toString(), {
             redirect: 'follow',
             headers: { 
-              'User-Agent': 'VIRP-Proxy/1.2.1 (https://virp.pl)',
+              'User-Agent': 'VIRP-Proxy/1.2.2 (https://virp.pl)',
               'Accept': 'application/json, text/plain, */*'
             },
             signal: controller ? controller.signal : undefined
@@ -218,14 +463,22 @@ export default {
         }
 
         const statsData = await statsRes.text();
-        return new Response(statsData, {
+        const outResponse = new Response(statsData, {
           status: statsRes.status,
           headers: {
             ...corsHeaders,
             'Content-Type': 'application/json; charset=utf-8',
-            'Cache-Control': 'public, max-age=15'
+            'Cache-Control': statsRes.ok ? 'public, max-age=30' : 'public, max-age=5'
           }
         });
+
+        if (cache && statsRes.ok) {
+          try {
+            await cache.put(cacheKey, outResponse.clone());
+          } catch (_) {}
+        }
+
+        return outResponse;
       } catch (err) {
         return new Response(JSON.stringify({ 
           error: 'Nie udało się pobrać statystyk serwera',
@@ -238,7 +491,7 @@ export default {
     }
 
     // =========================================================================
-    // 3. PROXY STATUSÓW LIVE TWITCH & KICK (GET /api/streamers)
+    // 3. PROXY STATUSÓW LIVE TWITCH & KICK (GET /api/streamers) — RÓWNOLEGŁE POBIERANIE
     // =========================================================================
     if (request.method === 'GET' && normalizedPath === '/api/streamers') {
       const debugRequested = url.searchParams.get('debug') === '1';
@@ -276,180 +529,15 @@ export default {
         kickParam
       } : null;
 
-      // --- 1. TWITCH HELIX API ---
-      if (twitchParam && env && env.TWITCH_CLIENT_ID && env.TWITCH_CLIENT_SECRET) {
-        try {
-          const tClientId = String(env.TWITCH_CLIENT_ID).trim();
-          const tClientSecret = String(env.TWITCH_CLIENT_SECRET).trim();
+      // Równoległe pobieranie danych z Twitch Helix i Kick OpenAPI v1
+      const [twitchStatus, kickStatus] = await Promise.allSettled([
+        fetchTwitchStreams(twitchParam, env, debugData, activeStreams),
+        fetchKickStreams(kickParam, env, debugData, activeStreams)
+      ]);
 
-          let tAppToken = null;
-          const nowMs = Date.now();
-          if (cachedTwitchToken && nowMs < twitchTokenExpiry) {
-            tAppToken = cachedTwitchToken;
-          } else {
-            const tTokenRes = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${tClientId}&client_secret=${tClientSecret}&grant_type=client_credentials`, {
-              method: 'POST',
-              signal: AbortSignal.timeout(7000)
-            });
-            const tTokenData = await tTokenRes.json();
-            tAppToken = tTokenData.access_token;
-            if (tAppToken) {
-              cachedTwitchToken = tAppToken;
-              twitchTokenExpiry = nowMs + Math.max(0, ((tTokenData.expires_in || 3600) - 300)) * 1000;
-            }
-          }
-
-          if (debugData) {
-            debugData.twitchTokenOk = Boolean(tAppToken);
-          }
-
-          if (tAppToken) {
-            const tLogins = twitchParam.split(',').map(l => l.trim().toLowerCase()).filter(Boolean);
-            const queryParams = tLogins.slice(0, 100).map(l => `user_login=${encodeURIComponent(l)}`).join('&');
-
-            const helixRes = await fetch(`https://api.twitch.tv/helix/streams?${queryParams}`, {
-              headers: {
-                'Client-ID': tClientId,
-                'Authorization': `Bearer ${tAppToken}`
-              },
-              signal: AbortSignal.timeout(7000)
-            });
-            const helixData = await helixRes.json();
-
-            if (debugData) {
-              debugData.twitchStreamsCount = helixData.data?.length || 0;
-            }
-
-            if (helixData.data && Array.isArray(helixData.data)) {
-              helixData.data.forEach(stream => {
-                const thumb = stream.thumbnail_url
-                  ? stream.thumbnail_url.replace('{width}', '640').replace('{height}', '360')
-                  : null;
-                activeStreams[stream.user_login.toLowerCase()] = {
-                  platform: 'twitch',
-                  isLive: true,
-                  game: stream.game_name,
-                  title: stream.title,
-                  viewers: stream.viewer_count,
-                  thumbnail: thumb
-                };
-              });
-            }
-          }
-        } catch (tErr) {
-          console.error('[Worker] Błąd pobierania Twitch:', tErr);
-          if (debugData) debugData.twitchError = tErr.message;
-        }
-      }
-
-      // --- 2. KICK OFFICIAL DEVELOPER API (OpenAPI v1) ---
-      if (kickParam && env && env.KICK_CLIENT_ID && env.KICK_CLIENT_SECRET) {
-        try {
-          const kClientId = String(env.KICK_CLIENT_ID).trim();
-          const kClientSecret = String(env.KICK_CLIENT_SECRET).trim();
-
-          let kAppToken = null;
-          const nowKickMs = Date.now();
-          if (cachedKickToken && nowKickMs < kickTokenExpiry) {
-            kAppToken = cachedKickToken;
-          } else {
-            const kTokenRes = await fetch('https://id.kick.com/oauth/token', {
-              method: 'POST',
-              headers: { 
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json'
-              },
-              body: new URLSearchParams({
-                grant_type: 'client_credentials',
-                client_id: kClientId,
-                client_secret: kClientSecret
-              }),
-              signal: AbortSignal.timeout(7000)
-            });
-            const kTokenData = await kTokenRes.json();
-            kAppToken = kTokenData.access_token;
-            if (kAppToken) {
-              cachedKickToken = kAppToken;
-              kickTokenExpiry = nowKickMs + Math.max(0, ((kTokenData.expires_in || 3600) - 300)) * 1000;
-            }
-          }
-
-          if (debugData) {
-            debugData.kickTokenOk = Boolean(kAppToken);
-            if (!kAppToken) debugData.kickTokenError = 'Failed to acquire Kick access token';
-          }
-
-          if (kAppToken) {
-            const kLogins = kickParam.split(',').map(l => l.trim().toLowerCase()).filter(Boolean);
-            if (kLogins.length > 0) {
-              // Oficjalny endpoint Kick v1: GET /public/v1/channels?slug=channel1&slug=channel2
-              const queryParams = kLogins.slice(0, 50).map(l => `slug=${encodeURIComponent(l)}`).join('&');
-
-              const kickRes = await fetch(`https://api.kick.com/public/v1/channels?${queryParams}`, {
-                headers: {
-                  'Authorization': `Bearer ${kAppToken}`,
-                  'Accept': 'application/json'
-                },
-                signal: AbortSignal.timeout(7000)
-              });
-
-              if (debugData) {
-                debugData.kickChannelsStatus = kickRes.status;
-              }
-
-              if (kickRes.ok) {
-                const kickJson = await kickRes.json();
-                const channels = Array.isArray(kickJson.data) ? kickJson.data : (kickJson.data ? [kickJson.data] : []);
-
-                if (debugData) {
-                  debugData.kickChannelsCount = channels.length;
-                  debugData.kickChannelsList = channels.map(c => ({
-                    slug: c.slug,
-                    hasStream: Boolean(c.stream),
-                    isLive: Boolean(c.stream && c.stream.is_live),
-                    viewers: c.stream?.viewer_count,
-                    title: c.stream_title,
-                    category: c.category?.name
-                  }));
-                }
-
-                for (const ch of channels) {
-                  if (ch && ch.slug) {
-                    const slug = ch.slug.toLowerCase();
-                    const stream = ch.stream;
-                    if (stream && stream.is_live) {
-                      const kickThumb = (stream.thumbnail && !stream.thumbnail.includes('default-thumbnail'))
-                        ? stream.thumbnail
-                        : (ch.banner_picture || null);
-                      activeStreams[slug] = {
-                        platform: 'kick',
-                        isLive: true,
-                        game: ch.category?.name || 'Grand Theft Auto V',
-                        title: ch.stream_title || '',
-                        viewers: Number(stream.viewer_count) || 0,
-                        thumbnail: kickThumb
-                      };
-                    }
-                  }
-                }
-              } else {
-                const kickErrText = await kickRes.text();
-                console.error('[Worker Kick Channels Error]:', kickRes.status, kickErrText);
-                if (debugData) debugData.kickChannelsError = 'Channels request failed';
-              }
-            }
-          } else {
-            console.error('[Worker Kick Token Error]: Brak tokenu Kick');
-          }
-        } catch (kErr) {
-          console.error('[Worker] Błąd pobierania Kick:', kErr);
-          if (debugData) debugData.kickError = kErr.message;
-        }
-      } else if (debugData && kickParam) {
-        debugData.kickSkipped = {
-          reason: 'Brak poświadczeń Kick API w zmiennych środowiskowych Workera'
-        };
-      }
+      const twitchSuccess = twitchStatus.status === 'fulfilled' && twitchStatus.value;
+      const kickSuccess = kickStatus.status === 'fulfilled' && kickStatus.value;
+      const hasAnyError = (twitchParam && !twitchSuccess) || (kickParam && !kickSuccess);
 
       const responsePayload = { live: activeStreams };
       if (debugData) {
@@ -461,11 +549,11 @@ export default {
         headers: {
           ...corsHeaders,
           'Content-Type': 'application/json',
-          'Cache-Control': isDebug ? 'no-store' : 'public, max-age=60'
+          'Cache-Control': (isDebug || hasAnyError) ? 'public, max-age=5' : 'public, max-age=60'
         }
       });
 
-      if (cache && !isDebug) {
+      if (cache && !isDebug && !hasAnyError) {
         try {
           await cache.put(cacheKey, outResponse.clone());
         } catch (putErr) {}

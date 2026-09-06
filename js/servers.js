@@ -677,36 +677,19 @@ const ServerCatalog = {
 
     let onlineCount = null;
 
-    // 1. Pobranie danych na żywo (bezpośrednio jeśli endpoint wspiera CORS, lub przez Cloudflare Proxy)
+    // 1. Pobranie danych na żywo przez dedykowane proxy Cloudflare Worker (eliminacja błędów CORS przeglądarki)
     if (statsUrl) {
       let data = null;
 
       try {
-        // CFX.re oraz RAGE:MP udostępniają nagłówek Access-Control-Allow-Origin: * natywnie
-        const supportsDirectCors = statsUrl.includes('cfx-services.net') || statsUrl.includes('rage.mp');
+        const proxyUrl = `https://virp-proxy.chojmarcel.workers.dev/api/stats?url=${encodeURIComponent(statsUrl)}`;
+        const pController = new AbortController();
+        const pTimeout = setTimeout(() => pController.abort(), 6000);
+        const pRes = await fetch(proxyUrl, { signal: pController.signal }).catch(() => null);
+        clearTimeout(pTimeout);
 
-        if (supportsDirectCors) {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 4000);
-          const res = await fetch(statsUrl, { signal: controller.signal }).catch(() => null);
-          clearTimeout(timeoutId);
-
-          if (res && res.ok) {
-            data = await res.json().catch(() => null);
-          }
-        }
-
-        // Jeśli endpoint nie wspiera CORS (np. własne API serwerów jak Strefa RP) lub bezpośrednie zapytanie zablokował CORS (res === null)
-        if (!data && (!supportsDirectCors || !res)) {
-          const proxyUrl = `https://virp-proxy.chojmarcel.workers.dev/api/stats?url=${encodeURIComponent(statsUrl)}`;
-          const pController = new AbortController();
-          const pTimeout = setTimeout(() => pController.abort(), 5000);
-          const pRes = await fetch(proxyUrl, { signal: pController.signal }).catch(() => null);
-          clearTimeout(pTimeout);
-
-          if (pRes && pRes.ok) {
-            data = await pRes.json().catch(() => null);
-          }
+        if (pRes && pRes.ok) {
+          data = await pRes.json().catch(() => null);
         }
       } catch {
         // Bezpieczny fallback przy błędzie sieciowym

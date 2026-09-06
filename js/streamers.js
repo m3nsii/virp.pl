@@ -58,7 +58,8 @@ const StreamersHub = {
       // Zsynchronizuj lokalne głosy z klipami
       this.syncLocalClipVotes();
 
-      await this.fetchLiveStatusFromWorker();
+      // Odpytaj Worker asynchronicznie w tle (nie blokuj startu aplikacji)
+      this.fetchLiveStatusFromWorker();
     } catch (error) {
       console.error('[StreamersHub] Błąd pobierania bazy twórców:', error);
       this.streamers = [];
@@ -113,10 +114,19 @@ const StreamersHub = {
       if (twitchLogins.length > 0) params.set('twitch', twitchLogins.join(','));
       if (kickLogins.length > 0) params.set('kick', kickLogins.join(','));
 
-      const res = await fetch(`${this.WORKER_API_URL}?${params.toString()}`, {
-        signal: AbortSignal.timeout(10000)
-      });
-      if (!res.ok) throw new Error(`Worker HTTP ${res.status}`);
+      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      const timeoutId = controller ? setTimeout(() => controller.abort(), 12000) : null;
+
+      let res = null;
+      try {
+        res = await fetch(`${this.WORKER_API_URL}?${params.toString()}`, {
+          signal: controller ? controller.signal : undefined
+        });
+      } finally {
+        if (timeoutId) clearTimeout(timeoutId);
+      }
+
+      if (!res || !res.ok) throw new Error(`Worker HTTP ${res ? res.status : 'ERR'}`);
       const data = await res.json();
 
       if (data && data.live) {
@@ -150,6 +160,22 @@ const StreamersHub = {
       console.warn('[StreamersHub] Statusy live z Workera chwilowo niedostępne:', err);
     } finally {
       this._isFetchingLive = false;
+    }
+  },
+
+  startLivePolling() {
+    this.stopLivePolling();
+    this._liveInterval = setInterval(() => {
+      if (this.isOpen) {
+        this.fetchLiveStatusFromWorker();
+      }
+    }, 45000);
+  },
+
+  stopLivePolling() {
+    if (this._liveInterval) {
+      clearInterval(this._liveInterval);
+      this._liveInterval = null;
     }
   },
 
@@ -261,13 +287,15 @@ const StreamersHub = {
 
     if (typeof lucide !== 'undefined') lucide.createIcons({ root: this.portal });
 
-    // W tle odpytaj Worker o aktualne statusy na żywo
-    await this.fetchLiveStatusFromWorker();
+    // Włącz cykliczne odświeżanie w tle i zaktualizuj statusy
+    this.startLivePolling();
+    this.fetchLiveStatusFromWorker();
   },
 
   closePortal() {
     if (!this.portal) return;
     this.isOpen = false;
+    this.stopLivePolling();
     this.portal.classList.add('hidden');
     document.body.style.overflow = '';
 
