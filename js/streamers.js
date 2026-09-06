@@ -180,11 +180,26 @@ const StreamersHub = {
   },
 
   bindEvents() {
-    // Nawigacja — linki otwierające portal
+    // Nawigacja — linki otwierające portal streamerów
     document.querySelectorAll('a[href="#streamers"]').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        this.openPortal();
+        this.openPortal('streamers');
+      });
+    });
+
+    // Nawigacja — linki otwierające portal bezpośrednio w sekcji klipów
+    document.querySelectorAll('a[href="#clips"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!this.isOpen) {
+          this.openPortal('clips');
+        } else {
+          this.scrollToClips();
+          if (window.location.hash !== '#clips') {
+            window.history.pushState(null, '', '#clips');
+          }
+        }
       });
     });
 
@@ -259,13 +274,26 @@ const StreamersHub = {
 
   checkHash() {
     if (window.location.hash === '#streamers') {
-      if (!this.isOpen) this.openPortal();
+      if (!this.isOpen) this.openPortal('streamers');
+    } else if (window.location.hash === '#clips') {
+      if (!this.isOpen) {
+        this.openPortal('clips');
+      } else {
+        this.scrollToClips();
+      }
     } else if (this.isOpen) {
       this.closePortal();
     }
   },
 
-  async openPortal() {
+  scrollToClips() {
+    const clipsSec = document.getElementById('clips-section');
+    if (clipsSec) {
+      clipsSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  },
+
+  async openPortal(target = 'streamers') {
     if (!this.portal) return;
     this.isOpen = true;
     if (window.Gta6Portal && window.Gta6Portal.isOpen) {
@@ -273,7 +301,6 @@ const StreamersHub = {
     }
     this.portal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-    this.portal.scrollTop = 0;
 
     // Natychmiastowy render kafelków z aktualnej bazy
     this.updateTelemetry();
@@ -281,11 +308,18 @@ const StreamersHub = {
     this.applyFilters();
     this.renderClips();
 
-    if (window.location.hash !== '#streamers') {
-      window.history.pushState(null, '', '#streamers');
+    const targetHash = target === 'clips' ? '#clips' : '#streamers';
+    if (window.location.hash !== targetHash) {
+      window.history.pushState(null, '', targetHash);
     }
 
     if (typeof lucide !== 'undefined') lucide.createIcons({ root: this.portal });
+
+    if (target === 'clips') {
+      setTimeout(() => this.scrollToClips(), 150);
+    } else {
+      this.portal.scrollTop = 0;
+    }
 
     // Włącz cykliczne odświeżanie w tle i zaktualizuj statusy
     this.startLivePolling();
@@ -299,7 +333,7 @@ const StreamersHub = {
     this.portal.classList.add('hidden');
     document.body.style.overflow = '';
 
-    if (window.location.hash === '#streamers') {
+    if (window.location.hash === '#streamers' || window.location.hash === '#clips') {
       window.history.replaceState(null, '', window.location.pathname + window.location.search);
     }
   },

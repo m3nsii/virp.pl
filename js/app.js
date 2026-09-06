@@ -382,12 +382,10 @@ const VIRP = {
       }
     });
 
-    // Hash check
+    // Hash check — przekierowanie starych linków #gta6 na dedykowaną podstronę /gta6
     const checkGta6Hash = () => {
       if (window.location.hash === '#gta6') {
-        if (!window.Gta6Portal.isOpen) window.Gta6Portal.openPortal();
-      } else if (window.Gta6Portal.isOpen) {
-        window.Gta6Portal.closePortal();
+        window.location.href = 'gta6';
       }
     };
 

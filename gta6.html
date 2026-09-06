@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <!-- ============================================================
+       VIRP.pl — Dedykowane Polskie Centrum GTA 6 Roleplay (Leonida RP)
+       Statyczna podstrona SEO | HTML5 + Tailwind + Vanilla JS
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: https://buycoffee.to; connect-src 'self' https://virp-proxy.chojmarcel.workers.dev https://challenges.cloudflare.com https://frontend.cfx-services.net https://cdn.rage.mp https://api.strefarp.gg https://unpkg.com https://cdnjs.cloudflare.com; frame-src 'self' https://challenges.cloudflare.com https://*.youtube.com https://*.youtube-nocookie.com; object-src 'none'; base-uri 'self';">
+  
+  <!-- SEO Primary Meta Tags -->
+  <title>GTA 6 RP Polska — Polski Hub Społeczności i Serwerów GTA VI Roleplay | VIRP.pl</title>
+  <meta name="title" content="GTA 6 RP Polska — Polski Hub Społeczności i Serwerów GTA VI Roleplay | VIRP.pl">
+  <meta name="description" content="Oficjalne polskie centrum GTA 6 Roleplay (Leonida State RP). Dołącz do społeczności graczy w Vice City, sprawdź zapowiedzi serwerów, dołącz do frakcji i przygotuj się na premierę GTA VI na VIRP.pl.">
+  <meta name="keywords" content="GTA 6 RP, GTA VI Roleplay, polskie serwery GTA 6, serwer GTA 6 RP, Vice City RP, Leonida RP, FiveM GTA 6, GTA 6 Polska, premiera GTA 6 RP, whitelist GTA 6, VIRP.pl">
+  <meta name="author" content="VIRP.pl">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://virp.pl/gta6">
+
+  <!-- OpenGraph / Facebook / Discord -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="GTA 6 RP Polska — Polski Hub Społeczności i Serwerów GTA VI Roleplay">
+  <meta property="og:description" content="Przygotuj się na nową erę roleplayu w Vice City i stanie Leonida. Poznaj plany polskich twórców serwerów, dołącz do frakcji i buduj społeczność na VIRP.pl.">
+  <meta property="og:url" content="https://virp.pl/gta6">
+  <meta property="og:site_name" content="VIRP.pl">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:image" content="https://virp.pl/img/gta6-vice-city.jpg">
+  <meta property="og:image:secure_url" content="https://virp.pl/img/gta6-vice-city.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675">
+  <meta property="og:image:alt" content="GTA 6 RP Vice City Skyline — VIRP.pl">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GTA 6 RP Polska — Centrum Społeczności GTA VI Roleplay">
+  <meta name="twitter:description" content="Polskie centrum GTA 6 Roleplay w stanie Leonida. Aktualności, zapowiedzi serwerów i strefa dla graczy.">
+  <meta name="twitter:image" content="https://virp.pl/img/gta6-vice-city.jpg">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/logo-vi.png">
+
+  <!-- Tailwind CSS (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bg-primary': '#06080F',
+            'bg-secondary': '#0D111D',
+            'bg-tertiary': '#141A29',
+            'neon-pink': '#FF1F7D',
+            'neon-amber': '#FF9E00',
+            'neon-cyan': '#00F0FF',
+            'status-green': '#00FF66',
+            'accent-pink': '#FF1F7D',
+            'accent-purple': '#a855f7',
+            'accent-amber': '#FF9E00',
+            'accent-cyan': '#00F0FF',
+            'accent-green': '#00FF66',
+          },
+          fontFamily: {
+            'display': ['Teko', 'sans-serif'],
+            'data': ['Space Mono', 'monospace'],
+            'sans': ['Space Mono', 'system-ui', 'sans-serif'],
+            'mono': ['Space Mono', 'JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js"></script>
+
+  <!-- Google Fonts: Space Mono & Teko -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Teko:wght@500;600;700&display=swap">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css?v=1.2.2">
+
+  <!-- Structured Data: JSON-LD (WebPage, VideoGame, BreadcrumbList, FAQPage) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://virp.pl/gta6#webpage",
+        "url": "https://virp.pl/gta6",
+        "name": "GTA 6 RP Polska — Polski Hub Społeczności i Serwerów GTA VI Roleplay",
+        "description": "Polskie centrum GTA 6 Roleplay (Leonida State RP). Aktualności, zapowiedzi serwerów, rekrutacja i społeczność graczy.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://virp.pl/#website",
+          "url": "https://virp.pl/",
+          "name": "VIRP.pl"
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Strona Główna",
+              "item": "https://virp.pl/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "GTA 6 RP",
+              "item": "https://virp.pl/gta6"
+            }
+          ]
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Czy w GTA 6 powstaną serwery Roleplay podobne do FiveM?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Tak. Rockstar Games oficjalnie przejął zespół twórców FiveM (Cfx.re), a w oficjalnych komunikatach zapowiedziano wsparcie dla serwerów dedykowanych i społeczności twórców w ekosystemie GTA nowej generacji."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Kiedy odbędzie się premiera GTA 6 i kiedy wystartują serwery RP?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Premiera Grand Theft Auto VI zaplanowana jest na jesień 2026 roku (listopad 2026) na konsole PlayStation 5 oraz Xbox Series X/S. Wersja PC oraz dedykowane narzędzia moderskie wystartują w kolejnym etapie."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Gdzie rozgrywać się będzie akcja GTA 6 RP?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Akcja GTA 6 osadzona jest w fikcyjnym stanie Leonida, którego sercem jest neonowe miasto Vice City wzorowane na Miami, a także malownicze mokradła Grassrivers oraz archipelag wysp Keys."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Jak przygotować się lub zapisać na Whitelistę polskich serwerów GTA 6?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Na portalu VIRP.pl będziemy na bieżąco publikować listę zweryfikowanych polskich projektów GTA 6 RP, linki do ich Discordów, formularze podań na Whitelistę oraz zapowiedzi frakcji (VCPD, Sheriff, Frakcje Medyczne i Kartel)."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-bg-primary text-slate-100 font-sans antialiased selection:bg-neon-pink selection:text-white">
+
+  <!-- ============================================================
+       TOP ANNOUNCEMENT TICKER
+       ============================================================ -->
+  <div id="top-announcement-bar" class="w-full bg-gradient-to-r from-[#06080F] via-[#0D1322] to-[#06080F] border-b border-cyan-500/25 py-1.5 text-slate-300 font-mono text-[11px] relative overflow-hidden transition-all duration-300 shadow-[0_2px_15px_rgba(0,0,0,0.5)]">
+    <div class="ticker-container">
+      <div class="ticker-track">
+        <div class="ticker-items flex items-center gap-6 pr-8 whitespace-nowrap">
+          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-pink-500/15 border border-pink-500/30 text-neon-pink font-bold text-[10px] uppercase tracking-wider">
+            <span class="w-1.5 h-1.5 rounded-full bg-neon-pink animate-pulse"></span>
+            GTA VI HUB
+          </span>
+          <span class="text-slate-300 font-semibold">🌴 Stan Leonida &amp; Vice City RP w przygotowaniu</span>
+          <span class="text-slate-600">•</span>
+          <a href="/#servers" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-cyan-500/15 border border-cyan-500/35 text-neon-cyan hover:text-white transition-all font-semibold cursor-pointer">
+            <i data-lucide="server" class="w-3 h-3 text-neon-cyan"></i>
+            <span>Graj teraz na serwerach GTA V RP</span>
+            <i data-lucide="arrow-right" class="w-3 h-3"></i>
+          </a>
+          <span class="text-slate-600">•</span>
+          <span class="text-slate-300">🔥 Dołącz do dyskusji o GTA VI na Discordzie: discord.gg/nwXxZybY9R</span>
+          <span class="text-slate-600">•</span>
+        </div>
+        <div class="ticker-items flex items-center gap-6 pr-8 whitespace-nowrap" aria-hidden="true">
+          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-pink-500/15 border border-pink-500/30 text-neon-pink font-bold text-[10px] uppercase tracking-wider">
+            <span class="w-1.5 h-1.5 rounded-full bg-neon-pink animate-pulse"></span>
+            GTA VI HUB
+          </span>
+          <span class="text-slate-300 font-semibold">🌴 Stan Leonida &amp; Vice City RP w przygotowaniu</span>
+          <span class="text-slate-600">•</span>
+          <a href="/#servers" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-cyan-500/15 border border-cyan-500/35 text-neon-cyan hover:text-white transition-all font-semibold cursor-pointer">
+            <i data-lucide="server" class="w-3 h-3 text-neon-cyan"></i>
+            <span>Graj teraz na serwerach GTA V RP</span>
+            <i data-lucide="arrow-right" class="w-3 h-3"></i>
+          </a>
+          <span class="text-slate-600">•</span>
+          <span class="text-slate-300">🔥 Dołącz do dyskusji o GTA VI na Discordzie: discord.gg/nwXxZybY9R</span>
+          <span class="text-slate-600">•</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       NAVIGATION BAR
+       ============================================================ -->
+  <nav class="navbar sticky top-0 z-40 bg-[#06080F]/90 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo & Brand -->
+        <div class="flex items-center gap-3">
+          <a href="/" class="flex items-center gap-3 group" id="nav-logo">
+            <div class="logo-badge-vi">
+              <span class="logo-text-vi">VI</span>
+              <div class="logo-scanlines"></div>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-display text-2xl font-black text-white tracking-wider leading-none uppercase">
+                VIRP<span class="text-neon-pink">.PL</span>
+              </span>
+              <span class="font-data text-[8.5px] text-neon-cyan tracking-widest uppercase font-bold mt-0.5">
+                GTA COMMUNITY HUB
+              </span>
+            </div>
+          </a>
+          <div class="hidden sm:flex items-center ml-2 pl-3 border-l border-white/10">
+            <span class="author-glitch" data-text="M3NSI">M3NSI</span>
+          </div>
+        </div>
+
+        <!-- Desktop Navigation Links -->
+        <div class="hidden md:flex items-center gap-5">
+          <a href="/#clips" class="nav-link">Klipy</a>
+          <a href="/#servers" class="nav-link">Serwery</a>
+          <a href="/#streamers" class="nav-link">Streamerzy</a>
+          <a href="/gta6" class="nav-link nav-link-gta6 flex items-center gap-1.5 font-bold text-neon-pink active">
+            <span class="hud-pill hud-pill-pink text-[9px] px-1.5 py-0.5">VI</span>
+            <span>GTA VI</span>
+          </a>
+          <a href="/#toolkit" class="nav-link">RP Toolkit</a>
+          <a href="/#about" class="nav-link">O Projekcie</a>
+          <a href="/#contact" class="nav-link flex items-center gap-1.5 text-slate-300 hover:text-neon-cyan transition-colors">
+            <i data-lucide="mail" class="w-3.5 h-3.5 text-neon-cyan"></i>
+            <span>Kontakt</span>
+          </a>
+          <a href="/#servers" class="btn-primary text-sm py-2 px-4">
+            <i data-lucide="server" class="w-4 h-4"></i>
+            Katalog Serwerów
+          </a>
+
+          <!-- Socials -->
+          <div class="flex items-center gap-2 pl-2 border-l border-white/10">
+            <a href="https://discord.gg/nwXxZybY9R" target="_blank" rel="noopener noreferrer" class="nav-icon-btn nav-icon-discord" title="Dołącz do Discorda VIRP.pl" aria-label="Discord VIRP.pl">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
+            </a>
+            <a href="https://buycoffee.to/m3nsi" target="_blank" rel="noopener noreferrer" class="nav-icon-btn nav-icon-coffee" title="Postaw kawę dla twórcy (buycoffee.to/m3nsi)" aria-label="Postaw kawę">
+              <i data-lucide="coffee" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-btn" class="md:hidden btn-icon" aria-label="Menu mobilne">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="mobile-menu hidden md:hidden bg-[#0D111D] border-t border-white/10 px-4 py-4 space-y-3">
+      <a href="/#clips" class="block py-2 nav-link">Klipy</a>
+      <a href="/#servers" class="block py-2 nav-link">Serwery</a>
+      <a href="/#streamers" class="block py-2 nav-link">Streamerzy</a>
+      <a href="/gta6" class="block py-2 nav-link nav-link-gta6 flex items-center gap-2 text-neon-pink font-bold">
+        <span class="hud-pill hud-pill-pink text-[9px] px-1.5 py-0.5">VI</span>
+        <span>GTA VI Hub</span>
+      </a>
+      <a href="/#toolkit" class="block py-2 nav-link">RP Toolkit</a>
+      <a href="/#about" class="block py-2 nav-link">O Projekcie</a>
+      <a href="https://discord.gg/nwXxZybY9R" target="_blank" rel="noopener noreferrer" class="btn-primary w-full text-center py-2.5 flex items-center justify-center gap-2">
+        <i data-lucide="message-square" class="w-4 h-4"></i>
+        <span>Dołącz do Discorda</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO & HUD HEADER (GTA VI LEONIDA)
+       ============================================================ -->
+  <header class="relative pt-12 pb-16 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(255,31,125,0.18),transparent_70%)]"></div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+      <!-- Breadcrumbs -->
+      <nav class="flex items-center gap-2 text-xs font-mono text-slate-400 mb-6" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-neon-cyan transition-colors">VIRP.pl</a>
+        <span>/</span>
+        <span class="text-neon-pink font-bold">GTA 6 RP</span>
+      </nav>
+
+      <!-- Badge statusu -->
+      <div class="flex items-center gap-2 mb-4 flex-wrap">
+        <span class="hud-pill hud-pill-pink text-[11px] font-mono font-bold uppercase tracking-wider py-1 px-3">
+          <span class="w-2 h-2 rounded-full bg-neon-pink animate-pulse inline-block mr-1.5"></span>
+          STAN LEONIDA // VICE CITY 2026
+        </span>
+        <span class="hud-pill hud-pill-cyan text-[11px] font-mono font-bold uppercase tracking-wider py-1 px-3">
+          OFICJALNY HUB SPOŁECZNOŚCI
+        </span>
+      </div>
+
+      <!-- H1 Główny Tytuł SEO -->
+      <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-wide uppercase leading-none mb-6">
+        POLSKIE CENTRUM <span class="gradient-text">GTA 6 ROLEPLAY</span>
+      </h1>
+
+      <p class="text-base sm:text-lg text-slate-300 font-mono leading-relaxed max-w-3xl mb-8">
+        Gdy tylko Rockstar Games wyda Grand Theft Auto VI, <strong class="text-white">VIRP.pl stanie się głównym polskim katalogiem serwerów GTA 6 Online i Vice City Roleplay</strong>. Poznaj szczegóły nowej ery RP, śledź zapowiedzi polskich projektów i dołącz do społeczności tworzącej historię w stanie Leonida!
+      </p>
+
+      <!-- Przyciski CTA Hero -->
+      <div class="flex flex-wrap items-center gap-4 mb-12">
+        <a href="https://discord.gg/nwXxZybY9R" target="_blank" rel="noopener noreferrer" class="btn-primary text-sm py-3 px-6 shadow-xl shadow-pink-500/25 flex items-center gap-2.5 font-bold">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+          <span>Dołącz do Discorda GTA 6 RP</span>
+        </a>
+        <a href="/#servers" class="btn-secondary text-sm py-3 px-6 flex items-center gap-2">
+          <i data-lucide="compass" class="w-4 h-4 text-neon-cyan"></i>
+          <span>Przeglądaj Serwery GTA V</span>
+        </a>
+        <a href="https://discord.gg/nwXxZybY9R" target="_blank" rel="noopener noreferrer" class="btn-ghost text-sm py-3 px-5 border border-white/20 hover:border-neon-pink text-slate-300 hover:text-white flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-neon-pink"></i>
+          <span>Zgłoś Projekt Serwera GTA 6</span>
+        </a>
+      </div>
+
+      <!-- Pasek Telemetrii GTA VI -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-8">
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">LOKALIZACJA</span>
+          <div class="streamer-stat-value text-neon-pink">VICE CITY &amp; LEONIDA</div>
+        </div>
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">PREMIERA</span>
+          <div class="streamer-stat-value text-neon-amber">19 LISTOPADA 2026</div>
+        </div>
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">PLATFORMA MODÓW</span>
+          <div class="streamer-stat-value text-neon-cyan">EKOSYSTEM CFX.RE</div>
+        </div>
+        <div class="streamer-stat-card">
+          <span class="streamer-stat-label">PORTAL VIRP</span>
+          <div class="streamer-stat-value text-status-green flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-status-green animate-ping"></span>
+            <span>GOTOWY NA PREMIERĘ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wielki Baner z Vice City Skyline -->
+      <div class="relative rounded-2xl overflow-hidden border border-pink-500/30 shadow-2xl mb-16 bg-[#0a0d16]">
+        <div class="relative h-80 sm:h-96 w-full overflow-hidden">
+          <img src="img/gta6-vice-city.jpg" alt="GTA VI Vice City Panorama i Skyline" class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0a0d16] via-[#0a0d16]/60 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-[#0a0d16]/95 via-[#0a0d16]/50 to-transparent"></div>
+          
+          <div class="absolute bottom-6 left-6 right-6 max-w-3xl">
+            <div class="flex items-center gap-2 mb-2 flex-wrap">
+              <span class="hud-pill hud-pill-pink text-[10px] uppercase tracking-widest font-bold">LEONIDA ONLINE 2026</span>
+              <span class="hud-pill hud-pill-cyan text-[10px] uppercase tracking-widest font-bold">NEXT-GEN ROLEPLAY</span>
+            </div>
+            <h2 class="font-display text-2xl sm:text-4xl font-black text-white tracking-wide uppercase leading-tight mb-2">
+              REWOLUCJA POLSKIEGO ROLEPLAYU W <span class="gradient-text">VICE CITY</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-200 font-mono leading-relaxed max-w-2xl">
+              Ogromna metropolia Vice City, autentyczne bagna Grassrivers, wyspy Keys, zaawansowane zachowania przechodniów i fizyka pojazdów RAGE nowej generacji otwierają przed nami możliwości fabularne, o jakich do tej pory mogliśmy tylko marzyć.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           SEKCJA 1: CO ZMIENI GTA VI W ŚWIECIE ROLEPLAY?
+           ============================================================ -->
+      <section class="mb-20">
+        <div class="text-center mb-12">
+          <span class="hud-pill hud-pill-cyan text-xs font-mono uppercase tracking-widest px-3 py-1 mb-3 inline-block">
+            INNOWACJE &amp; MECHANIKI
+          </span>
+          <h2 class="font-display text-3xl sm:text-4xl font-black text-white uppercase tracking-wider">
+            CO ZMIENI <span class="gradient-text">GTA VI RP</span>?
+          </h2>
+          <p class="text-slate-400 font-mono text-xs sm:text-sm max-w-2xl mx-auto mt-2">
+            Technologiczny skok od GTA V do GTA VI to nie tylko grafika — to fundamenty pod zupełnie nową generację serwerów społecznościowych.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Karta 1 -->
+          <div class="glass-card p-6 flex flex-col justify-between border-t-2 border-t-neon-pink">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-neon-pink/15 flex items-center justify-center text-neon-pink mb-4">
+                <i data-lucide="cpu" class="w-6 h-6"></i>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white uppercase mb-2">Oficjalne Wsparcie Cfx.re</h3>
+              <p class="text-xs text-slate-300 font-mono leading-relaxed">
+                Po przejęciu FiveM przez Rockstar Games, dedykowane serwery GTA VI będą od początku projektowane w oparciu o oficjalne API, co zagwarantuje wyższą stabilność, brak crashy i zabezpieczenia anty-cheat.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/10 text-[10px] font-mono text-neon-pink font-bold">
+              // OFICJALNY EKOSYSTEM
+            </div>
+          </div>
+
+          <!-- Karta 2 -->
+          <div class="glass-card p-6 flex flex-col justify-between border-t-2 border-t-neon-cyan">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-neon-cyan/15 flex items-center justify-center text-neon-cyan mb-4">
+                <i data-lucide="map" class="w-6 h-6"></i>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white uppercase mb-2">Żywy Stan Leonida</h3>
+              <p class="text-xs text-slate-300 font-mono leading-relaxed">
+                Ogromna, zróżnicowana mapa: od neonowych wieżowców Vice City, przez luksusowe rezydencje Starfish Island, aż po dzikie mokradła i małe miasteczka idealne pod fabularne odgrywanie szeryfa czy bimbrownika.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/10 text-[10px] font-mono text-neon-cyan font-bold">
+              // 2.5X WIĘKSZA MAPA
+            </div>
+          </div>
+
+          <!-- Karta 3 -->
+          <div class="glass-card p-6 flex flex-col justify-between border-t-2 border-t-neon-amber">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-neon-amber/15 flex items-center justify-center text-neon-amber mb-4">
+                <i data-lucide="shield" class="w-6 h-6"></i>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white uppercase mb-2">Frakcje Nowej Ery</h3>
+              <p class="text-xs text-slate-300 font-mono leading-relaxed">
+                Policja VCPD z dynamicznymi bazami danych i kamerami miejskimi, rozbudowane frakcje medyczne EMS z zaawansowaną anatomią, oraz kartele narkotykowe z własną logistyką wodną i lotniczą.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/10 text-[10px] font-mono text-neon-amber font-bold">
+              // ZAAWANSOWANE FRAKCJE
+            </div>
+          </div>
+
+          <!-- Karta 4 -->
+          <div class="glass-card p-6 flex flex-col justify-between border-t-2 border-t-status-green">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-status-green/15 flex items-center justify-center text-status-green mb-4">
+                <i data-lucide="sparkles" class="w-6 h-6"></i>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white uppercase mb-2">Immersja i Mimika</h3>
+              <p class="text-xs text-slate-300 font-mono leading-relaxed">
+                Fotorealistyczna animacja twarzy, dynamiczna fizyka ubrań i włosów oraz responsywne otoczenie sprawią, że interakcje głosowe w voice chat staną się naturalne jak w hollywoodzkim filmie.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/10 text-[10px] font-mono text-status-green font-bold">
+              // FOTOREALISTYCZNA MIMIKA
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SEKCJA 2: STREFA DLA TWÓRCÓW & POLSKICH PROJEKTÓW
+           ============================================================ -->
+      <section class="mb-20">
+        <div class="rounded-2xl bg-gradient-to-br from-[#0e1424] via-[#090d16] to-[#120818] border border-cyan-500/30 p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+          <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-neon-cyan/10 blur-3xl pointer-events-none"></div>
+          
+          <div class="max-w-3xl">
+            <span class="hud-pill hud-pill-cyan text-xs font-mono uppercase tracking-wider mb-4 inline-block">
+              DLA WŁAŚCICIELI I DEVELOPERÓW
+            </span>
+            <h2 class="font-display text-3xl sm:text-5xl font-black text-white uppercase tracking-wider mb-4 leading-tight">
+              TWORZYSZ POLSKI SERWER <span class="gradient-text">GTA 6 ROLEPLAY</span>?
+            </h2>
+            <p class="text-slate-300 font-mono text-xs sm:text-sm leading-relaxed mb-8">
+              Jesteś właścicielem działającego projektu na FiveM/RAGE, czy budujesz zupełnie nowy serwer dedykowany pod GTA VI? Na VIRP.pl otrzymasz bezpłatną wizytówkę w rankingu, możliwość promocji naboru do frakcji oraz bezpośredni dostęp do tysięcy polskich graczy czekających na premierę.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4">
+              <a href="https://discord.gg/nwXxZybY9R" target="_blank" rel="noopener noreferrer" class="btn-primary text-sm py-3 px-6 flex items-center gap-2">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span>Zgłoś Swój Projekt Serwera GTA 6</span>
+              </a>
+              <a href="/#about" class="btn-secondary text-sm py-3 px-6">
+                <span>Dowiedz się więcej o VIRP.pl</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SEKCJA 3: GRAJ TERAZ — POLSKIE SERWERY GTA V RP
+           ============================================================ -->
+      <section class="mb-20">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-white/10 pb-4">
+          <div>
+            <span class="hud-pill hud-pill-green text-xs font-mono uppercase tracking-wider mb-2 inline-block">
+              DOSTĘPNE JUŻ DZIŚ
+            </span>
+            <h2 class="font-display text-2xl sm:text-3xl font-black text-white uppercase tracking-wider">
+              CZEKAJĄC NA PREMIERĘ — GRAJ W <span class="text-neon-cyan">GTA V RP</span>
+            </h2>
+            <p class="text-slate-400 font-mono text-xs mt-1">
+              Topowe polskie serwery FiveM i RAGE:MP z aktualną liczbą graczy na żywo.
+            </p>
+          </div>
+          <a href="/#servers" class="btn-secondary text-xs py-2.5 px-5 flex items-center gap-2 self-start sm:self-auto">
+            <span>Pełny Ranking Serwerów</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Karta Serwera 1: 77RP -->
+          <div class="glass-card p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="hud-pill hud-pill-pink text-[10px]">FIVEM RP</span>
+                <span class="font-mono text-xs text-status-green font-bold flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-status-green animate-pulse"></span> ONLINE
+                </span>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white mb-1">77 Roleplay</h3>
+              <p class="text-xs text-slate-400 font-mono line-clamp-2 mb-4">
+                Jeden z najpopularniejszych polskich serwerów Voice RP z zaawansowaną ekonomią i dedykowanymi frakcjami.
+              </p>
+            </div>
+            <a href="/#servers" class="text-xs font-mono text-neon-cyan hover:underline flex items-center gap-1">
+              <span>Zobacz szczegóły i statystyki na żywo</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+
+          <!-- Karta Serwera 2: Strefa RP -->
+          <div class="glass-card p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="hud-pill hud-pill-pink text-[10px]">FIVEM RP</span>
+                <span class="font-mono text-xs text-status-green font-bold flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-status-green animate-pulse"></span> ONLINE
+                </span>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white mb-1">Strefa RP</h3>
+              <p class="text-xs text-slate-400 font-mono line-clamp-2 mb-4">
+                Legenda polskiej sceny Roleplay. Dynamiczny świat, autorskie skrypty i tysiące graczy każdego dnia.
+              </p>
+            </div>
+            <a href="/#servers" class="text-xs font-mono text-neon-cyan hover:underline flex items-center gap-1">
+              <span>Zobacz szczegóły i statystyki na żywo</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+
+          <!-- Karta Serwera 3: V-RP -->
+          <div class="glass-card p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="hud-pill hud-pill-cyan text-[10px]">RAGE:MP // TEXT RP</span>
+                <span class="font-mono text-xs text-status-green font-bold flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-status-green animate-pulse"></span> ONLINE
+                </span>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white mb-1">V-Roleplay</h3>
+              <p class="text-xs text-slate-400 font-mono line-clamp-2 mb-4">
+                Największy polski serwer Text Roleplay na platformie RAGE:MP z naciskiem na głęboką kreację postaci i wątków fabularnych.
+              </p>
+            </div>
+            <a href="/#servers" class="text-xs font-mono text-neon-cyan hover:underline flex items-center gap-1">
+              <span>Zobacz szczegóły i statystyki na żywo</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SEKCJA 4: FAQ — NAJCZĘSTSZE PYTANIA O GTA 6 RP
+           ============================================================ -->
+      <section class="mb-20">
+        <div class="text-center mb-12">
+          <span class="hud-pill hud-pill-pink text-xs font-mono uppercase tracking-widest px-3 py-1 mb-3 inline-block">
+            PYTANIA &amp; ODPOWIEDZI
+          </span>
+          <h2 class="font-display text-3xl sm:text-4xl font-black text-white uppercase tracking-wider">
+            FAQ — <span class="gradient-text">GTA 6 RP</span>
+          </h2>
+          <p class="text-slate-400 font-mono text-xs sm:text-sm max-w-xl mx-auto mt-2">
+            Wszystko, co musisz wiedzieć o nadchodzącej premierze i scenie Roleplay w stanie Leonida.
+          </p>
+        </div>
+
+        <div class="space-y-4 max-w-4xl mx-auto">
+          <!-- FAQ 1 -->
+          <div class="glass-card p-6 border-l-4 border-l-neon-pink">
+            <h3 class="font-display text-lg sm:text-xl font-bold text-white uppercase mb-2 flex items-center gap-2">
+              <i data-lucide="help-circle" class="w-5 h-5 text-neon-pink flex-shrink-0"></i>
+              <span>Czy w GTA 6 powstaną serwery Roleplay na wzór FiveM?</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 font-mono leading-relaxed">
+              Zdecydowanie tak! Rockstar Games oficjalnie wchłonął zespół stojący za FiveM (Cfx.re), a oficjalnym celem tej współpracy jest wsparcie dedykowanych serwerów społecznościowych w nowej generacji GTA. GTA VI powstaje z pełną świadomością ogromu fenomenu roleplayu.
+            </p>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="glass-card p-6 border-l-4 border-l-neon-cyan">
+            <h3 class="font-display text-lg sm:text-xl font-bold text-white uppercase mb-2 flex items-center gap-2">
+              <i data-lucide="help-circle" class="w-5 h-5 text-neon-cyan flex-shrink-0"></i>
+              <span>Kiedy odbędzie się premiera GTA 6 i kiedy wystartują serwery RP?</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 font-mono leading-relaxed">
+              Premiera GTA 6 zapowiedziana jest na <strong>jesień 2026 roku</strong> (listopad 2026) na konsolach PlayStation 5 oraz Xbox Series X/S. Wersja PC zadebiutuje w późniejszym terminie i to wraz z nią wystartują pierwsze pełnoprawne polskie serwery modyfikowane.
+            </p>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="glass-card p-6 border-l-4 border-l-neon-amber">
+            <h3 class="font-display text-lg sm:text-xl font-bold text-white uppercase mb-2 flex items-center gap-2">
+              <i data-lucide="help-circle" class="w-5 h-5 text-neon-amber flex-shrink-0"></i>
+              <span>Gdzie będzie toczyć się akcja gry?</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 font-mono leading-relaxed">
+              Miejscem akcji jest stan Leonida — odpowiednik Florydy. Serce mapy to Vice City, a otaczają je bagna Grassrivers, Port Gellhorn oraz tropikalny archipelag wysp Keys. Mapa ma być ponad dwukrotnie większa niż Los Santos z GTA V.
+            </p>
+          </div>
+
+          <!-- FAQ 4 -->
+          <div class="glass-card p-6 border-l-4 border-l-status-green">
+            <h3 class="font-display text-lg sm:text-xl font-bold text-white uppercase mb-2 flex items-center gap-2">
+              <i data-lucide="help-circle" class="w-5 h-5 text-status-green flex-shrink-0"></i>
+              <span>Jak zapisać się na Whitelistę polskich serwerów GTA 6?</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 font-mono leading-relaxed">
+              Na VIRP.pl znajdziesz oficjalny katalog polskich serwerów GTA 6. Gdy projekty uruchomią rekrutacje, na profilu każdego serwera pojawi się bezpośredni link do składania podań na Whitelistę oraz dołączenia do ich oficjalnego Discorda.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SEKCJA 5: CALL TO ACTION (DISCORD SPOŁECZNOŚCI)
+           ============================================================ -->
+      <section class="mb-12">
+        <div class="rounded-2xl p-8 sm:p-12 text-center bg-gradient-to-r from-pink-950/40 via-purple-950/30 to-cyan-950/40 border border-pink-500/30 shadow-2xl relative">
+          <div class="w-16 h-16 rounded-2xl bg-[#5865F2]/20 border border-[#5865F2]/40 text-[#5865F2] flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/20">
+            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+            </svg>
+          </div>
+          <h2 class="font-display text-3xl sm:text-5xl font-black text-white uppercase tracking-wider mb-3">
+            BĄDŹ CZĘŚCIĄ <span class="gradient-text">HISTORII RP</span>
+          </h2>
+          <p class="text-slate-300 font-mono text-xs sm:text-sm max-w-xl mx-auto mb-8 leading-relaxed">
+            Dołącz do oficjalnego Discorda VIRP.pl i dyskutuj z polską społecznością o zapowiedziach GTA VI, przeciekach, projektach serwerów i nowościach!
+          </p>
+          <a href="https://discord.gg/nwXxZybY9R" target="_blank" rel="noopener noreferrer" class="btn-primary text-sm py-3.5 px-8 shadow-2xl shadow-indigo-500/30 font-bold inline-flex items-center gap-2">
+            <span>Dołącz do Discorda VIRP.pl</span>
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </section>
+
+      <!-- Nota prawna / Disclaimer -->
+      <div class="p-5 rounded-xl bg-[#0d121f]/70 border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 flex-shrink-0 mt-0.5">
+            <i data-lucide="info" class="w-4 h-4"></i>
+          </div>
+          <p class="text-[11px] text-slate-400 font-mono leading-relaxed">
+            VIRP.pl jest niezależnym portalem fanowskim i nie jest powiązany z Rockstar Games, Take-Two Interactive ani marką Grand Theft Auto. Wszystkie znaki towarowe i materiały graficzne należą do ich właścicieli.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer bg-[#06080F] border-t border-white/10 py-12 text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="logo-badge-vi">
+              <span class="logo-text-vi">VI</span>
+              <div class="logo-scanlines"></div>
+            </div>
+            <span class="font-display text-xl font-bold text-white tracking-wider">
+              VIRP<span class="text-neon-pink">.PL</span>
+            </span>
+          </div>
+          <p class="text-xs font-mono text-slate-400 leading-relaxed">
+            Największy polski katalog i hub serwerów GTA Roleplay. Od FiveM i RAGE:MP po nadchodzące GTA 6 w stanie Leonida.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-white mb-3 text-sm uppercase tracking-wider font-mono">Nawigacja</h4>
+          <ul class="space-y-2 text-xs font-mono">
+            <li><a href="/#clips" class="hover:text-white transition-colors">Top Klipy Społeczności</a></li>
+            <li><a href="/#servers" class="hover:text-white transition-colors">Katalog Serwerów GTA V</a></li>
+            <li><a href="/#streamers" class="hover:text-white transition-colors">Streamerzy &amp; Media</a></li>
+            <li><a href="/gta6" class="text-neon-pink hover:underline font-bold">GTA 6 RP Leonida Hub</a></li>
+            <li><a href="/#toolkit" class="hover:text-white transition-colors">RP Toolkit</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-white mb-3 text-sm uppercase tracking-wider font-mono">Społeczność</h4>
+          <ul class="space-y-2 text-xs font-mono">
+            <li><a href="https://discord.gg/nwXxZybY9R" target="_blank" rel="noopener noreferrer" class="text-[#5865F2] hover:underline flex items-center gap-1.5"><i data-lucide="message-square" class="w-3.5 h-3.5"></i> Oficjalny Discord</a></li>
+            <li><a href="https://buycoffee.to/m3nsi" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:underline flex items-center gap-1.5"><i data-lucide="coffee" class="w-3.5 h-3.5"></i> Wesprzyj Projekt</a></li>
+            <li><a href="/#contact" class="hover:text-white transition-colors flex items-center gap-1.5"><i data-lucide="mail" class="w-3.5 h-3.5 text-neon-cyan"></i> Kontakt &amp; Reklama</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-white mb-3 text-sm uppercase tracking-wider font-mono">Autor</h4>
+          <p class="text-xs font-mono text-slate-400 leading-relaxed mb-3">
+            Projekt i rozwój: <strong class="text-white">M3NSI</strong>.
+          </p>
+          <span class="hud-pill hud-pill-pink text-[10px] font-mono">VIRP.pl v1.2.2</span>
+        </div>
+      </div>
+
+      <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
+        <p>&copy; 2026 VIRP.pl. Wszelkie prawa zastrzeżone.</p>
+        <div class="flex items-center gap-4">
+          <a href="/" class="hover:text-slate-300 transition-colors">Strona Główna</a>
+          <span>•</span>
+          <a href="/gta6" class="text-neon-pink hover:underline">GTA 6 Hub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Inicjalizacja Ikon i Menu Mobilnego -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+
+      // Mobilne menu toggle
+      const menuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
