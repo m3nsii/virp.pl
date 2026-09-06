@@ -1,0 +1,18 @@
+# Środowisko deweloperskie i edytory lokalne
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Wewnętrzny backend i notatki projektowe (przechowywane wyłącznie lokalnie)
+backend/
+notes/
+
+# Systemowe pliki tymczasowe i logi
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini
