@@ -15,6 +15,7 @@ const StreamersHub = {
   userVotedClips: new Set(),
   isOpen: false,
   WORKER_API_URL: 'https://virp-proxy.chojmarcel.workers.dev/api/streamers',
+  FEATURED_TWITCH_CLIPS: ['pago3', 'banduracartel', 'mrdzinold'],
 
   async init() {
     this.portal = document.getElementById('streamers-portal');
@@ -113,6 +114,7 @@ const StreamersHub = {
       params.set('logins', allLogins.join(','));
       if (twitchLogins.length > 0) params.set('twitch', twitchLogins.join(','));
       if (kickLogins.length > 0) params.set('kick', kickLogins.join(','));
+      params.set('clips', this.FEATURED_TWITCH_CLIPS.join(','));
 
       const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
       const timeoutId = controller ? setTimeout(() => controller.abort(), 12000) : null;
@@ -155,6 +157,16 @@ const StreamersHub = {
           this.applyFilters();
           if (typeof lucide !== 'undefined' && this.portal) lucide.createIcons({ root: this.portal });
         }
+      }
+      if (data && Array.isArray(data.clips)) {
+        const localVotes = new Map(this.clips.map(clip => [clip.id, clip.votes || 0]));
+        const remoteClips = data.clips.map(clip => ({
+          ...clip,
+          votes: localVotes.get(clip.id) || 0
+        }));
+        this.clips = remoteClips;
+        this.syncLocalClipVotes();
+        if (this.isOpen) this.renderClips();
       }
     } catch (err) {
       console.warn('[StreamersHub] Statusy live z Workera chwilowo niedostępne:', err);
