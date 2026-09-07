@@ -59,8 +59,7 @@ body::before {
   background-size: 100% 4px, 6px 100%;
   pointer-events: none;
   opacity: 0.6;
-  transform: translateZ(0);
-  will-change: transform;
+  contain: strict;
 }
 
 /* Ścięte rogi w stylu HUD */
@@ -133,20 +132,20 @@ body::before {
 }
 
 @keyframes glitch-anim-1 {
-  0% { clip-path: inset(20% 0 60% 0); transform: skew(0.3deg); }
-  20% { clip-path: inset(80% 0 5% 0); transform: skew(-0.2deg); }
-  40% { clip-path: inset(10% 0 85% 0); transform: skew(0.5deg); }
-  60% { clip-path: inset(40% 0 40% 0); transform: skew(-0.3deg); }
-  80% { clip-path: inset(70% 0 15% 0); transform: skew(0.1deg); }
-  100% { clip-path: inset(25% 0 55% 0); transform: skew(0deg); }
+  0% { transform: translate(0, 0) skewX(0.3deg); opacity: 0.85; }
+  20% { transform: translate(-1.5px, 0.5px) skewX(-0.2deg); opacity: 0.95; }
+  40% { transform: translate(1px, -0.5px) skewX(0.4deg); opacity: 0.75; }
+  60% { transform: translate(-1px, 0) skewX(-0.3deg); opacity: 0.9; }
+  80% { transform: translate(1.5px, 0.5px) skewX(0.1deg); opacity: 0.95; }
+  100% { transform: translate(0, 0) skewX(0deg); opacity: 0.85; }
 }
 
 @keyframes glitch-anim-2 {
-  0% { clip-path: inset(10% 0 70% 0); transform: skew(-0.3deg); }
-  25% { clip-path: inset(60% 0 20% 0); transform: skew(0.4deg); }
-  50% { clip-path: inset(30% 0 50% 0); transform: skew(-0.1deg); }
-  75% { clip-path: inset(85% 0 5% 0); transform: skew(0.2deg); }
-  100% { clip-path: inset(15% 0 65% 0); transform: skew(0deg); }
+  0% { transform: translate(0, 0) skewX(-0.3deg); opacity: 0.75; }
+  25% { transform: translate(1.5px, -0.5px) skewX(0.3deg); opacity: 0.9; }
+  50% { transform: translate(-1px, 0.5px) skewX(-0.1deg); opacity: 0.7; }
+  75% { transform: translate(1px, 0) skewX(0.2deg); opacity: 0.95; }
+  100% { transform: translate(0, 0) skewX(0deg); opacity: 0.75; }
 }
 
 /* Przyciski HUD */
@@ -212,7 +211,10 @@ body::before {
   border-bottom: var(--border-tech);
   transition: box-shadow 0.3s ease;
   transform: translateZ(0);
-  will-change: transform;
+}
+
+.nav-glass.nav-scrolled {
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.45);
 }
 
 .nav-link {
@@ -331,12 +333,12 @@ body::before {
 }
 
 @keyframes glitch-anim-fast {
-  0% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 0); }
-  20% { clip-path: inset(80% 0 5% 0); transform: translate(1px, 0); }
-  40% { clip-path: inset(30% 0 50% 0); transform: translate(-1px, 0); }
-  60% { clip-path: inset(60% 0 20% 0); transform: translate(1px, 0); }
-  80% { clip-path: inset(15% 0 65% 0); transform: translate(0, 0); }
-  100% { clip-path: inset(45% 0 35% 0); transform: translate(-1px, 0); }
+  0% { transform: translate(-1px, 0) skewX(0.2deg); opacity: 0.9; }
+  20% { transform: translate(1px, 0) skewX(-0.2deg); opacity: 0.7; }
+  40% { transform: translate(-0.5px, 0) skewX(0.3deg); opacity: 0.85; }
+  60% { transform: translate(1px, 0) skewX(-0.1deg); opacity: 0.65; }
+  80% { transform: translate(0, 0) skewX(0deg); opacity: 0.9; }
+  100% { transform: translate(-1px, 0) skewX(0.2deg); opacity: 0.85; }
 }
 
 /* ============================================================
@@ -481,15 +483,14 @@ body::before {
     linear-gradient(to right, rgba(0, 240, 255, 0.15) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 31, 125, 0.15) 1px, transparent 1px);
   background-size: 50px 50px;
-  transform: rotateX(75deg) translateZ(0);
   transform-origin: 50% 100%;
   will-change: transform;
-  animation: move-grid 12s linear infinite;
+  animation: move-grid 2.5s linear infinite;
 }
 
 @keyframes move-grid {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 500px; }
+  0% { transform: rotateX(75deg) translateY(0) translateZ(0); }
+  100% { transform: rotateX(75deg) translateY(50px) translateZ(0); }
 }
 
 .hero-badge {
@@ -802,10 +803,10 @@ body::before {
   clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
   contain: content;
-  will-change: transform;
 }
 
 .hud-card:hover {
+  will-change: transform;
   border-color: #FF1F7D;
   transform: translateY(-4px);
   box-shadow: 0 12px 30px rgba(255, 31, 125, 0.25), inset 0 0 15px rgba(0, 240, 255, 0.05);
@@ -1188,7 +1189,8 @@ body::before {
 /* ============================================================
    TOOLKIT CARDS
    ============================================================ */
-.toolkit-card {\n  contain: content;\n  will-change: transform;
+.toolkit-card {
+  contain: content;
   background: var(--bg-panel);
   border: var(--border-tech);
   padding: 1.5rem;
@@ -1200,6 +1202,7 @@ body::before {
 }
 
 .toolkit-card:hover {
+  will-change: transform;
   border-color: rgba(0, 240, 255, 0.3);
   transform: translateY(-2px);
 }
@@ -2133,7 +2136,8 @@ input[type="range"]::-webkit-slider-thumb {
 /* ============================================================
    STREAMER HUD CARDS & PLATFORMS
    ============================================================ */
-.streamer-card {\n  contain: content;\n  will-change: transform;
+.streamer-card {
+  contain: content;
   background: var(--bg-panel);
   border: 1px solid rgba(0, 240, 255, 0.15);
   display: flex;
@@ -2144,6 +2148,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .streamer-card:hover {
+  will-change: transform;
   border-color: var(--neon-cyan);
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(0, 240, 255, 0.15);
@@ -2523,7 +2528,8 @@ input[type="range"]::-webkit-slider-thumb {
 /* ============================================================
    COMMUNITY CLIPS & HIGHLIGHTS
    ============================================================ */
-.clip-card {\n  contain: content;\n  will-change: transform;
+.clip-card {
+  contain: content;
   background: var(--bg-panel);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 6px;
@@ -2534,6 +2540,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .clip-card:hover {
+  will-change: transform;
   border-color: var(--neon-cyan);
   transform: translateY(-4px);
   box-shadow: 0 10px 25px rgba(0, 240, 255, 0.15);

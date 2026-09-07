@@ -162,21 +162,20 @@ const VIRP = {
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
 
-    // Sticky navbar shadow on scroll z throttlingiem requestAnimationFrame (brak Layout Thrashing)
-    let scrollTicking = false;
+    // Sticky navbar shadow: lekki toggle klasy nav-scrolled tylko przy przekroczeniu progu (0 forced reflows)
+    let isScrolled = false;
     window.addEventListener('scroll', () => {
-      if (!scrollTicking) {
-        window.requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-          if (navbar) {
-            navbar.style.boxShadow = scrollY > 10 ? '0 4px 30px rgba(0, 0, 0, 0.3)' : 'none';
-          }
-          this.updateActiveNavLink();
-          scrollTicking = false;
-        });
-        scrollTicking = true;
+      const scrolled = window.scrollY > 15;
+      if (scrolled !== isScrolled) {
+        isScrolled = scrolled;
+        if (navbar) {
+          navbar.classList.toggle('nav-scrolled', scrolled);
+        }
       }
     }, { passive: true });
+
+    // ScrollSpy oparty w 100% na natywnym IntersectionObserverze (brak odczytów layoutu w scrollu)
+    this.initScrollSpy();
 
     // Mobile menu toggle
     if (mobileMenuBtn && mobileMenu) {
@@ -243,49 +242,51 @@ const VIRP = {
   },
 
   /**
-   * Aktualizacja aktywnego linku nawigacji na podstawie pozycji scrolla
-   * Zoptymalizowana: throttling 150ms, cache elementów i eliminacja Forced Synchronous Layout
+   * ScrollSpy: w 100% asynchroniczny z użyciem IntersectionObserver
+   * 0 zapytań o layout (offsetTop/offsetHeight) w trakcie przewijania strony!
    */
-  _lastNavCheck: 0,
   _currentActiveNavId: '',
-  _navSectionsCache: null,
-  _navLinksCache: null,
+  _navObserver: null,
 
-  updateActiveNavLink() {
-    const now = performance.now();
-    if (now - this._lastNavCheck < 150) return;
-    this._lastNavCheck = now;
+  initScrollSpy() {
+    const navLinks = Array.from(document.querySelectorAll('.nav-link'));
+    if (!navLinks.length) return;
 
-    if (!this._navSectionsCache) {
-      this._navSectionsCache = Array.from(document.querySelectorAll('section[id]:not(.sr-only)'));
-    }
-    if (!this._navLinksCache) {
-      this._navLinksCache = Array.from(document.querySelectorAll('.nav-link'));
-    }
+    const sections = Array.from(document.querySelectorAll('section[id]:not(.sr-only)'));
+    if (!sections.length) return;
 
-    const scrollPos = window.scrollY + 140;
-    let currentId = '';
-
-    for (let i = 0; i < this._navSectionsCache.length; i++) {
-      const section = this._navSectionsCache[i];
-      const top = section.offsetTop;
-      const height = section.offsetHeight;
-      if (scrollPos >= top && scrollPos < top + height) {
-        currentId = section.getAttribute('id');
-        break;
+    if ('IntersectionObserver' in window) {
+      if (this._navObserver) {
+        this._navObserver.disconnect();
       }
-    }
 
-    if (currentId && currentId !== this._currentActiveNavId) {
-      this._currentActiveNavId = currentId;
-      this._navLinksCache.forEach(link => {
-        if (link.getAttribute('href') === `#${currentId}`) {
-          link.classList.add('active');
-        } else {
-          link.classList.remove('active');
-        }
+      this._navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            this.setActiveNavLink(id, navLinks);
+          }
+        });
+      }, {
+        rootMargin: '-15% 0px -65% 0px',
+        threshold: 0
       });
+
+      sections.forEach(sec => this._navObserver.observe(sec));
     }
+  },
+
+  setActiveNavLink(id, navLinks) {
+    if (!id || id === this._currentActiveNavId) return;
+    this._currentActiveNavId = id;
+    const links = navLinks || Array.from(document.querySelectorAll('.nav-link'));
+    links.forEach(link => {
+      if (link.getAttribute('href') === `#${id}`) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
   },
 
   /* ----------------------------------------------------------
