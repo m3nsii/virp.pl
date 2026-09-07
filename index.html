@@ -42,12 +42,52 @@
   <meta name="twitter:image" content="https://virp.pl/img/hero-vice.jpg">
   <meta name="twitter:image:alt" content="VIRP.pl — Hub Społeczności GTA Roleplay">
 
-  <!-- Motyw Przeglądarki i Favicon -->
+  <!-- Motyw Przeglądarki i Favicon (Zoptymalizowane pod Google Search, Bing & Urządzenia Mobilne) -->
   <meta name="theme-color" content="#FF1F7D">
   <meta name="msapplication-TileColor" content="#06080F">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/logo-vi.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="img/logo-vi.png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" sizes="48x48" href="/img/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/img/favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+
+  <!-- Structured Data: JSON-LD (WebSite & Organization with Official Logo for Google Search & Knowledge Graph) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://virp.pl/#website",
+        "url": "https://virp.pl/",
+        "name": "VIRP.pl",
+        "description": "Polski Hub Społeczności GTA, GTA VI & Serwerów Roleplay i Online",
+        "inLanguage": "pl-PL",
+        "publisher": {
+          "@id": "https://virp.pl/#organization"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://virp.pl/#organization",
+        "name": "VIRP.pl",
+        "url": "https://virp.pl/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://virp.pl/img/logo-512.png",
+          "width": 512,
+          "height": 512,
+          "caption": "VIRP.pl - Polski Hub Społeczności GTA Roleplay"
+        },
+        "image": "https://virp.pl/img/logo-512.png",
+        "sameAs": [
+          "https://discord.gg/nwXxZybY9R"
+        ]
+      }
+    ]
+  }
+  </script>
 
   <!-- Tailwind CSS (Play CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
