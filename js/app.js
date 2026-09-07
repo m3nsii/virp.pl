@@ -56,7 +56,7 @@ window.safeUrl = safeUrl;
  */
 const VIRP = {
   /** Wersja aplikacji */
-  version: '1.2.2',
+  version: '1.3.4',
 
   /** Czy aplikacja jest zainicjalizowana */
   initialized: false,

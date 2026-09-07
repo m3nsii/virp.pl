@@ -10,6 +10,7 @@
 # Wewnętrzny backend i notatki projektowe (przechowywane wyłącznie lokalnie)
 backend/
 notes/
+cloudflareworker/
 
 # Systemowe pliki tymczasowe i logi
 *.log

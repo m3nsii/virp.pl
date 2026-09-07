@@ -10,8 +10,10 @@ const ServerCatalog = {
   activeSort: 'votes',
   searchQuery: '',
   currentView: 'grid',
-  VOTE_PREFIX: 'virp_vote_',
-  VOTE_COOLDOWN: 24 * 60 * 60 * 1000,
+  VOTE_API_URL: 'https://virp-proxy.chojmarcel.workers.dev/api/votes',
+  remoteVotes: Object.create(null),
+  pendingVotes: new Set(),
+  votedServers: new Set(),
 
   debounce(fn, delay = 250) {
     let timer;
@@ -29,9 +31,38 @@ const ServerCatalog = {
       return;
     }
     this.bindEvents();
+    await this.loadRemoteVotes();
     this.applyFilters();
     this.initLiveTracking();
     this.updateHeroStats();
+  },
+
+  async loadRemoteVotes() {
+    const ids = this.servers.map(server => server.id).filter(Boolean);
+    if (!ids.length) return;
+
+    try {
+      const response = await fetch(`${this.VOTE_API_URL}?type=server&ids=${encodeURIComponent(ids.join(','))}`, {
+        headers: { Accept: 'application/json' }
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (!data || typeof data.votes !== 'object' || Array.isArray(data.votes)) {
+        throw new Error('Nieprawidłowa odpowiedź API głosów');
+      }
+      Object.entries(data.votes).forEach(([id, count]) => {
+        if (this.servers.some(server => server.id === id) && Number.isInteger(count) && count >= 0) {
+          this.remoteVotes[id] = count;
+        }
+      });
+      if (Array.isArray(data.voted)) {
+        data.voted.forEach(id => {
+          if (this.servers.some(server => server.id === id)) this.votedServers.add(id);
+        });
+      }
+    } catch (error) {
+      console.warn('[ServerCatalog] Głosy z serwera są chwilowo niedostępne:', error);
+    }
   },
 
   async fetchServers() {
@@ -218,7 +249,7 @@ const ServerCatalog = {
 
       switch (criteria) {
         case 'votes':
-          return ((parseInt(b.votes, 10) || 0) + this.getLocalVotes(b.id)) - ((parseInt(a.votes, 10) || 0) + this.getLocalVotes(a.id));
+          return this.getVoteCount(b) - this.getVoteCount(a);
         case 'slots':
           return (parseInt(b.slots, 10) || 0) - (parseInt(a.slots, 10) || 0);
         case 'newest': {
@@ -282,9 +313,8 @@ const ServerCatalog = {
     const safeWebsiteUrl = safeUrl(server.website);
     const safeDirect = sanitize(server.directConnect || '');
 
-    const hasVoted = this.hasVoted(server.id);
-    const localVotes = this.getLocalVotes(server.id);
-    const totalVotes = (parseInt(server.votes, 10) || 0) + localVotes;
+    const hasVoted = this.pendingVotes.has(server.id);
+    const totalVotes = this.getVoteCount(server);
     const serverNum = String(index + 1).padStart(2, '0');
 
     // Dedykowana odznaka kategorii HUD
@@ -475,8 +505,8 @@ const ServerCatalog = {
     const safePlatform = sanitize(String(server.platform || server.type || 'FIVEM').toUpperCase());
     const safeCategory = sanitize(String(server.category || 'ROLEPLAY').toUpperCase());
     const safeSlots = parseInt(server.slots, 10) || 0;
-    const hasVoted = this.hasVoted(server.id);
-    const safeVotes = (parseInt(server.votes, 10) || 0) + this.getLocalVotes(server.id);
+    const hasVoted = this.pendingVotes.has(server.id);
+    const safeVotes = this.getVoteCount(server);
     const safeDiscordUrl = safeUrl(server.discord);
     const safeDirect = sanitize(server.directConnect || '');
 
@@ -554,71 +584,49 @@ const ServerCatalog = {
     if (el) el.textContent = count;
   },
 
-  handleVote(serverId) {
-    if (this.hasVoted(serverId)) {
-      if (typeof VIRP !== 'undefined') VIRP.showToast('Już zagłosowałeś! Możesz ponownie za 24h.', 'info');
-      return;
-    }
+  async handleVote(serverId) {
+    const server = this.servers.find(item => item.id === serverId);
+    if (!server || this.pendingVotes.has(serverId)) return;
+
+    this.pendingVotes.add(serverId);
+    this.renderServers(this.filteredServers);
 
     try {
-      localStorage.setItem(this.VOTE_PREFIX + serverId, JSON.stringify({ timestamp: Date.now(), voted: true }));
-    } catch (_) {}
-
-    const safeSelectorId = window.CSS?.escape ? CSS.escape(serverId) : serverId;
-    const voteBtns = document.querySelectorAll(`[data-vote-btn="${safeSelectorId}"]`);
-    voteBtns.forEach(voteBtn => {
-      voteBtn.classList.add('voted');
-      voteBtn.disabled = true;
-
-      const server = this.servers.find(s => s.id === serverId);
-      if (server) {
-        const totalVotes = (parseInt(server.votes, 10) || 0) + this.getLocalVotes(serverId);
-        const span = voteBtn.querySelector('span');
-        if (span) {
-          span.textContent = totalVotes;
-        } else {
-          voteBtn.textContent = `✓ ${totalVotes}`;
+      const response = await fetch(this.VOTE_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ type: 'server', id: serverId })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error('Już zagłosowałeś. Możesz ponownie za 24h.');
         }
+        throw new Error(data.error || `HTTP ${response.status}`);
       }
-
-      const icon = voteBtn.querySelector('i, svg');
-      if (icon) {
-        icon.setAttribute('data-lucide', 'check');
-        if (typeof lucide !== 'undefined') lucide.createIcons({ root: voteBtn });
+      if (!Number.isInteger(data.votes) || data.votes < 0) {
+        throw new Error('Nieprawidłowa odpowiedź API głosów');
       }
-    });
-
-    if (this.currentView === 'table') {
+      this.remoteVotes[serverId] = data.votes;
+      this.votedServers.add(serverId);
+      if (typeof VIRP !== 'undefined') VIRP.showToast('Dziękujemy za głos! 🎮', 'success');
+    } catch (error) {
+      if (typeof VIRP !== 'undefined') VIRP.showToast(error.message || 'Nie udało się oddać głosu.', 'error');
+      if (error.message && error.message.includes('24h')) this.votedServers.add(serverId);
+    } finally {
+      this.pendingVotes.delete(serverId);
       this.renderServers(this.filteredServers);
+      this.updateHeroStats();
     }
+  },
 
-    if (typeof VIRP !== 'undefined') {
-      VIRP.showToast('Dziękujemy za głos! 🎮', 'success');
-    }
-    this.updateHeroStats();
+  getVoteCount(server) {
+    const remote = this.remoteVotes[server.id];
+    return Number.isInteger(remote) ? remote : (parseInt(server.votes, 10) || 0);
   },
 
   hasVoted(serverId) {
-    try {
-      const data = localStorage.getItem(this.VOTE_PREFIX + serverId);
-      if (!data) return false;
-      const voteData = JSON.parse(data);
-      if (!voteData || typeof voteData.timestamp !== 'number' || isNaN(voteData.timestamp)) {
-        localStorage.removeItem(this.VOTE_PREFIX + serverId);
-        return false;
-      }
-      if (Date.now() - voteData.timestamp >= this.VOTE_COOLDOWN) {
-        localStorage.removeItem(this.VOTE_PREFIX + serverId);
-        return false;
-      }
-      return voteData.voted === true;
-    } catch (_) {
-      return false;
-    }
-  },
-
-  getLocalVotes(serverId) {
-    return this.hasVoted(serverId) ? 1 : 0;
+    return this.pendingVotes.has(serverId) || this.votedServers.has(serverId);
   },
 
   /* ===========================================================
@@ -776,7 +784,7 @@ const ServerCatalog = {
       const live = this.liveStatusData[s.id];
       totalOnline += live ? live.online : (s.live?.basePlayers || 0);
     });
-    const totalVotes = this.servers.reduce((sum, s) => sum + (parseInt(s.votes, 10) || 0) + this.getLocalVotes(s.id), 0);
+    const totalVotes = this.servers.reduce((sum, s) => sum + this.getVoteCount(s), 0);
 
     if (typeof VIRP !== 'undefined' && VIRP.updateHeroStats) {
       VIRP.updateHeroStats({ servers: totalServers, slots: totalOnline, votes: totalVotes });
