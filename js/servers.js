@@ -260,24 +260,6 @@ const ServerCatalog = {
     grid.innerHTML = servers.map((server, index) => this.renderServerCard(server, index)).join('');
 
     if (typeof lucide !== 'undefined') lucide.createIcons({ root: grid });
-
-    // Anuluj poprzednie timery animacji (ochrona przed akumulacją timerów)
-    this._cardTimers = this._cardTimers || [];
-    this._cardTimers.forEach(t => clearTimeout(t));
-    this._cardTimers = [];
-
-    requestAnimationFrame(() => {
-      grid.querySelectorAll('.hud-card').forEach((card, i) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(16px)';
-        const timer = setTimeout(() => {
-          card.style.transition = 'opacity 0.35s ease-out, transform 0.35s ease-out';
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        }, i * 60);
-        this._cardTimers.push(timer);
-      });
-    });
   },
 
   /**

@@ -142,6 +142,7 @@ const VIRP = {
     this.initScrollAnimations();
     this.initSmoothScroll();
     this.initHeroStats();
+    this.initHeroGridOptimization();
     this.initRadioWidget();
     this.initGta6Portal();
     this.initContactModal();
@@ -481,6 +482,24 @@ const VIRP = {
     }, { threshold: 0.5 });
 
     observer.observe(statsSection);
+  },
+
+  /**
+   * Automatyczne wstrzymanie animacji siatki 3D, gdy sekcja Hero jest poza ekranem
+   * Oszczędza 100% obciążenia GPU podczas przeglądania katalogu i narzędzi!
+   */
+  initHeroGridOptimization() {
+    const heroSection = document.getElementById('hero');
+    const gridPlane = document.querySelector('.hero-grid-plane');
+    if (!heroSection || !gridPlane || !('IntersectionObserver' in window)) return;
+
+    const heroObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        gridPlane.classList.toggle('is-paused', !entry.isIntersecting);
+      });
+    }, { threshold: 0.02 });
+
+    heroObserver.observe(heroSection);
   },
 
   /**
