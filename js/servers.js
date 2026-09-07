@@ -83,7 +83,7 @@ const ServerCatalog = {
         <p class="empty-state-desc">Nie udało się pobrać listy serwerów.</p>
       </div>
     `;
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    if (typeof lucide !== 'undefined') lucide.createIcons({ root: grid });
   },
 
   bindEvents() {
@@ -483,7 +483,7 @@ const ServerCatalog = {
         </tbody>
       </table>
     `;
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    if (typeof lucide !== 'undefined') lucide.createIcons({ root: grid });
   },
 
   renderMtaServerRow(server) {
@@ -602,7 +602,7 @@ const ServerCatalog = {
       const icon = voteBtn.querySelector('i, svg');
       if (icon) {
         icon.setAttribute('data-lucide', 'check');
-        if (typeof lucide !== 'undefined') lucide.createIcons();
+        if (typeof lucide !== 'undefined') lucide.createIcons({ root: voteBtn });
       }
     });
 
@@ -651,7 +651,10 @@ const ServerCatalog = {
     this.refreshAllLiveStats();
     if (this._liveInterval) clearInterval(this._liveInterval);
     // Odświeżaj co 45 sekund
-    this._liveInterval = setInterval(() => this.refreshAllLiveStats(), 45000);
+    this._liveInterval = setInterval(() => {
+      if (document.hidden) return;
+      this.refreshAllLiveStats();
+    }, 45000);
   },
 
   async refreshAllLiveStats() {
@@ -665,6 +668,7 @@ const ServerCatalog = {
           new Promise(res => setTimeout(() => res(this.fetchServerLiveStats(s)), idx * 80))
         )
       );
+      this.updateHeroStats(); // Wywołane RAZ po aktualizacji wszystkich serwerów
     } finally {
       this._isRefreshing = false;
     }
@@ -743,7 +747,6 @@ const ServerCatalog = {
     };
 
     this.updateServerCardLiveUI(serverId, onlineCount, maxSlots, percent);
-    this.updateHeroStats();
   },
 
   calculateRealisticLivePlayers(server, maxSlots) {

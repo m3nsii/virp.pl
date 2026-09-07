@@ -166,6 +166,7 @@ const StreamersHub = {
   startLivePolling() {
     this.stopLivePolling();
     this._liveInterval = setInterval(() => {
+      if (document.hidden) return;
       if (this.isOpen) {
         this.fetchLiveStatusFromWorker();
       }
@@ -859,7 +860,7 @@ const StreamerApplicationModal = {
       if (firstInput) firstInput.focus();
     }, 200);
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    if (typeof lucide !== 'undefined') lucide.createIcons({ root: this.modal });
   },
 
   close() {
@@ -1162,7 +1163,7 @@ const ClipApplicationModal = {
       if (firstInput) firstInput.focus();
     }, 200);
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    if (typeof lucide !== 'undefined') lucide.createIcons({ root: this.modal });
   },
 
   close() {
@@ -1529,6 +1530,8 @@ const ClipViewerModal = {
     if (!this.modal) return;
     this.modal.classList.remove('open');
     if (this.containerEl) {
+      const iframe = this.containerEl.querySelector('iframe');
+      if (iframe) iframe.src = 'about:blank';
       this.containerEl.innerHTML = '';
     }
     const portal = document.getElementById('streamers-portal');

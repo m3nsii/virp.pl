@@ -451,7 +451,7 @@ const AddServerModal = {
           <i data-lucide="send" class="w-4 h-4 mr-2"></i>
           Wyślij do Weryfikacji
         `;
-        if (typeof lucide !== 'undefined') lucide.createIcons();
+        if (typeof lucide !== 'undefined') lucide.createIcons({ root: submitBtn });
       }
       if (typeof VIRP !== 'undefined' && typeof VIRP.resetTurnstile === 'function') {
         VIRP.resetTurnstile('turnstile-server-container');

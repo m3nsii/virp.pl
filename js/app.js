@@ -651,6 +651,13 @@ const VIRP = {
         if (spotifyContainer) spotifyContainer.classList.remove('hidden');
         if (expandArrow) expandArrow.classList.add('rotate-180');
 
+        // Lazy-load Spotify iframe: przenieś data-src → src przy pierwszym użyciu
+        const spotifyIframe = spotifyContainer?.querySelector('iframe[data-src]');
+        if (spotifyIframe && !spotifyIframe.src) {
+          spotifyIframe.src = spotifyIframe.getAttribute('data-src');
+          spotifyIframe.removeAttribute('data-src');
+        }
+
         // Wycisz stream w tle, gdy użytkownik wybiera Spotify
         if (bgAudio && !bgAudio.paused) {
           bgAudio.pause();
@@ -771,20 +778,19 @@ const VIRP = {
 
     if (volumeSlider && bgAudio) {
       volumeSlider.value = 0.2;
+      let _lastVolumeIconType = 'volume-2';
       volumeSlider.addEventListener('input', (e) => {
         const val = parseFloat(e.target.value);
         bgAudio.volume = val;
         if (val > 0) prevVolume = val;
         if (volumeVal) volumeVal.textContent = `${Math.round(val * 100)}%`;
         if (volumeIcon) {
-          if (val === 0) {
-            volumeIcon.setAttribute('data-lucide', 'volume-x');
-          } else if (val < 0.5) {
-            volumeIcon.setAttribute('data-lucide', 'volume-1');
-          } else {
-            volumeIcon.setAttribute('data-lucide', 'volume-2');
+          const iconType = val === 0 ? 'volume-x' : (val < 0.5 ? 'volume-1' : 'volume-2');
+          if (iconType !== _lastVolumeIconType) {
+            _lastVolumeIconType = iconType;
+            volumeIcon.setAttribute('data-lucide', iconType);
+            if (typeof lucide !== 'undefined' && muteBtn) lucide.createIcons({ root: muteBtn });
           }
-          if (typeof lucide !== 'undefined' && muteBtn) lucide.createIcons({ root: muteBtn });
         }
       });
     }

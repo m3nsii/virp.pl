@@ -68,7 +68,7 @@ const RPToolkit = {
     }
 
     // Reinitialize Lucide icons for new panel
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    if (typeof lucide !== 'undefined' && targetPanel) lucide.createIcons({ root: targetPanel });
   },
 
   /**
@@ -711,14 +711,21 @@ const RPToolkit = {
     const filename = `karta_id_leonida_${safeName}.png`;
 
     try {
-      const link = document.createElement('a');
-      link.download = filename;
-      link.href = canvas.toDataURL('image/png');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      VIRP.showToast(`Pobrano kartę ID: ${filename} 🖼️`, 'success');
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          VIRP.showToast('Błąd generowania obrazu.', 'error');
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        VIRP.showToast(`Pobrano kartę ID: ${filename} 🖼️`, 'success');
+      }, 'image/png');
     } catch (e) {
       console.warn('[RPToolkit] Błąd eksportu canvas ID:', e);
       VIRP.showToast('Nie udało się wyeksportować karty ID.', 'error');
@@ -781,75 +788,90 @@ const RPToolkit = {
         doc.setFontSize(15);
         doc.text('VIRP.PL', 190, 23, { align: 'right' });
 
-        // 2. Osadzenie Karty ID Canvas w PDF
-        if (canvas) {
-          const imgData = canvas.toDataURL('image/png');
-          doc.addImage(imgData, 'PNG', 15, 36, 180, 113);
-        }
+        const finishPdfGeneration = (imgData) => {
+          // 2. Osadzenie Karty ID w PDF
+          if (imgData) {
+            doc.addImage(imgData, 'PNG', 15, 36, 180, 113);
+          }
 
-        // 3. Treść podania i zbalansowanie postaci
-        let y = 158;
+          // 3. Treść podania i zbalansowanie postaci
+          let y = 158;
 
-        doc.setTextColor(0, 240, 255);
-        doc.setFontSize(11);
-        doc.text('1. DANE ORAZ ZBALANSOWANIE PSYCHIKI POSTACI', 15, y);
-        y += 7;
+          doc.setTextColor(0, 240, 255);
+          doc.setFontSize(11);
+          doc.text('1. DANE ORAZ ZBALANSOWANIE PSYCHIKI POSTACI', 15, y);
+          y += 7;
 
-        doc.setTextColor(200, 210, 230);
-        doc.setFontSize(8.5);
-        doc.text(`Imie i Nazwisko: ${cleanText(data.name)} | Wiek: ${data.age} lat | Plec: ${cleanText(data.gender)} | Pochodzenie: ${cleanText(data.origin)}`, 15, y);
-        y += 5.5;
-        doc.text(`Rola / Zawod: ${cleanText(data.job)}`, 15, y);
-        y += 5.5;
-        if (data.traits) { doc.text(`Zalety / Mocne strony: ${cleanText(data.traits)}`, 15, y); y += 5.5; }
-        if (data.flaws) { doc.text(`Wady charakteru: ${cleanText(data.flaws)}`, 15, y); y += 5.5; }
-        if (data.phobias) { doc.text(`Fobie i ograniczenia: ${cleanText(data.phobias)}`, 15, y); y += 5.5; }
-        if (data.features) { doc.text(`Znaki szczegolne: ${cleanText(data.features)}`, 15, y); y += 7; }
+          doc.setTextColor(200, 210, 230);
+          doc.setFontSize(8.5);
+          doc.text(`Imie i Nazwisko: ${cleanText(data.name)} | Wiek: ${data.age} lat | Plec: ${cleanText(data.gender)} | Pochodzenie: ${cleanText(data.origin)}`, 15, y);
+          y += 5.5;
+          doc.text(`Rola / Zawod: ${cleanText(data.job)}`, 15, y);
+          y += 5.5;
+          if (data.traits) { doc.text(`Zalety / Mocne strony: ${cleanText(data.traits)}`, 15, y); y += 5.5; }
+          if (data.flaws) { doc.text(`Wady charakteru: ${cleanText(data.flaws)}`, 15, y); y += 5.5; }
+          if (data.phobias) { doc.text(`Fobie i ograniczenia: ${cleanText(data.phobias)}`, 15, y); y += 5.5; }
+          if (data.features) { doc.text(`Znaki szczegolne: ${cleanText(data.features)}`, 15, y); y += 7; }
 
-        doc.setTextColor(0, 240, 255);
-        doc.setFontSize(11);
-        doc.text('2. HISTORIA POSTACI (BACKSTORY)', 15, y);
-        y += 7;
+          doc.setTextColor(0, 240, 255);
+          doc.setFontSize(11);
+          doc.text('2. HISTORIA POSTACI (BACKSTORY)', 15, y);
+          y += 7;
 
-        doc.setTextColor(220, 225, 235);
-        doc.setFontSize(8);
-        const splitBackstory = doc.splitTextToSize(cleanText(data.backstory) || '', 180);
-        
-        if (y + (splitBackstory.length * 4.2) > 275) {
-          doc.addPage();
-          doc.setFillColor(11, 15, 25);
-          doc.rect(0, 0, 210, 297, 'F');
-          y = 20;
-        }
-
-        doc.text(splitBackstory, 15, y);
-        y += (splitBackstory.length * 4.2) + 6;
-
-        if (data.goals) {
-          if (y > 255) {
+          doc.setTextColor(220, 225, 235);
+          doc.setFontSize(8);
+          const splitBackstory = doc.splitTextToSize(cleanText(data.backstory) || '', 180);
+          
+          if (y + (splitBackstory.length * 4.2) > 275) {
             doc.addPage();
             doc.setFillColor(11, 15, 25);
             doc.rect(0, 0, 210, 297, 'F');
             y = 20;
           }
-          doc.setTextColor(0, 240, 255);
-          doc.setFontSize(11);
-          doc.text('3. CELE I MOTYWACJE W MIESCIE', 15, y);
-          y += 7;
-          doc.setTextColor(220, 225, 235);
-          doc.setFontSize(8);
-          const splitGoals = doc.splitTextToSize(cleanText(data.goals) || '', 180);
-          doc.text(splitGoals, 15, y);
+
+          doc.text(splitBackstory, 15, y);
+          y += (splitBackstory.length * 4.2) + 6;
+
+          if (data.goals) {
+            if (y > 255) {
+              doc.addPage();
+              doc.setFillColor(11, 15, 25);
+              doc.rect(0, 0, 210, 297, 'F');
+              y = 20;
+            }
+            doc.setTextColor(0, 240, 255);
+            doc.setFontSize(11);
+            doc.text('3. CELE I MOTYWACJE W MIESCIE', 15, y);
+            y += 7;
+            doc.setTextColor(220, 225, 235);
+            doc.setFontSize(8);
+            const splitGoals = doc.splitTextToSize(cleanText(data.goals) || '', 180);
+            doc.text(splitGoals, 15, y);
+          }
+
+          // Stopka
+          doc.setTextColor(100, 116, 139);
+          doc.setFontSize(7.5);
+          doc.text(`Wygenerowano na VIRP.pl | VIRP.PL | Data: ${new Date().toLocaleDateString('pl-PL')}`, 105, 290, { align: 'center' });
+
+          const safeName = cleanText(data.name).replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+          doc.save(`podanie_whitelist_${safeName}.pdf`);
+          VIRP.showToast('Pobrano podanie w formacie PDF! 📄', 'success');
+        };
+
+        if (canvas) {
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              finishPdfGeneration(null);
+              return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => finishPdfGeneration(reader.result);
+            reader.readAsDataURL(blob);
+          }, 'image/png');
+        } else {
+          finishPdfGeneration(null);
         }
-
-        // Stopka
-        doc.setTextColor(100, 116, 139);
-        doc.setFontSize(7.5);
-        doc.text(`Wygenerowano na VIRP.pl | VIRP.PL | Data: ${new Date().toLocaleDateString('pl-PL')}`, 105, 290, { align: 'center' });
-
-        const safeName = cleanText(data.name).replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
-        doc.save(`podanie_whitelist_${safeName}.pdf`);
-        VIRP.showToast('Pobrano podanie w formacie PDF! 📄', 'success');
         return;
       }
     } catch (e) {
