@@ -645,9 +645,11 @@ const StreamersHub = {
 
     filteredClips.sort((a, b) => {
       if (this.activeClipSort === 'newest') {
-        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+        return this.getClipTimestamp(b) - this.getClipTimestamp(a);
       }
-      return (b.views || 0) - (a.views || 0) || (b.votes || 0) - (a.votes || 0);
+      return (b.views || 0) - (a.views || 0) ||
+        (b.votes || 0) - (a.votes || 0) ||
+        this.getClipTimestamp(b) - this.getClipTimestamp(a);
     });
 
     if (filteredClips.length === 0) {
@@ -695,6 +697,11 @@ const StreamersHub = {
         this.handleClipVote(clipId, btn);
       });
     });
+  },
+
+  getClipTimestamp(clip) {
+    const timestamp = Date.parse(clip?.createdAt || '');
+    return Number.isNaN(timestamp) ? 0 : timestamp;
   },
 
   renderClipCard(clip, rank) {
