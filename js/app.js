@@ -548,6 +548,7 @@ const VIRP = {
 
     if (startValue === numTarget) return;
 
+    let lastRendered = startValue;
     const update = (currentTime) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
@@ -556,7 +557,10 @@ const VIRP = {
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = Math.round(startValue + (numTarget - startValue) * eased);
       
-      el.textContent = current.toLocaleString('pl-PL');
+      if (current !== lastRendered) {
+        lastRendered = current;
+        el.textContent = current.toLocaleString('pl-PL');
+      }
 
       if (progress < 1) {
         this._activeCountUps[elementId] = requestAnimationFrame(update);
