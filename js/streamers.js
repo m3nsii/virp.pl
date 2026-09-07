@@ -717,7 +717,7 @@ const StreamersHub = {
             <i data-lucide="film" class="w-6 h-6"></i>
           </div>
           <h4 class="font-display text-lg text-white tracking-wide uppercase mb-1">Brak klipów w tym okresie</h4>
-          <p class="font-mono text-xs text-slate-400 max-w-sm mx-auto mb-4">To są przykładowe klipy z wybranych kanałów Twitch. Możesz też zgłosić własny klip do weryfikacji.</p>
+          <p class="font-mono text-xs text-slate-400 max-w-sm mx-auto mb-4">To są przykładowe klipy z wybranych kanałów Twitch i Kick. Możesz też zgłosić własny klip do weryfikacji.</p>
           <button type="button" id="clips-empty-submit-btn" class="btn-secondary text-xs py-2 px-4 inline-flex items-center gap-2 cursor-pointer">
             <i data-lucide="plus-circle" class="w-4 h-4 text-neon-cyan"></i>
             <span>DODAJ PIERWSZY KLIP</span>
