@@ -491,11 +491,14 @@ const VIRP = {
   initHeroGridOptimization() {
     const heroSection = document.getElementById('hero');
     const gridPlane = document.querySelector('.hero-grid-plane');
-    if (!heroSection || !gridPlane || !('IntersectionObserver' in window)) return;
+    const glitchTitle = document.querySelector('.glitch-title');
+    if (!heroSection || !('IntersectionObserver' in window)) return;
 
     const heroObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        gridPlane.classList.toggle('is-paused', !entry.isIntersecting);
+        const isOffScreen = !entry.isIntersecting;
+        if (gridPlane) gridPlane.classList.toggle('is-paused', isOffScreen);
+        if (glitchTitle) glitchTitle.classList.toggle('is-paused', isOffScreen);
       });
     }, { threshold: 0.02 });
 
