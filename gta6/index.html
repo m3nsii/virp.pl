@@ -1,6 +1,36 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
+  <!-- Sprzętowa detekcja GPU / Fallback dla Chrome bez akceleracji sprzętowej -->
+  <script>
+    (function() {
+      try {
+        var canvas = document.createElement('canvas');
+        var gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (!gl) {
+          document.documentElement.classList.add('no-gpu');
+          return;
+        }
+        var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        if (debugInfo) {
+          var renderer = (gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '').toLowerCase();
+          if (
+            renderer.indexOf('swiftshader') !== -1 ||
+            renderer.indexOf('llvmpipe') !== -1 ||
+            renderer.indexOf('software') !== -1 ||
+            renderer.indexOf('basic render') !== -1 ||
+            renderer.indexOf('gdi generic') !== -1 ||
+            renderer.indexOf('mesa offscreen') !== -1
+          ) {
+            document.documentElement.classList.add('no-gpu');
+          }
+        }
+      } catch (e) {
+        document.documentElement.classList.add('no-gpu');
+      }
+    })();
+  </script>
+
   <!-- ============================================================
        VIRP.pl — Dedykowane Polskie Centrum GTA 6 Roleplay (Leonida RP)
        Statyczna podstrona SEO | HTML5 + Tailwind + Vanilla JS

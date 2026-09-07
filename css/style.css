@@ -46,10 +46,20 @@ body::after {
 }
 
 /* ============================================================
-   CRT MONITOR SCANLINES (Wyłączono pełnoekranową nakładkę dla 120 FPS w Chrome)
+   CRT MONITOR SCANLINES (Subtelna nakładka retro z akceleracją GPU)
    ============================================================ */
 body::before {
-  display: none;
+  content: ' ';
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  z-index: 999;
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+  opacity: 0.45;
+  contain: strict;
+  transform: translateZ(0);
 }
 
 /* Ścięte rogi w stylu HUD */
@@ -202,8 +212,8 @@ body::before {
    ============================================================ */
 .nav-glass {
   background: rgba(6, 8, 15, 0.94);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: var(--border-tech);
   transition: box-shadow 0.25s ease;
   transform: translateZ(0);
@@ -2800,4 +2810,53 @@ input[type="range"]::-webkit-slider-thumb {
   100% {
     transform: translateX(0%);
   }
+}
+
+/* ============================================================
+   TRYB AWARYJNY: BRAK AKCELERACJI SPRZĘTOWEJ (NO-GPU / CPU FALLBACK)
+   Gdy użytkownik ma wyłączone GPU w przeglądarce lub używa programowego
+   rasteryzatora (SwiftShader / Mesa / Basic Render Driver), automatycznie
+   wyłączamy rozmycia (backdrop-filter) i złożone animacje, gwarantując
+   stałe 60 FPS bez jakichkolwiek przycięć.
+   ============================================================ */
+.no-gpu * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.no-gpu body::before {
+  display: none !important;
+}
+
+.no-gpu body::after {
+  display: none !important;
+}
+
+.no-gpu body {
+  background-color: #06080F !important;
+}
+
+.no-gpu .nav-glass {
+  background: rgba(6, 8, 15, 0.98) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7) !important;
+}
+
+.no-gpu .hud-panel,
+.no-gpu .hud-card,
+.no-gpu .toolkit-card,
+.no-gpu .streamer-card,
+.no-gpu .clip-card {
+  background: #0D111D !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6) !important;
+}
+
+.no-gpu .hero-grid-plane {
+  display: none !important;
+}
+
+.no-gpu .glitch-title::before,
+.no-gpu .glitch-title::after,
+.no-gpu .author-glitch::before,
+.no-gpu .author-glitch::after {
+  display: none !important;
 }
