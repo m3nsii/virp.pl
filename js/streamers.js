@@ -73,6 +73,20 @@ const StreamersHub = {
       views: 0,
       votes: 0,
       isFeaturedSample: true
+    },
+    {
+      id: 'kick-xmerghani-01M1AME5XWDGRVFQWT7JT1S8CP',
+      title: 'Przykładowy klip Kick — xmerghani',
+      streamer: 'xmerghani',
+      streamerLogin: 'xmerghani',
+      streamerAvatar: 'img/streamers/xmerghani.webp',
+      platform: 'kick',
+      url: 'https://kick.com/xmerghani/clips/clip_01M1AME5XWDGRVFQWT7JT1S8CP',
+      thumbnail: '',
+      duration: '—',
+      views: 0,
+      votes: 0,
+      isFeaturedSample: true
     }
   ],
 
