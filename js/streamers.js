@@ -17,6 +17,64 @@ const StreamersHub = {
   isOpen: false,
   WORKER_API_URL: 'https://virp-proxy.chojmarcel.workers.dev/api/streamers',
   FEATURED_TWITCH_CLIPS: ['pago3', 'banduracartel', 'mrdzinold'],
+  FEATURED_KICK_CLIPS: [
+    {
+      id: 'kick-neexcsgo-01M1VV2FVDBFEEWT12QZF8SEYA',
+      title: 'Przykładowy klip Kick — neexcsgo',
+      streamer: 'neexcsgo',
+      streamerLogin: 'neexcsgo',
+      streamerAvatar: 'img/streamers/neexcsgo.webp',
+      platform: 'kick',
+      url: 'https://kick.com/neexcsgo/clips/clip_01M1VV2FVDBFEEWT12QZF8SEYA',
+      thumbnail: '',
+      duration: '—',
+      views: 0,
+      votes: 0,
+      isFeaturedSample: true
+    },
+    {
+      id: 'kick-lequ-01M1F9HYVGFN3WBANQ6RSN2QVE',
+      title: 'Przykładowy klip Kick — lequ',
+      streamer: 'lequ',
+      streamerLogin: 'lequ',
+      streamerAvatar: 'img/streamers/lequ.webp',
+      platform: 'kick',
+      url: 'https://kick.com/lequ/clips/clip_01M1F9HYVGFN3WBANQ6RSN2QVE',
+      thumbnail: '',
+      duration: '—',
+      views: 0,
+      votes: 0,
+      isFeaturedSample: true
+    },
+    {
+      id: 'kick-niter-01M1HM5ZEZSY8MEWXZ6XGBYW4V',
+      title: 'Przykładowy klip Kick — niter',
+      streamer: 'niter',
+      streamerLogin: 'niter',
+      streamerAvatar: 'img/streamers/niter.webp',
+      platform: 'kick',
+      url: 'https://kick.com/niter/clips/clip_01M1HM5ZEZSY8MEWXZ6XGBYW4V',
+      thumbnail: '',
+      duration: '—',
+      views: 0,
+      votes: 0,
+      isFeaturedSample: true
+    },
+    {
+      id: 'kick-rybsonlol-01KZW0GWXWCVV21YWFXE6S9TTR',
+      title: 'Przykładowy klip Kick — rybsonlol',
+      streamer: 'rybsonlol',
+      streamerLogin: 'rybsonlol',
+      streamerAvatar: 'img/streamers/rybsonlol.webp',
+      platform: 'kick',
+      url: 'https://kick.com/rybsonlol/clips/clip_01KZW0GWXWCVV21YWFXE6S9TTR',
+      thumbnail: '',
+      duration: '—',
+      views: 0,
+      votes: 0,
+      isFeaturedSample: true
+    }
+  ],
 
   async init() {
     this.portal = document.getElementById('streamers-portal');
@@ -55,7 +113,7 @@ const StreamersHub = {
       const data = await response.json();
       
       this.streamers = Array.isArray(data.streamers) ? data.streamers : (Array.isArray(data) ? data : []);
-      this.clips = Array.isArray(data.clips) ? data.clips : [];
+      this.clips = this.withFeaturedKickClips(Array.isArray(data.clips) ? data.clips : []);
 
       // Zsynchronizuj lokalne głosy z klipami
       this.syncLocalClipVotes();
@@ -165,7 +223,7 @@ const StreamersHub = {
           ...clip,
           votes: localVotes.get(clip.id) || 0
         }));
-        this.clips = remoteClips;
+        this.clips = this.withFeaturedKickClips(remoteClips);
         this.syncLocalClipVotes();
         if (this.isOpen) this.renderClips();
       }
@@ -704,6 +762,14 @@ const StreamersHub = {
     return Number.isNaN(timestamp) ? 0 : timestamp;
   },
 
+  withFeaturedKickClips(clips) {
+    const existingIds = new Set(clips.map(clip => clip?.id).filter(Boolean));
+    const featuredKickClips = this.FEATURED_KICK_CLIPS
+      .filter(clip => !existingIds.has(clip.id))
+      .map(clip => ({ ...clip }));
+    return [...clips, ...featuredKickClips];
+  },
+
   renderClipCard(clip, rank) {
     const safeTitle = typeof sanitize === 'function' ? sanitize(clip.title) : clip.title;
     const safeStreamer = typeof sanitize === 'function' ? sanitize(clip.streamer) : clip.streamer;
@@ -715,6 +781,9 @@ const StreamersHub = {
     const safeThumb = typeof safeUrl === 'function' ? safeUrl(clip.thumbnail) : clip.thumbnail;
     const safeClipId = typeof sanitize === 'function' ? sanitize(clip.id) : clip.id;
     const hasVoted = this.userVotedClips.has(clip.id);
+    const sampleBadge = clip.isFeaturedSample
+      ? '<span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-1 text-[9px] font-bold text-black">PRZYKŁADOWY KICK</span>'
+      : '';
 
     let rankBadge = '';
     if (rank === 1) {
@@ -731,6 +800,7 @@ const StreamersHub = {
       <div class="clip-card" data-clip-id="${safeClipId}">
         <div class="clip-thumb-box clip-play-action cursor-pointer" data-clip-id="${safeClipId}" style="background-image: url('${safeThumb}');">
           ${rankBadge}
+          ${sampleBadge}
           <div class="clip-duration">${safeDuration}</div>
           <div class="clip-play-overlay">
             <i data-lucide="play" class="w-5 h-5 text-white fill-white"></i>
