@@ -244,27 +244,48 @@ const VIRP = {
 
   /**
    * Aktualizacja aktywnego linku nawigacji na podstawie pozycji scrolla
+   * Zoptymalizowana: throttling 150ms, cache elementów i eliminacja Forced Synchronous Layout
    */
+  _lastNavCheck: 0,
+  _currentActiveNavId: '',
+  _navSectionsCache: null,
+  _navLinksCache: null,
+
   updateActiveNavLink() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const scrollPos = window.scrollY + 120;
+    const now = performance.now();
+    if (now - this._lastNavCheck < 150) return;
+    this._lastNavCheck = now;
 
-    sections.forEach(section => {
-      const rect = section.getBoundingClientRect();
-      const top = rect.top + window.scrollY;
+    if (!this._navSectionsCache) {
+      this._navSectionsCache = Array.from(document.querySelectorAll('section[id]:not(.sr-only)'));
+    }
+    if (!this._navLinksCache) {
+      this._navLinksCache = Array.from(document.querySelectorAll('.nav-link'));
+    }
+
+    const scrollPos = window.scrollY + 140;
+    let currentId = '';
+
+    for (let i = 0; i < this._navSectionsCache.length; i++) {
+      const section = this._navSectionsCache[i];
+      const top = section.offsetTop;
       const height = section.offsetHeight;
-      const id = section.getAttribute('id');
-
       if (scrollPos >= top && scrollPos < top + height) {
-        navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${id}`) {
-            link.classList.add('active');
-          }
-        });
+        currentId = section.getAttribute('id');
+        break;
       }
-    });
+    }
+
+    if (currentId && currentId !== this._currentActiveNavId) {
+      this._currentActiveNavId = currentId;
+      this._navLinksCache.forEach(link => {
+        if (link.getAttribute('href') === `#${currentId}`) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
   },
 
   /* ----------------------------------------------------------

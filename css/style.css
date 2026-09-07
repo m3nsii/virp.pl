@@ -199,6 +199,8 @@ body::before {
   -webkit-backdrop-filter: blur(16px);
   border-bottom: var(--border-tech);
   transition: box-shadow 0.3s ease;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .nav-link {
@@ -457,6 +459,7 @@ body::before {
   z-index: 1;
   mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%);
   -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%);
+  contain: strict;
 }
 
 .hero-grid-plane {
@@ -466,8 +469,9 @@ body::before {
     linear-gradient(to right, rgba(0, 240, 255, 0.15) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 31, 125, 0.15) 1px, transparent 1px);
   background-size: 50px 50px;
-  transform: rotateX(75deg);
+  transform: rotateX(75deg) translateZ(0);
   transform-origin: 50% 100%;
+  will-change: transform;
   animation: move-grid 12s linear infinite;
 }
 
@@ -791,9 +795,11 @@ body::before {
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease;
   clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  contain: content;
+  will-change: transform;
 }
 
 .hud-card:hover {
@@ -2759,4 +2765,12 @@ input[type="range"]::-webkit-slider-thumb {
   100% {
     transform: translateX(0%);
   }
+}
+
+/* ============================================================
+   CHROMIUM / CHROME RENDERING ENGINE OPTIMIZATIONS
+   ============================================================ */
+#toolkit, #about, footer {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 600px;
 }

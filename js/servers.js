@@ -402,9 +402,9 @@ const ServerCatalog = {
         </div>
 
         <div class="hud-card-cover">
-          <!-- Logo Serwera z Neonowym Glow -->
+          <!-- Logo Serwera z Neonowym Glow (Zoptymalizowane asynchroniczne dekodowanie) -->
           <div class="hud-logo-backdrop">
-            <img src="${safeBannerUrl}" alt="${safeName}" class="hud-server-brand-logo" onerror="this.onerror=null;this.src='img/logo-vi.png'" />
+            <img src="${safeBannerUrl}" alt="${safeName}" class="hud-server-brand-logo" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/logo-vi.png'" />
           </div>
           <div class="hud-card-overlay">
             <div class="hud-badges-row flex flex-wrap gap-1.5">
