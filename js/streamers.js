@@ -12,6 +12,7 @@ const StreamersHub = {
   activeSort: 'viewers',
   searchQuery: '',
   activeClipTime: 'all',
+  activeClipSort: 'best',
   userVotedClips: new Set(),
   isOpen: false,
   WORKER_API_URL: 'https://virp-proxy.chojmarcel.workers.dev/api/streamers',
@@ -265,7 +266,15 @@ const StreamersHub = {
       });
     }
 
-    // Filtry czasowe klipów (Wszystkie / 3 Dni / Ten Miesiąc)
+    const clipSortSelect = document.getElementById('clip-sort-select');
+    if (clipSortSelect) {
+      clipSortSelect.addEventListener('change', (e) => {
+        this.activeClipSort = e.target.value;
+        this.renderClips();
+      });
+    }
+
+    // Filtry czasowe klipów
     document.querySelectorAll('[data-clip-time]').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('[data-clip-time]').forEach(b => b.classList.remove('active'));
@@ -619,24 +628,27 @@ const StreamersHub = {
     const now = Date.now();
 
     // Filtry czasowe (zabezpieczone przed przyszłymi datami)
-    if (this.activeClipTime === '3days') {
-      const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+    const periods = {
+      day: 24 * 60 * 60 * 1000,
+      week: 7 * 24 * 60 * 60 * 1000,
+      month: 30 * 24 * 60 * 60 * 1000,
+      year: 365 * 24 * 60 * 60 * 1000
+    };
+    const periodMs = periods[this.activeClipTime];
+    if (periodMs) {
       filteredClips = filteredClips.filter(c => {
         const time = new Date(c.createdAt || '').getTime();
         const diff = now - time;
-        return !isNaN(time) && diff >= 0 && diff <= threeDaysMs;
-      });
-    } else if (this.activeClipTime === 'month') {
-      const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
-      filteredClips = filteredClips.filter(c => {
-        const time = new Date(c.createdAt || '').getTime();
-        const diff = now - time;
-        return !isNaN(time) && diff >= 0 && diff <= thirtyDaysMs;
+        return !isNaN(time) && diff >= 0 && diff <= periodMs;
       });
     }
 
-    // Sortowanie klipów po liczbie głosów descending
-    filteredClips.sort((a, b) => (b.votes || 0) - (a.votes || 0));
+    filteredClips.sort((a, b) => {
+      if (this.activeClipSort === 'newest') {
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+      }
+      return (b.views || 0) - (a.views || 0) || (b.votes || 0) - (a.votes || 0);
+    });
 
     if (filteredClips.length === 0) {
       grid.innerHTML = `
@@ -644,8 +656,8 @@ const StreamersHub = {
           <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mx-auto mb-3 text-neon-cyan">
             <i data-lucide="film" class="w-6 h-6"></i>
           </div>
-          <h4 class="font-display text-lg text-white tracking-wide uppercase mb-1">Brak zgłoszonych klipów</h4>
-          <p class="font-mono text-xs text-slate-400 max-w-sm mx-auto mb-4">Bądź pierwszy! Widziałeś dobrą akcję na streamie GTA RP? Zgłoś klip do weryfikacji i weź udział w głosowaniu.</p>
+          <h4 class="font-display text-lg text-white tracking-wide uppercase mb-1">Brak klipów w tym okresie</h4>
+          <p class="font-mono text-xs text-slate-400 max-w-sm mx-auto mb-4">To są przykładowe klipy z wybranych kanałów Twitch. Możesz też zgłosić własny klip do weryfikacji.</p>
           <button type="button" id="clips-empty-submit-btn" class="btn-secondary text-xs py-2 px-4 inline-flex items-center gap-2 cursor-pointer">
             <i data-lucide="plus-circle" class="w-4 h-4 text-neon-cyan"></i>
             <span>DODAJ PIERWSZY KLIP</span>

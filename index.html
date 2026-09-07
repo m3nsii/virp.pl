@@ -1091,7 +1091,7 @@
               TOP KLIPY &amp; AKCJE Z SERWERÓW RP
             </h3>
             <p class="text-xs text-slate-400 font-mono mt-0.5">
-              Głosuj na najlepsze akcje tygodnia i miesiąca ze streamów GTA RP!
+              Przykładowe klipy z wybranych kanałów Twitch. Klipy użytkowników pojawią się po weryfikacji zgłoszeń.
             </p>
           </div>
 
@@ -1099,9 +1099,15 @@
             <!-- Filtry Czasowe Klipów -->
             <div class="flex items-center gap-1 bg-[#0b0f19] p-1 rounded-lg border border-white/10">
               <button type="button" class="clip-time-btn active" data-clip-time="all">Wszystkie</button>
-              <button type="button" class="clip-time-btn" data-clip-time="3days">3 Dni</button>
-              <button type="button" class="clip-time-btn" data-clip-time="month">Ten Miesiąc</button>
+              <button type="button" class="clip-time-btn" data-clip-time="day">Dzień</button>
+              <button type="button" class="clip-time-btn" data-clip-time="week">Tydzień</button>
+              <button type="button" class="clip-time-btn" data-clip-time="month">Miesiąc</button>
+              <button type="button" class="clip-time-btn" data-clip-time="year">Rok</button>
             </div>
+            <select id="clip-sort-select" class="sort-select text-xs" aria-label="Sortuj klipy">
+              <option value="best">Najlepsze</option>
+              <option value="newest">Najnowsze</option>
+            </select>
 
             <!-- Przycisk Zgłoś Klip -->
             <button type="button" id="open-clip-modal-btn" class="btn-primary py-2 px-4 text-xs flex items-center gap-2 cursor-pointer shadow-lg shadow-cyan-500/20 bg-gradient-to-r from-neon-cyan to-blue-600 border-none text-black font-bold hover:brightness-110">
