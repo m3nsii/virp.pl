@@ -154,21 +154,21 @@ const RPToolkit = {
       name: 'James "Mack" Sterling',
       age: 34,
       gender: 'Mężczyzna',
-      origin: 'Vice City, Leonida',
+      origin: 'Leonida',
       job: 'Zastępca Szeryfa / LSPD',
       avatar: 'police',
       traits: 'Opanowany, lojalny, spostrzegawczy, wyszkolenie taktyczne',
       flaws: 'Zbyt ufny w procedury, pamiętliwy, wypalenie zawodowe, bezsenność',
       phobias: 'Klaustrofobia (uraz po uwięzieniu w radiowozie), niechęć do walki wręcz',
       features: 'Krótka fryzura wojskowa, blizna na brodzie, zawsze wyprasowany mundur',
-      backstory: 'Wychowany w robotniczej dzielnicy Vice City. Po 6 latach służby wojskowej wrócił do rodzinnego stanu Leonida, by wstąpić do departamentu szeryfa. Pragnie przywrócić porządek na ulicach opanowanych przez nowe kartele.',
+      backstory: 'Wychowany w robotniczej dzielnicy Leonida City. Po 6 latach służby wojskowej wrócił do rodzinnego stanu Leonida, by wstąpić do departamentu szeryfa. Pragnie przywrócić porządek na ulicach opanowanych przez nowe kartele.',
       goals: 'Awansować na stopień sierżanta i oczyścić dzielnicę portową z przemytu broni.'
     },
     medic: {
       name: 'Dr. Elena Rossi',
       age: 29,
       gender: 'Kobieta',
-      origin: 'Włochy / Vice City',
+      origin: 'Włochy / Leonida',
       job: 'Lekarz Rezydent / Paramedyk EMS',
       avatar: 'medic',
       traits: 'Empatyczna, odporna na stres, precyzyjna, doskonała pamięć',
@@ -189,8 +189,8 @@ const RPToolkit = {
       flaws: 'Nałogowy hazardzista wyścigowy, lekkomyślność finansowa, porywczy charakter',
       phobias: 'Chorobliwy lęk przed aresztowaniem i konfiskatą projektów aut',
       features: 'Ręce wiecznie ubrudzone smarem, czapka z daszkiem snapback, tatuaż silnika V8 na przedramieniu',
-      backstory: 'Przyjechał z Polski za marzeniem budowy najszybszych aut w Vice City. Zaczynał od wymiany klocków w szopie, a dziś składa japońskie potwory biturbo do nielegalnych wyścigów ulicznych.',
-      goals: 'Wygrać puchar Vice City Underground i otworzyć legalną hamownię.'
+      backstory: 'Przyjechał z Polski za marzeniem budowy najszybszych aut w Leonida City. Zaczynał od wymiany klocków w szopie, a dziś składa japońskie potwory biturbo do nielegalnych wyścigów ulicznych.',
+      goals: 'Wygrać puchar Leonida City Underground i otworzyć legalną hamownię.'
     },
     gang: {
       name: 'Mateo "El Mudo" Delgado',
@@ -217,7 +217,7 @@ const RPToolkit = {
       flaws: 'Egoizm, materializm, bezwzględność biznesowa, uzależnienie od drogich cygar',
       phobias: 'Lęk przed bankructwem i utratą statusu społecznego, astma wysiłkowa',
       features: 'Szyty na miarę garnitur w prążki, złoty zegarek Rolex, nienaganny uśmiech',
-      backstory: 'Zbił fortunę na giełdzie Wall Street, po czym przeniósł swoje aktywa do rozwijającego się rynku nieruchomości w Vice City. Kupuje kluby nocne i mariny, balansując na granicy prawa.',
+      backstory: 'Zbił fortunę na giełdzie Wall Street, po czym przeniósł swoje aktywa do rozwijającego się rynku nieruchomości w Leonida City. Kupuje kluby nocne i mariny, balansując na granicy prawa.',
       goals: 'Wykupić wieżowiec w Downtown i sfinansować własną partię polityczną.'
     },
     driver: {
@@ -231,7 +231,7 @@ const RPToolkit = {
       flaws: 'Uzależnienie od adrenaliny, skłonność do brawury, unika stałych relacji',
       phobias: 'Lęk wysokości, nie znosi małych zamkniętych pomieszczeń bez okien',
       features: 'Rękawiczki wyścigowe bez palców, sportowa bluza, zawsze nosi okulary przeciwsłoneczne',
-      backstory: 'Były kierowca rajdowy w Europie, który po zawieszeniu licencji zaoferował swoje umiejętności półświatkowi. W Vice City wynajmuje się ekipom napadowym jako gwarancja bezpiecznego odwrotu.',
+      backstory: 'Były kierowca rajdowy w Europie, który po zawieszeniu licencji zaoferował swoje umiejętności półświatkowi. W Leonida City wynajmuje się ekipom napadowym jako gwarancja bezpiecznego odwrotu.',
       goals: 'Zgromadzić 500 000 $ na zakup i modyfikację legendarnego klasyka z 1988 roku.'
     }
   },
@@ -261,7 +261,7 @@ const RPToolkit = {
     const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     const age = Math.floor(Math.random() * 32) + 20;
 
-    const origins = ['Vice City, Leonida', 'Liberty City', 'Los Santos', 'Polska (Kraków)', 'Włochy (Neapol)', 'Meksyk (Tijuana)', 'Kolumbia (Medellín)', 'Kuba (Hawana)'];
+    const origins = ['Leonida', 'Liberty City', 'Los Santos', 'Polska (Kraków)', 'Włochy (Neapol)', 'Meksyk (Tijuana)', 'Kolumbia (Medellín)', 'Kuba (Hawana)'];
     
     const jobs = [
       { job: 'Funkcjonariusz Policji', avatar: 'police' },
@@ -317,7 +317,7 @@ const RPToolkit = {
       flaws: flawsPool[Math.floor(Math.random() * flawsPool.length)],
       phobias: phobiasPool[Math.floor(Math.random() * phobiasPool.length)],
       features: featuresPool[Math.floor(Math.random() * featuresPool.length)],
-      backstory: `Przybył(a) do Vice City w poszukiwaniu nowego początku. Doświadczenia z przeszłości nauczyły postać polegać na sobie, jednak w realiach stanu Leonida musi wypracować nową reputację.`,
+      backstory: `Przybył(a) do Leonida City w poszukiwaniu nowego początku. Doświadczenia z przeszłości nauczyły postać polegać na sobie, jednak w realiach stanu Leonida musi wypracować nową reputację.`,
       goals: `Zbudować stabilną pozycję w mieście, zdobyć zaufanie kluczowych ludzi i osiągnąć niezależność finansową.`
     };
 
@@ -356,7 +356,7 @@ const RPToolkit = {
     const name = document.getElementById('char-name')?.value.trim();
     const age = document.getElementById('char-age')?.value || '28';
     const gender = document.getElementById('char-gender')?.value || 'Mężczyzna';
-    const origin = document.getElementById('char-origin')?.value.trim() || 'Vice City, Leonida';
+    const origin = document.getElementById('char-origin')?.value.trim() || 'Leonida';
     const job = document.getElementById('char-job')?.value.trim() || 'Obywatel';
     const avatarType = document.getElementById('char-avatar-type')?.value || 'street';
     const traits = document.getElementById('char-traits')?.value.trim() || '';
@@ -391,7 +391,7 @@ const RPToolkit = {
     let card = '';
     card += `${divider}\n`;
     card += `   KARTA POSTACI — PODANIE WHITELIST // VIRP.PL\n`;
-    card += `   VIRP.PL  |  STAN: LEONIDA (VICE CITY)\n`;
+    card += `   VIRP.PL  |  STAN: LEONIDA (LEONIDA CITY)\n`;
     card += `${divider}\n\n`;
 
     card += `▸ DANE PERSONALNE:\n`;
@@ -642,7 +642,7 @@ const RPToolkit = {
       name: 'MARCO VALENTINO',
       age: 28,
       gender: 'Mężczyzna',
-      origin: 'Vice City, Leonida',
+      origin: 'Leonida',
       job: 'Obywatel / Kierowca',
       avatarType: 'street'
     });
@@ -909,7 +909,7 @@ const RPToolkit = {
     let md = '';
     md += `>>> **═════════════════════════════════════════════**\n`;
     md += `**📋 PODANIE NA WHITELIST // VIRP.PL**\n`;
-    md += `*Stan Leonida — Vice City 2026*\n`;
+    md += `*Stan Leonida — Leonida City 2026*\n`;
     md += `**═════════════════════════════════════════════**\n\n`;
 
     md += `**▸ DANE PERSONALNE:**\n`;

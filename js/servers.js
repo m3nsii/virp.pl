@@ -313,7 +313,7 @@ const ServerCatalog = {
     const safeWebsiteUrl = safeUrl(server.website);
     const safeDirect = sanitize(server.directConnect || '');
 
-    const hasVoted = this.pendingVotes.has(server.id);
+    const hasVoted = this.hasVoted(server.id);
     const totalVotes = this.getVoteCount(server);
     const serverNum = String(index + 1).padStart(2, '0');
 
@@ -354,11 +354,16 @@ const ServerCatalog = {
     const tagsHTML = tagsArray.slice(0, 3).map(tag => `<span class="hud-tag">#${sanitize(tag)}</span>`).join('');
     const maxSlots = parseInt(server.slots, 10) || 300;
 
-    const baseFallback = (server.live && server.live.basePlayers) ? server.live.basePlayers : 80;
     const liveInfo = this.liveStatusData[server.id] || {
-      online: baseFallback,
-      percent: Math.min(100, Math.round((baseFallback / maxSlots) * 100))
+      online: null,
+      slots: maxSlots,
+      percent: null,
+      available: false
     };
+    const liveOnline = Number.isInteger(liveInfo.online) ? liveInfo.online : '—';
+    const liveSlots = Number.isInteger(liveInfo.slots) ? liveInfo.slots : maxSlots;
+    const livePercent = Number.isInteger(liveInfo.percent) ? `${liveInfo.percent}% ZAPEŁNIENIA` : 'BRAK DANYCH';
+    const liveState = liveInfo.available ? 'LIVE' : 'BRAK DANYCH LIVE';
 
     // Kaskada przekierowania: WWW -> Discord -> Direct Connect (F8)
     let mainActionBtn = '';
@@ -378,7 +383,7 @@ const ServerCatalog = {
       `;
     } else if (safeDirect) {
       mainActionBtn = `
-        <button data-copy-ip="${safeDirect}" class="hud-action-btn hud-connect-btn" title="Kopiuj adres F8: ${safeDirect}">
+        <button data-copy-ip="${safeDirect}" class="hud-action-btn hud-connect-btn" title="Kopiuj adres F8: ${safeDirect}" aria-label="Kopiuj adres F8 ${safeDirect}">
           <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
           <span>CONNECT</span>
         </button>
@@ -387,14 +392,14 @@ const ServerCatalog = {
 
     // Dodatkowa ikonka Discorda (wyświetlana obok, jeśli główny przycisk prowadzi na stronę WWW)
     const extraDiscordBtn = (safeWebsiteUrl && safeDiscordUrl) ? `
-      <a href="${safeDiscordUrl}" target="_blank" rel="noopener noreferrer" class="hud-action-btn hud-discord-btn" title="Discord serwera">
+      <a href="${safeDiscordUrl}" target="_blank" rel="noopener noreferrer" class="hud-action-btn hud-discord-btn" title="Discord serwera" aria-label="Otwórz Discord serwera">
         <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
       </a>
     ` : '';
 
     // Dodatkowa ikonka Direct Connect F8 (jeśli główny przycisk prowadzi na stronę WWW i serwer ma IP)
     const extraConnectBtn = (safeWebsiteUrl && safeDirect) ? `
-      <button data-copy-ip="${safeDirect}" class="hud-action-btn hud-discord-btn" title="Kopiuj adres F8: ${safeDirect}">
+      <button data-copy-ip="${safeDirect}" class="hud-action-btn hud-discord-btn" title="Kopiuj adres F8: ${safeDirect}" aria-label="Kopiuj adres F8 ${safeDirect}">
         <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
       </button>
     ` : '';
@@ -408,8 +413,8 @@ const ServerCatalog = {
           </div>
           <div class="hud-slots">
             <span class="pulse-dot"></span>
-            <span class="font-mono font-bold text-emerald-400 text-xs" data-live-header="${safeId}">${liveInfo.online}</span>
-            <span class="text-[10px] text-slate-500 uppercase tracking-wider font-mono">/${maxSlots} ONLINE</span>
+            <span class="font-mono font-bold text-emerald-400 text-xs" data-live-header="${safeId}">${liveOnline}</span>
+            <span class="text-[10px] text-slate-500 uppercase tracking-wider font-mono">/${liveSlots} ONLINE</span>
           </div>
         </div>
 
@@ -433,8 +438,8 @@ const ServerCatalog = {
               ${safeName}
               <i data-lucide="badge-check" class="w-4 h-4 text-neon-cyan" title="Zweryfikowany Serwer"></i>
             </h3>
-            <span class="font-mono text-[10px] text-emerald-400 bg-emerald-950/40 border border-emerald-500/25 px-2 py-0.5 rounded flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> LIVE
+             <span class="font-mono text-[10px] ${liveInfo.available ? 'text-emerald-400 bg-emerald-950/40 border-emerald-500/25' : 'text-slate-400 bg-slate-900/60 border-slate-700'} border px-2 py-0.5 rounded flex items-center gap-1" data-live-status="${safeId}">
+              <span class="w-1.5 h-1.5 rounded-full ${liveInfo.available ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}"></span> ${liveState}
             </span>
           </div>
 
@@ -443,12 +448,12 @@ const ServerCatalog = {
             <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 mb-1">
               <span class="text-slate-300 font-semibold flex items-center gap-1">
                 <i data-lucide="users" class="w-3 h-3 text-neon-cyan"></i>
-                <span data-live-players="${safeId}">${liveInfo.online}</span> / ${maxSlots} GRACZY
+                <span data-live-players="${safeId}">${liveOnline}</span> / <span data-live-slots="${safeId}">${liveSlots}</span> GRACZY
               </span>
-              <span class="text-neon-cyan font-bold" data-capacity-percent="${safeId}">${liveInfo.percent}% ZAPEŁNIENIA</span>
+              <span class="text-neon-cyan font-bold" data-capacity-percent="${safeId}">${livePercent}</span>
             </div>
             <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-              <div class="bg-gradient-to-r from-emerald-500 via-cyan-400 to-pink-500 h-full rounded-full transition-all duration-700" data-capacity-bar="${safeId}" style="width: ${liveInfo.percent}%;"></div>
+              <div class="bg-gradient-to-r from-emerald-500 via-cyan-400 to-pink-500 h-full rounded-full transition-all duration-700" data-capacity-bar="${safeId}" style="width: ${liveInfo.percent || 0}%;"></div>
             </div>
           </div>
 
@@ -462,8 +467,9 @@ const ServerCatalog = {
             data-vote-btn="${safeId}"
             ${hasVoted ? 'disabled' : ''}
             title="${hasVoted ? 'Głos oddany (24h cooldown)' : 'Zagłosuj na serwer'}"
+            aria-label="${hasVoted ? `Głos oddany na serwer ${safeName}` : `Zagłosuj na serwer ${safeName}`}"
           >
-            <i data-lucide="${hasVoted ? 'check' : 'arrow-up'}" class="w-4 h-4"></i>
+            <i data-lucide="${hasVoted ? 'check' : 'arrow-up'}" class="w-4 h-4" aria-hidden="true"></i>
             <span class="font-mono font-bold">${totalVotes}</span>
           </button>
 
@@ -505,7 +511,7 @@ const ServerCatalog = {
     const safePlatform = sanitize(String(server.platform || server.type || 'FIVEM').toUpperCase());
     const safeCategory = sanitize(String(server.category || 'ROLEPLAY').toUpperCase());
     const safeSlots = parseInt(server.slots, 10) || 0;
-    const hasVoted = this.pendingVotes.has(server.id);
+    const hasVoted = this.hasVoted(server.id);
     const safeVotes = this.getVoteCount(server);
     const safeDiscordUrl = safeUrl(server.discord);
     const safeDirect = sanitize(server.directConnect || '');
@@ -528,13 +534,14 @@ const ServerCatalog = {
             class="vote-btn-hud px-3 py-1 ${hasVoted ? 'bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 opacity-80 cursor-default' : 'bg-pink-950/40 border border-pink-500/30 text-pink-400 hover:bg-pink-500 hover:text-white transition cursor-pointer'}" 
             data-vote-btn="${safeId}"
             ${hasVoted ? 'disabled' : ''}
+            aria-label="${hasVoted ? `Głos oddany na serwer ${safeName}` : `Zagłosuj na serwer ${safeName}`}"
           >
             ${hasVoted ? '✓' : '▲'} ${safeVotes}
           </button>
         </td>
         <td>
           <div class="flex items-center gap-2">
-            ${safeDirect ? `<button data-copy-ip="${safeDirect}" class="text-xs text-amber-400 hover:underline cursor-pointer">IP</button>` : ''}
+            ${safeDirect ? `<button data-copy-ip="${safeDirect}" class="text-xs text-amber-400 hover:underline cursor-pointer" aria-label="Kopiuj adres IP ${safeDirect}">IP</button>` : ''}
             ${safeDiscordUrl ? `<a href="${safeDiscordUrl}" target="_blank" rel="noopener noreferrer" class="text-xs text-cyan-400 hover:underline">DISCORD</a>` : ''}
           </div>
         </td>
@@ -722,30 +729,20 @@ const ServerCatalog = {
       }
     }
 
-    // 2. Fallback: użyj basePlayers z konfiguracji danego serwera z unikalną wariacją
-    if (onlineCount === null || isNaN(onlineCount)) {
-      onlineCount = this.calculateRealisticLivePlayers(server, maxSlots);
-    }
-
-    const percent = Math.min(Math.round((onlineCount / maxSlots) * 100), 100);
+    const hasLiveData = Number.isInteger(onlineCount) && onlineCount >= 0;
+    const percent = hasLiveData && maxSlots > 0
+      ? Math.min(Math.round((onlineCount / maxSlots) * 100), 100)
+      : null;
 
     this.liveStatusData[serverId] = {
-      online: onlineCount,
+      online: hasLiveData ? onlineCount : null,
       slots: maxSlots,
       percent: percent,
+      available: hasLiveData,
       lastUpdated: Date.now()
     };
 
     this.updateServerCardLiveUI(serverId, onlineCount, maxSlots, percent);
-  },
-
-  calculateRealisticLivePlayers(server, maxSlots) {
-    // Każdy serwer ma swoją indywidualną bazę graczy (basePlayers)
-    const base = (server.live && server.live.basePlayers) ? server.live.basePlayers : 80;
-    // Unikalna wariacja per serwer (na podstawie ID), żeby serwery nie miały identycznych liczb
-    const serverSeed = server.id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-    const variance = Math.round(Math.sin((Date.now() / 45000) + serverSeed) * 3);
-    return Math.max(1, base + variance);
   },
 
   updateServerCardLiveUI(serverId, online, slots, percent) {
@@ -753,20 +750,23 @@ const ServerCatalog = {
 
     // Licznik w nagłówku
     const headerEl = document.querySelector(`[data-live-header="${safeSelectorId}"]`);
-    if (headerEl) headerEl.textContent = online;
+    const isAvailable = Number.isInteger(online) && Number.isInteger(percent);
+    if (headerEl) headerEl.textContent = isAvailable ? online : '—';
 
     // Licznik w pasku obciążenia
     const playerEl = document.querySelector(`[data-live-players="${safeSelectorId}"]`);
-    if (playerEl) playerEl.textContent = online;
+    if (playerEl) playerEl.textContent = isAvailable ? online : '—';
+    const slotsEl = document.querySelector(`[data-live-slots="${safeSelectorId}"]`);
+    if (slotsEl && Number.isInteger(slots)) slotsEl.textContent = slots;
 
     // Procent
     const percentEl = document.querySelector(`[data-capacity-percent="${safeSelectorId}"]`);
-    if (percentEl) percentEl.textContent = `${percent}% ZAPEŁNIENIA`;
+    if (percentEl) percentEl.textContent = isAvailable ? `${percent}% ZAPEŁNIENIA` : 'BRAK DANYCH';
 
     // Pasek
     const barEl = document.querySelector(`[data-capacity-bar="${safeSelectorId}"]`);
     if (barEl) {
-      barEl.style.width = `${percent}%`;
+      barEl.style.width = `${isAvailable ? percent : 0}%`;
       if (percent >= 90) {
         barEl.className = 'bg-gradient-to-r from-pink-500 to-red-500 h-full rounded-full transition-all duration-700';
       } else if (percent >= 70) {
@@ -775,6 +775,11 @@ const ServerCatalog = {
         barEl.className = 'bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full transition-all duration-700';
       }
     }
+    const statusEl = document.querySelector(`[data-live-status="${safeSelectorId}"]`);
+    if (statusEl) {
+      statusEl.className = `font-mono text-[10px] ${isAvailable ? 'text-emerald-400 bg-emerald-950/40 border-emerald-500/25' : 'text-slate-400 bg-slate-900/60 border-slate-700'} border px-2 py-0.5 rounded flex items-center gap-1`;
+      statusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${isAvailable ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}"></span> ${isAvailable ? 'LIVE' : 'BRAK DANYCH LIVE'}`;
+    }
   },
 
   updateHeroStats() {
@@ -782,7 +787,7 @@ const ServerCatalog = {
     let totalOnline = 0;
     this.servers.forEach(s => {
       const live = this.liveStatusData[s.id];
-      totalOnline += live ? live.online : (s.live?.basePlayers || 0);
+      if (live && Number.isInteger(live.online)) totalOnline += live.online;
     });
     const totalVotes = this.servers.reduce((sum, s) => sum + this.getVoteCount(s), 0);
 

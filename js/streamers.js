@@ -724,7 +724,7 @@ const StreamersHub = {
               </div>
             </div>
 
-            <button type="button" class="clip-vote-btn ${hasVoted ? 'voted' : ''}" data-clip-id="${safeClipId}" title="${hasVoted ? 'Oddałeś głos na ten klip' : 'Zagłosuj na ten klip'}">
+            <button type="button" class="clip-vote-btn ${hasVoted ? 'voted' : ''}" data-clip-id="${safeClipId}" title="${hasVoted ? 'Oddałeś głos na ten klip' : 'Zagłosuj na ten klip'}" aria-label="${hasVoted ? `Cofnij głos na klip ${safeTitle}` : `Zagłosuj na klip ${safeTitle}`}">
               <i data-lucide="flame" class="w-4 h-4 ${hasVoted ? 'text-neon-pink fill-neon-pink' : 'text-slate-400'}"></i>
               <span class="clip-vote-count font-mono font-bold text-xs ${hasVoted ? 'text-neon-pink' : 'text-slate-300'}">${safeVotes}</span>
             </button>
@@ -1551,4 +1551,3 @@ if (document.readyState === 'loading') {
 } else {
   StreamersHub.init();
 }
-
