@@ -100,6 +100,8 @@ const RPToolkit = {
     const exportPdfBtn = document.getElementById('char-export-pdf-btn');
     const exportTxtBtn = document.getElementById('char-export-btn');
     const randomBtn = document.getElementById('char-random-btn');
+    const saveBtn = document.getElementById('char-save-btn');
+    const loadBtn = document.getElementById('char-load-btn');
 
     if (generateBtn) {
       generateBtn.addEventListener('click', () => this.generateCharacterCard());
@@ -132,6 +134,11 @@ const RPToolkit = {
     if (randomBtn) {
       randomBtn.addEventListener('click', () => this.randomizeCharacter());
     }
+    if (saveBtn) saveBtn.addEventListener('click', () => this.saveCharacter());
+    if (loadBtn) loadBtn.addEventListener('click', () => this.loadSelectedCharacter());
+    this.bindCharacterLivePreview();
+    this.refreshSavedCharacters();
+    this.restoreCharacterDraft();
 
     // Obsługa kliknięć w gotowe archetypy
     document.querySelectorAll('.char-preset-btn[data-archetype]').forEach(btn => {
@@ -175,7 +182,7 @@ const RPToolkit = {
       flaws: 'Pracoholiczka, trudności z odmawianiem pomocy, impulsywność w sytuacjach krytycznych',
       phobias: 'Lęk przed ogniem (trauma z dzieciństwa), bezradność wobec śmierci pacjenta',
       features: 'Włosy spięte w kok, stetoskop na szyi, drobny tatuaż eskulapa na nadgarstku',
-      backstory: 'Ukończyła studia medyczne w Mediolanie i przeniosła się do Vice General Hospital. W realiach brutalnego miasta często musi podejmować decyzje na granicy życia i śmierci pod presją czasu.',
+      backstory: 'Ukończyła studia medyczne w Mediolanie i przeniosła się do szpitala w Leonida City. W realiach brutalnego miasta często musi podejmować decyzje na granicy życia i śmierci pod presją czasu.',
       goals: 'Zbudować nowoczesny oddział szybkiego reagowania ratownictwa medycznego.'
     },
     mechanic: {
@@ -210,7 +217,7 @@ const RPToolkit = {
       name: 'Alexander Vance',
       age: 42,
       gender: 'Mężczyzna',
-      origin: 'Nowy Jork / Downtown Vice',
+      origin: 'Nowy Jork / Downtown Leonida',
       job: 'Inwestor Nieruchomości / Makler',
       avatar: 'suit',
       traits: 'Wybitna retoryka, charyzma, zmysł analityczny, wysoka kultura',
@@ -243,6 +250,7 @@ const RPToolkit = {
     const data = this.archetypes[key];
     if (!data) return;
 
+    this._currentCharData = null;
     this.setFormValues(data);
     this.generateCharacterCard();
     VIRP.showToast(`Wczytano archetyp: ${data.job} 🎭`, 'success');
@@ -306,6 +314,31 @@ const RPToolkit = {
       'Sportowy zegarek, lekko utyka przy gwałtownym biegu'
     ];
 
+    const backstoryOpenings = [
+      'Po utracie pracy w poprzednim mieście',
+      'Po konflikcie z dawnym wspólnikiem',
+      'Uciekając przed długiem, którego nie dało się już spłacić',
+      'Po zakończeniu służby i trudnym rozstaniu z rodziną',
+      'W poszukiwaniu osoby, która zniknęła bez śladu'
+    ];
+    const backstoryReasons = [
+      'przyjechał do Leonida City zacząć od zera',
+      'szuka kontaktów i legalnego źródła dochodu',
+      'chce odbudować reputację bez wracania do dawnych błędów',
+      'liczy na ochronę anonimowości w wielkim mieście',
+      'próbuje odzyskać pieniądze i zamknąć stary rozdział'
+    ];
+    const backstoryConflicts = [
+      'Jedna z dawnych decyzji może jednak szybko wyjść na jaw.',
+      'Nie wie, czy może zaufać pierwszym osobom, które proponują mu pomoc.',
+      'Każdy zarobiony dolar przypomina mu o cenie, jaką zapłacił za nowy start.',
+      'W mieście czeka na niego ktoś, kto zna jego prawdziwą historię.',
+      'Największym problemem nie jest brak umiejętności, lecz brak zaufania.'
+    ];
+    const opening = backstoryOpenings[Math.floor(Math.random() * backstoryOpenings.length)];
+    const reason = backstoryReasons[Math.floor(Math.random() * backstoryReasons.length)];
+    const conflict = backstoryConflicts[Math.floor(Math.random() * backstoryConflicts.length)];
+    const subject = isFemale ? 'przyjechała' : 'przyjechał';
     const randomData = {
       name: `${firstName} ${lastName}`,
       age: age,
@@ -317,10 +350,11 @@ const RPToolkit = {
       flaws: flawsPool[Math.floor(Math.random() * flawsPool.length)],
       phobias: phobiasPool[Math.floor(Math.random() * phobiasPool.length)],
       features: featuresPool[Math.floor(Math.random() * featuresPool.length)],
-      backstory: `Przybył(a) do Leonida City w poszukiwaniu nowego początku. Doświadczenia z przeszłości nauczyły postać polegać na sobie, jednak w realiach stanu Leonida musi wypracować nową reputację.`,
-      goals: `Zbudować stabilną pozycję w mieście, zdobyć zaufanie kluczowych ludzi i osiągnąć niezależność finansową.`
+      backstory: `${opening} ${subject} do Leonida City, aby ${reason}. Doświadczenia z przeszłości nauczyły tę postać ostrożności, ale nowy start wymaga ryzyka. ${conflict}`,
+      goals: `Zdobyć stabilną pozycję, spłacić dawne zobowiązania i zbudować sieć zaufanych ludzi, zanim przeszłość ponownie upomni się o swoje.`
     };
 
+    this._currentCharData = null;
     this.setFormValues(randomData);
     this.generateCharacterCard();
     VIRP.showToast(`Wylosowano postać: ${randomData.name} 🎲`, 'success');
@@ -349,6 +383,134 @@ const RPToolkit = {
     setValue('char-goals', data.goals);
   },
 
+  bindCharacterLivePreview() {
+    const ids = ['char-name', 'char-age', 'char-gender', 'char-origin', 'char-job', 'char-avatar-type'];
+    ids.forEach(id => {
+      document.getElementById(id)?.addEventListener('input', () => {
+        this.renderLiveIdPreview();
+        this.saveFormDraft();
+      });
+      document.getElementById(id)?.addEventListener('change', () => {
+        this.renderLiveIdPreview();
+        this.saveFormDraft();
+      });
+    });
+    ['char-origin', 'char-job', 'char-traits', 'char-flaws', 'char-phobias', 'char-features', 'char-backstory', 'char-goals'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', () => this.saveFormDraft());
+    });
+  },
+
+  renderLiveIdPreview() {
+    const current = this._currentCharData || {};
+    const getValue = (id, fallback) => document.getElementById(id)?.value.trim() || fallback;
+    this.renderIdCardCanvas({
+      ...current,
+      name: getValue('char-name', 'MARCO VALENTINO'),
+      age: Number(getValue('char-age', '28')) || 28,
+      gender: getValue('char-gender', 'Mężczyzna'),
+      origin: getValue('char-origin', 'Leonida'),
+      job: getValue('char-job', 'Obywatel'),
+      avatarType: getValue('char-avatar-type', 'street')
+    });
+  },
+
+  createCharacterId() {
+    const randomPart = Math.random().toString(36).slice(2, 8).toUpperCase();
+    return `LEO-${Date.now().toString(36).slice(-6).toUpperCase()}-${randomPart}`;
+  },
+
+  saveDraft(data) {
+    try {
+      localStorage.setItem('virp_character_draft', JSON.stringify(data));
+    } catch (_) {}
+  },
+
+  saveFormDraft() {
+    const getValue = id => document.getElementById(id)?.value || '';
+    const draft = {
+      name: getValue('char-name').trim(),
+      age: Number(getValue('char-age')) || 28,
+      gender: getValue('char-gender') || 'Mężczyzna',
+      origin: getValue('char-origin').trim(),
+      job: getValue('char-job').trim(),
+      avatar: getValue('char-avatar-type') || 'street',
+      traits: getValue('char-traits').trim(),
+      flaws: getValue('char-flaws').trim(),
+      phobias: getValue('char-phobias').trim(),
+      features: getValue('char-features').trim(),
+      backstory: getValue('char-backstory').trim(),
+      goals: getValue('char-goals').trim()
+    };
+    if (!draft.name && !draft.backstory) return;
+    try { localStorage.setItem('virp_character_draft', JSON.stringify(draft)); } catch (_) {}
+  },
+
+  restoreCharacterDraft() {
+    try {
+      const raw = localStorage.getItem('virp_character_draft');
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (!data || typeof data !== 'object' || !data.name) return;
+      this.setFormValues(data);
+      this._currentCharData = data;
+      if (data.flaws && data.backstory && data.backstory.length >= 80) {
+        this.generateCharacterCard();
+      } else {
+        this.renderLiveIdPreview();
+      }
+    } catch (_) {}
+  },
+
+  getSavedCharacters() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem('virp_saved_characters') || '[]');
+      return Array.isArray(parsed) ? parsed.filter(character => character && character.id && character.name) : [];
+    } catch (_) {
+      return [];
+    }
+  },
+
+  refreshSavedCharacters() {
+    const select = document.getElementById('char-saved-select');
+    if (!select) return;
+    select.innerHTML = '<option value="">Wczytaj zapisaną postać</option>';
+    this.getSavedCharacters().forEach(character => {
+      const option = document.createElement('option');
+      option.value = character.id;
+      option.textContent = `${character.name} — ${character.job || 'postać RP'}`;
+      select.appendChild(option);
+    });
+  },
+
+  saveCharacter() {
+    if (!this._currentCharData) {
+      this.generateCharacterCard();
+    }
+    if (!this._currentCharData) return;
+    const characters = this.getSavedCharacters().filter(character => character.id !== this._currentCharData.id);
+    characters.unshift({ ...this._currentCharData, savedAt: new Date().toISOString() });
+    try {
+      localStorage.setItem('virp_saved_characters', JSON.stringify(characters.slice(0, 10)));
+      this.refreshSavedCharacters();
+      VIRP.showToast('Postać zapisana lokalnie w tej przeglądarce.', 'success');
+    } catch (_) {
+      VIRP.showToast('Nie udało się zapisać postaci.', 'error');
+    }
+  },
+
+  loadSelectedCharacter() {
+    const id = document.getElementById('char-saved-select')?.value;
+    const character = this.getSavedCharacters().find(item => item.id === id);
+    if (!character) {
+      VIRP.showToast('Wybierz zapisaną postać.', 'info');
+      return;
+    }
+    this.setFormValues(character);
+    this._currentCharData = character;
+    this.generateCharacterCard();
+    VIRP.showToast(`Wczytano postać: ${character.name}.`, 'success');
+  },
+
   /**
    * Generowanie sformatowanej karty postaci + render Canvas ID
    */
@@ -365,9 +527,10 @@ const RPToolkit = {
     const features = document.getElementById('char-features')?.value.trim() || '';
     const backstory = document.getElementById('char-backstory')?.value.trim();
     const goals = document.getElementById('char-goals')?.value.trim() || '';
+    const ageNumber = Number(age);
 
     // Walidacja minimalna
-    if (!name) {
+    if (!name || name.split(/\s+/).length < 2 || name.length < 5) {
       VIRP.showToast('Podaj imię i nazwisko postaci!', 'error');
       document.getElementById('char-name')?.focus();
       return;
@@ -379,10 +542,28 @@ const RPToolkit = {
       return;
     }
 
+    if (!Number.isInteger(ageNumber) || ageNumber < 16 || ageNumber > 85) {
+      VIRP.showToast('Wiek musi być liczbą całkowitą od 16 do 85.', 'error');
+      document.getElementById('char-age')?.focus();
+      return;
+    }
+    if (!flaws || flaws.length < 3) {
+      VIRP.showToast('Dodaj przynajmniej jedną wadę charakteru.', 'error');
+      document.getElementById('char-flaws')?.focus();
+      return;
+    }
+    if (backstory.length < 80) {
+      VIRP.showToast('Historia postaci powinna mieć co najmniej 80 znaków.', 'error');
+      document.getElementById('char-backstory')?.focus();
+      return;
+    }
+
     const charData = {
-      name, age, gender, origin, job, avatarType, traits, flaws, phobias, features, backstory, goals
+      id: this._currentCharData?.id || this.createCharacterId(),
+      name, age: ageNumber, gender, origin, job, avatarType, traits, flaws, phobias, features, backstory, goals
     };
     this._currentCharData = charData;
+    this.saveDraft(charData);
 
     // 1. Formatowanie czystego tekstu podania
     const divider = '═'.repeat(55);
@@ -390,7 +571,7 @@ const RPToolkit = {
 
     let card = '';
     card += `${divider}\n`;
-    card += `   KARTA POSTACI — PODANIE WHITELIST // VIRP.PL\n`;
+    card += `   KARTA POSTACI — PODANIE RP // VIRP.PL (FAN-MADE)\n`;
     card += `   VIRP.PL  |  STAN: LEONIDA (LEONIDA CITY)\n`;
     card += `${divider}\n\n`;
 
@@ -508,7 +689,7 @@ const RPToolkit = {
 
     ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
     ctx.font = '9px "JetBrains Mono", monospace';
-    ctx.fillText('VERIFIED CITIZEN ID', w - 36, 68);
+    ctx.fillText('FAN-MADE RP // NOT OFFICIAL', w - 36, 68);
     ctx.textAlign = 'left';
 
     // 5. Pole zdjęcia / Awataru (Avatar Box)
@@ -532,7 +713,7 @@ const RPToolkit = {
     ctx.fillStyle = '#00F0FF';
     ctx.font = 'bold 10px "JetBrains Mono", monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('OFFICIAL IDENTITY', photoX + photoW / 2, photoY + photoH - 14);
+    ctx.fillText('FAN-MADE RP ID', photoX + photoW / 2, photoY + photoH - 14);
     ctx.textAlign = 'left';
 
     // 6. Główne dane personalne (Środek i Prawa strona)
@@ -583,14 +764,14 @@ const RPToolkit = {
     ctx.fillText('STATUS:', infoX + 340, currY);
     currY += 20;
 
-    const licHash = (Math.abs(this.hashCode(data.name)) % 89999 + 10000).toString(16).toUpperCase();
+    const licHash = String(data.id || this.createCharacterId()).replace(/[^A-Z0-9]/gi, '').slice(-8).toUpperCase();
     ctx.fillStyle = '#FF9E00';
     ctx.font = 'bold 15px "JetBrains Mono", monospace';
     ctx.fillText(`LEO-2026-${licHash}`, infoX, currY);
     ctx.fillStyle = '#FFFFFF';
     ctx.fillText('2028-12-31', infoX + 190, currY);
     ctx.fillStyle = '#00FF66';
-    ctx.fillText('WL VERIFIED', infoX + 340, currY);
+    ctx.fillText('RP SAMPLE', infoX + 340, currY);
 
     // 7. Podpis kaligraficzny postaci
     const sigY = 430;
@@ -750,14 +931,7 @@ const RPToolkit = {
     const data = this._currentCharData;
     const canvas = document.getElementById('char-id-canvas');
 
-    const cleanText = (str) => {
-      if (!str) return '';
-      const map = {
-        'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ź': 'z', 'ż': 'z',
-        'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N', 'Ó': 'O', 'Ś': 'S', 'Ź': 'Z', 'Ż': 'Z'
-      };
-      return String(str).replace(/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, m => map[m] || m);
-    };
+    const cleanText = (str) => String(str || '');
 
     try {
       const jsPDFConstructor = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
@@ -781,7 +955,7 @@ const RPToolkit = {
 
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(15);
-        doc.text('PODANIE NA WHITELIST // STAN LEONIDA', 15, 23);
+        doc.text('PODANIE RP // STAN LEONIDA // FAN-MADE', 15, 23);
 
         // Logo w prawym rogu
         doc.setTextColor(255, 31, 125);
@@ -804,14 +978,14 @@ const RPToolkit = {
 
           doc.setTextColor(200, 210, 230);
           doc.setFontSize(8.5);
-          doc.text(`Imie i Nazwisko: ${cleanText(data.name)} | Wiek: ${data.age} lat | Plec: ${cleanText(data.gender)} | Pochodzenie: ${cleanText(data.origin)}`, 15, y);
+          doc.text(`Imię i Nazwisko: ${cleanText(data.name)} | Wiek: ${data.age} lat | Płeć: ${cleanText(data.gender)} | Pochodzenie: ${cleanText(data.origin)}`, 15, y);
           y += 5.5;
-          doc.text(`Rola / Zawod: ${cleanText(data.job)}`, 15, y);
+          doc.text(`Rola / Zawód: ${cleanText(data.job)}`, 15, y);
           y += 5.5;
           if (data.traits) { doc.text(`Zalety / Mocne strony: ${cleanText(data.traits)}`, 15, y); y += 5.5; }
           if (data.flaws) { doc.text(`Wady charakteru: ${cleanText(data.flaws)}`, 15, y); y += 5.5; }
           if (data.phobias) { doc.text(`Fobie i ograniczenia: ${cleanText(data.phobias)}`, 15, y); y += 5.5; }
-          if (data.features) { doc.text(`Znaki szczegolne: ${cleanText(data.features)}`, 15, y); y += 7; }
+          if (data.features) { doc.text(`Znaki szczególne: ${cleanText(data.features)}`, 15, y); y += 7; }
 
           doc.setTextColor(0, 240, 255);
           doc.setFontSize(11);
@@ -1078,6 +1252,7 @@ const RPToolkit = {
 
     this._lastGeneratedCard = null;
     this._currentCharData = null;
+    try { localStorage.removeItem('virp_character_draft'); } catch (_) {}
     this.renderDefaultIdCanvas();
 
     VIRP.showToast('Wyczyszczono formularz!', 'info');

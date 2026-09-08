@@ -655,6 +655,7 @@
                 <span>Kierowca / Getaway</span>
               </button>
             </div>
+            <p class="mt-3 text-[10px] text-slate-400 font-mono">Archetypy są wyłącznie inspiracją — przed użyciem sprawdź zasady konkretnego serwera RP.</p>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -720,7 +721,7 @@
 
                 <div class="form-group">
                   <label class="form-label text-slate-300" for="char-flaws">Wady Charakteru <span class="text-red-400">*</span></label>
-                  <input type="text" id="char-flaws" class="form-input border-red-500/30" placeholder="np. Hazardzista, impulsywny, pamiętliwy, chciwy">
+                  <input type="text" id="char-flaws" class="form-input border-red-500/30" placeholder="np. Hazardzista, impulsywny, pamiętliwy, chciwy" required>
                 </div>
 
                 <div class="form-group">
@@ -736,7 +737,7 @@
 
               <div class="form-group">
                 <label class="form-label" for="char-backstory">Historia / Backstory <span class="required">*</span></label>
-                <textarea id="char-backstory" class="form-textarea" rows="4" placeholder="Opisz historię życia postaci, dlaczego przyjechała do Leonida..."></textarea>
+                <textarea id="char-backstory" class="form-textarea" rows="4" minlength="80" placeholder="Opisz historię życia postaci, dlaczego przyjechała do Leonida..."></textarea>
               </div>
 
               <div class="form-group">
@@ -752,6 +753,13 @@
                 <button type="button" id="char-clear-btn" class="btn-secondary px-4" title="Wyczyść formularz">
                   <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <button type="button" id="char-save-btn" class="btn-secondary text-xs py-2 px-3">Zapisz postać</button>
+                <select id="char-saved-select" class="form-select text-xs flex-1 min-w-[180px]" aria-label="Wczytaj zapisaną postać">
+                  <option value="">Wczytaj zapisaną postać</option>
+                </select>
+                <button type="button" id="char-load-btn" class="btn-secondary text-xs py-2 px-3">Wczytaj</button>
               </div>
             </div>
 
