@@ -835,6 +835,14 @@ const RPToolkit = {
   drawAvatarSilhouette(ctx, type, x, y, w, h) {
     const cx = x + w / 2;
     const cy = y + h / 2 - 10;
+    const accent = {
+      police: '#3B82F6',
+      medic: '#EF4444',
+      crime: '#A855F7',
+      suit: '#F59E0B',
+      racer: '#FF1F7D',
+      street: '#00F0FF'
+    }[type] || '#00F0FF';
 
     ctx.save();
     ctx.beginPath();
@@ -845,26 +853,114 @@ const RPToolkit = {
     ctx.fillStyle = '#141A29';
     ctx.fillRect(x, y, w, h);
 
-    // Głowa
+    // Sylwetka głowy
     ctx.fillStyle = '#334155';
     ctx.beginPath();
     ctx.arc(cx, cy - 30, 36, 0, Math.PI * 2);
     ctx.fill();
 
-    // Tułów
-    ctx.beginPath();
-    ctx.arc(cx, cy + 85, 75, Math.PI, 0, false);
-    ctx.fill();
-
-    // Akcent kolorystyczny wg roli
-    ctx.fillStyle = '#00F0FF';
-    if (type === 'police') ctx.fillStyle = '#3B82F6';
-    if (type === 'medic') ctx.fillStyle = '#EF4444';
-    if (type === 'crime') ctx.fillStyle = '#A855F7';
-    if (type === 'suit') ctx.fillStyle = '#F59E0B';
-    if (type === 'racer') ctx.fillStyle = '#FF1F7D';
-
-    ctx.fillRect(cx - 15, cy + 30, 30, 10);
+    // Ubranie i dodatki są różne dla każdego stylu, nie tylko kolor akcentu.
+    ctx.fillStyle = '#334155';
+    if (type === 'police') {
+      ctx.fillRect(cx - 70, cy + 28, 140, 100);
+      ctx.fillStyle = accent;
+      ctx.fillRect(cx - 70, cy + 28, 140, 8);
+      ctx.fillRect(cx - 15, cy + 48, 30, 80);
+      ctx.fillStyle = '#172554';
+      ctx.fillRect(cx - 58, cy + 48, 36, 30);
+      ctx.fillRect(cx + 22, cy + 48, 36, 30);
+      ctx.fillStyle = '#CBD5E1';
+      ctx.fillRect(cx - 5, cy + 54, 10, 66);
+      ctx.fillStyle = '#FACC15';
+      ctx.beginPath();
+      ctx.arc(cx - 43, cy + 43, 5, 0, Math.PI * 2);
+      ctx.arc(cx + 43, cy + 43, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#1E3A8A';
+      ctx.fillRect(cx - 43, cy - 68, 86, 12);
+    } else if (type === 'medic') {
+      ctx.fillStyle = '#E2E8F0';
+      ctx.beginPath();
+      ctx.moveTo(cx - 72, cy + 128);
+      ctx.lineTo(cx - 58, cy + 38);
+      ctx.lineTo(cx + 58, cy + 38);
+      ctx.lineTo(cx + 72, cy + 128);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = accent;
+      ctx.fillRect(cx - 8, cy + 42, 16, 48);
+      ctx.fillRect(cx - 24, cy + 58, 48, 16);
+      ctx.fillStyle = '#F8FAFC';
+      ctx.fillRect(cx - 44, cy - 66, 88, 10);
+    } else if (type === 'suit') {
+      ctx.fillStyle = '#1E293B';
+      ctx.beginPath();
+      ctx.moveTo(cx - 72, cy + 128);
+      ctx.lineTo(cx - 52, cy + 34);
+      ctx.lineTo(cx + 52, cy + 34);
+      ctx.lineTo(cx + 72, cy + 128);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#F8FAFC';
+      ctx.beginPath();
+      ctx.moveTo(cx - 20, cy + 36);
+      ctx.lineTo(cx, cy + 66);
+      ctx.lineTo(cx + 20, cy + 36);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = accent;
+      ctx.fillRect(cx - 4, cy + 52, 8, 58);
+      ctx.fillStyle = '#0F172A';
+      ctx.fillRect(cx - 48, cy - 68, 96, 10);
+      ctx.fillRect(cx - 20, cy - 78, 40, 12);
+    } else if (type === 'racer') {
+      ctx.fillStyle = '#7C2D12';
+      ctx.beginPath();
+      ctx.arc(cx, cy - 30, 45, Math.PI, 0);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      ctx.fillRect(cx - 38, cy - 36, 76, 18);
+      ctx.fillStyle = '#334155';
+      ctx.beginPath();
+      ctx.moveTo(cx - 72, cy + 128);
+      ctx.lineTo(cx - 62, cy + 40);
+      ctx.lineTo(cx + 62, cy + 40);
+      ctx.lineTo(cx + 72, cy + 128);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = accent;
+      ctx.fillRect(cx - 58, cy + 55, 116, 12);
+      ctx.fillRect(cx - 8, cy + 40, 16, 88);
+    } else if (type === 'crime') {
+      ctx.fillStyle = '#111827';
+      ctx.beginPath();
+      ctx.moveTo(cx - 76, cy + 128);
+      ctx.lineTo(cx - 60, cy + 30);
+      ctx.lineTo(cx + 60, cy + 30);
+      ctx.lineTo(cx + 76, cy + 128);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(cx - 60, cy + 35);
+      ctx.lineTo(cx, cy + 128);
+      ctx.lineTo(cx + 60, cy + 35);
+      ctx.stroke();
+      ctx.fillStyle = '#0F172A';
+      ctx.beginPath();
+      ctx.arc(cx, cy - 58, 42, Math.PI, 0);
+      ctx.fill();
+    } else {
+      ctx.fillStyle = '#334155';
+      ctx.beginPath();
+      ctx.arc(cx, cy + 85, 75, Math.PI, 0, false);
+      ctx.fill();
+      ctx.fillStyle = accent;
+      ctx.fillRect(cx - 15, cy + 30, 30, 10);
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(cx - 48, cy - 68, 96, 10);
+    }
 
     ctx.restore();
   },
