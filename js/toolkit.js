@@ -914,13 +914,17 @@ const RPToolkit = {
       ctx.fillRect(cx - 48, cy - 68, 96, 10);
       ctx.fillRect(cx - 20, cy - 78, 40, 12);
     } else if (type === 'racer') {
-      ctx.fillStyle = '#7C2D12';
+      // Kask z wizjerem i kombinezon z pasami wyścigowymi.
+      ctx.fillStyle = '#9A3412';
       ctx.beginPath();
-      ctx.arc(cx, cy - 30, 45, Math.PI, 0);
+      ctx.arc(cx, cy - 30, 44, Math.PI, 0);
       ctx.fill();
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
-      ctx.fillRect(cx - 38, cy - 36, 76, 18);
-      ctx.fillStyle = '#334155';
+      ctx.fillStyle = '#0F172A';
+      ctx.fillRect(cx - 39, cy - 34, 78, 20);
+      ctx.strokeStyle = '#CBD5E1';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(cx - 39, cy - 34, 78, 20);
+      ctx.fillStyle = '#475569';
       ctx.beginPath();
       ctx.moveTo(cx - 72, cy + 128);
       ctx.lineTo(cx - 62, cy + 40);
@@ -929,9 +933,13 @@ const RPToolkit = {
       ctx.closePath();
       ctx.fill();
       ctx.fillStyle = accent;
-      ctx.fillRect(cx - 58, cy + 55, 116, 12);
-      ctx.fillRect(cx - 8, cy + 40, 16, 88);
+      ctx.fillRect(cx - 58, cy + 48, 116, 14);
+      ctx.fillRect(cx - 10, cy + 40, 20, 88);
+      ctx.fillStyle = '#E2E8F0';
+      ctx.fillRect(cx - 48, cy + 86, 28, 8);
+      ctx.fillRect(cx + 20, cy + 86, 28, 8);
     } else if (type === 'crime') {
+      // Skórzana kurtka z kołnierzem i klapami, zamiast pojedynczej kreski.
       ctx.fillStyle = '#111827';
       ctx.beginPath();
       ctx.moveTo(cx - 76, cy + 128);
@@ -940,26 +948,53 @@ const RPToolkit = {
       ctx.lineTo(cx + 76, cy + 128);
       ctx.closePath();
       ctx.fill();
-      ctx.strokeStyle = accent;
-      ctx.lineWidth = 5;
+      ctx.fillStyle = '#1F2937';
       ctx.beginPath();
-      ctx.moveTo(cx - 60, cy + 35);
-      ctx.lineTo(cx, cy + 128);
-      ctx.lineTo(cx + 60, cy + 35);
+      ctx.moveTo(cx - 58, cy + 32);
+      ctx.lineTo(cx - 12, cy + 74);
+      ctx.lineTo(cx - 28, cy + 88);
+      ctx.lineTo(cx - 64, cy + 52);
+      ctx.closePath();
+      ctx.moveTo(cx + 58, cy + 32);
+      ctx.lineTo(cx + 12, cy + 74);
+      ctx.lineTo(cx + 28, cy + 88);
+      ctx.lineTo(cx + 64, cy + 52);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(cx - 12, cy + 72);
+      ctx.lineTo(cx, cy + 124);
+      ctx.lineTo(cx + 12, cy + 72);
       ctx.stroke();
       ctx.fillStyle = '#0F172A';
       ctx.beginPath();
       ctx.arc(cx, cy - 58, 42, Math.PI, 0);
       ctx.fill();
     } else {
+      // Bluza z kapturem i daszkiem dla stylu streetwear.
       ctx.fillStyle = '#334155';
       ctx.beginPath();
-      ctx.arc(cx, cy + 85, 75, Math.PI, 0, false);
+      ctx.moveTo(cx - 72, cy + 128);
+      ctx.lineTo(cx - 62, cy + 48);
+      ctx.lineTo(cx - 38, cy + 30);
+      ctx.lineTo(cx + 38, cy + 30);
+      ctx.lineTo(cx + 62, cy + 48);
+      ctx.lineTo(cx + 72, cy + 128);
+      ctx.closePath();
       ctx.fill();
       ctx.fillStyle = accent;
-      ctx.fillRect(cx - 15, cy + 30, 30, 10);
-      ctx.fillStyle = '#475569';
-      ctx.fillRect(cx - 48, cy - 68, 96, 10);
+      ctx.fillRect(cx - 58, cy + 50, 116, 12);
+      ctx.fillStyle = '#1E293B';
+      ctx.beginPath();
+      ctx.arc(cx, cy - 34, 39, Math.PI, 0);
+      ctx.fill();
+      ctx.fillStyle = '#64748B';
+      ctx.fillRect(cx - 50, cy - 72, 100, 10);
+      ctx.fillRect(cx + 28, cy - 62, 30, 6);
+      ctx.fillStyle = '#CBD5E1';
+      ctx.fillRect(cx - 12, cy + 70, 24, 5);
     }
 
     ctx.restore();
