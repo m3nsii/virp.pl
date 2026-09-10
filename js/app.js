@@ -141,7 +141,6 @@ const VIRP = {
     this.initNavigation();
     this.initScrollAnimations();
     this.initSmoothScroll();
-    this.initHeroVoteAction();
     this.initHeroStats();
     this.initHeroGridOptimization();
     this.initRadioWidget();
@@ -328,16 +327,6 @@ const VIRP = {
           }
         } catch (_) {}
       });
-    });
-  },
-
-  initHeroVoteAction() {
-    const voteAction = document.getElementById('stat-votes');
-    const serversSection = document.getElementById('servers');
-    if (!voteAction || !serversSection) return;
-
-    voteAction.addEventListener('click', () => {
-      serversSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   },
 
