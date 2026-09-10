@@ -96,6 +96,7 @@ const StreamersHub = {
     await this.fetchData();
     this.bindEvents();
     this.checkHash();
+    Top3InfoModal.init();
     StreamerApplicationModal.init();
     ClipApplicationModal.init();
     ClipViewerModal.init();
@@ -449,73 +450,178 @@ const StreamersHub = {
     const container = document.getElementById('streamers-spotlight');
     if (!container) return;
 
-    // Priorytet Spotlight: transmisja GTA V, potem dowolny live, na końcu pierwszy z listy
-    const liveGta = this.streamers
-      .filter(s => s.isLive && (s.currentGame || '').toLowerCase().includes('grand theft auto'))
-      .sort((a, b) => (b.viewers || 0) - (a.viewers || 0));
+    // Pomocnik do rozpoznawania kategorii GTA V / FiveM
+    const isGtaCategory = (gameName) => {
+      if (!gameName || typeof gameName !== 'string') return false;
+      const s = gameName.toLowerCase();
+      return s.includes('grand theft auto') || s.includes('gta') || s.includes('fivem');
+    };
 
-    const allLive = this.streamers
-      .filter(s => s.isLive)
-      .sort((a, b) => (b.viewers || 0) - (a.viewers || 0));
+    // Reguła 1: Wyróżnienie działa TYLKO wtedy, gdy streamer jest LIVE (isLive === true)
+    const allLive = this.streamers.filter(s => s && s.isLive === true);
 
-    const featured = liveGta[0] || allLive[0] || this.streamers[0];
+    // Podział na partnerów (aktywna współpraca/barter) i pozostałych twórców
+    const livePartners = allLive.filter(s => s.isPartner === true || s.partner === true);
+    const liveOthers = allLive.filter(s => !(s.isPartner === true || s.partner === true));
 
-    if (!featured) {
-      container.innerHTML = '';
+    // Priorytet 1: Partnerzy grający w GTA V / FiveM (losowa rotacja dla równego barteru)
+    const partnersGta = livePartners.filter(s => isGtaCategory(s.currentGame)).sort(() => 0.5 - Math.random());
+    // Priorytet 2: Partnerzy grający w inne gry (losowa rotacja)
+    const partnersOther = livePartners.filter(s => !isGtaCategory(s.currentGame)).sort(() => 0.5 - Math.random());
+
+    // Priorytet 3: Pozostali twórcy grający w GTA V / FiveM (posortowani wg widzów)
+    const othersGta = liveOthers.filter(s => isGtaCategory(s.currentGame)).sort((a, b) => (b.viewers || 0) - (a.viewers || 0));
+    // Priorytet 4: Pozostali twórcy grający w inne gry (posortowani wg widzów)
+    const othersOther = liveOthers.filter(s => !isGtaCategory(s.currentGame)).sort((a, b) => (b.viewers || 0) - (a.viewers || 0));
+
+    // TOP 3: GTA Partnerzy -> Pozostali Partnerzy -> GTA Twórcy -> Pozostali Twórcy
+    const top3 = [...partnersGta, ...partnersOther, ...othersGta, ...othersOther].slice(0, 3);
+
+    if (top3.length === 0) {
+      container.innerHTML = `
+        <div class="top3-header flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-500"></div>
+            <h3 class="text-lg sm:text-xl font-display font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+              <span>TOP 3 TRANSMISJE // LIVE</span>
+              <span class="hud-pill hud-pill-amber text-[10px]">CZEKA NA TRANSMISJE</span>
+            </h3>
+          </div>
+          <button type="button" id="open-top3-info-btn" class="top3-how-to-btn text-xs font-mono text-neon-cyan hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer px-3 py-1.5 rounded bg-cyan-950/30 border border-cyan-500/30 hover:border-neon-cyan">
+            <i data-lucide="help-circle" class="w-3.5 h-3.5 text-neon-cyan"></i>
+            <span>Jak zdobyć odznakę POLECANY i stałe TOP 3?</span>
+          </button>
+        </div>
+
+        <div class="top3-empty-card p-6 sm:p-8 rounded-xl bg-gradient-to-r from-[#0d121f]/90 via-[#101728]/90 to-[#0d121f]/90 border border-white/10 text-center flex flex-col items-center justify-center">
+          <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center mb-3 text-neon-pink">
+            <i data-lucide="radio" class="w-6 h-6"></i>
+          </div>
+          <h4 class="font-display text-lg text-white font-bold uppercase tracking-wider mb-1">
+            Aktualnie żaden ze streamerów nie prowadzi transmisji
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-400 font-mono max-w-lg mb-5">
+            Wyróżnienie w TOP 3 działa wyłącznie dla aktywnych transmisji na żywo. Gdy streamerzy z naszej bazy odpalą stream, pojawią się tu automatycznie!
+          </p>
+          <div class="flex items-center gap-3 flex-wrap justify-center">
+            <button type="button" id="top3-empty-how-btn" class="btn-secondary text-xs py-2.5 px-4 flex items-center gap-2 cursor-pointer">
+              <i data-lucide="help-circle" class="w-4 h-4"></i>
+              <span>Zasady Barteru i TOP 3</span>
+            </button>
+            <button type="button" id="top3-empty-apply-btn" class="btn-primary text-xs py-2.5 px-4 flex items-center gap-2 cursor-pointer">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Zgłoś Swój Kanał</span>
+            </button>
+          </div>
+        </div>
+      `;
+      if (typeof lucide !== 'undefined') lucide.createIcons({ root: container });
       return;
     }
 
-    const safeName = typeof sanitize === 'function' ? sanitize(featured.name) : featured.name;
-    const safeTitle = typeof sanitize === 'function' ? sanitize(featured.title || 'Kanał Społeczności') : (featured.title || 'Kanał Społeczności');
-    const safeGame = typeof sanitize === 'function' ? sanitize(featured.currentGame || 'OFFLINE') : (featured.currentGame || 'OFFLINE');
-    const safePlatform = (featured.platform || 'twitch').toUpperCase();
-    const safeViewers = featured.viewers ? parseInt(featured.viewers).toLocaleString('pl-PL') : 0;
-    const safeChannelUrl = typeof window.safeUrl === 'function' ? window.safeUrl(featured.channelUrl) : featured.channelUrl;
-    const safeAvatar = typeof window.safeUrl === 'function' ? window.safeUrl(featured.avatar) : featured.avatar;
-    const safeThumbnail = featured.thumbnail && typeof window.safeUrl === 'function' ? window.safeUrl(featured.thumbnail) : featured.thumbnail;
-
     container.innerHTML = `
-      <div class="streamer-spotlight-card">
-        <div class="spotlight-badge-row">
-          <span class="hud-pill hud-pill-pink flex items-center gap-1">
-            <span class="pulse-dot"></span> SPOTLIGHT // GŁÓWNA TRANSMISJA
-          </span>
-          <span class="text-xs font-mono text-neon-cyan uppercase">PLATFORMA: ${safePlatform}</span>
+      <div class="top3-header flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <div class="w-2.5 h-2.5 rounded-full bg-neon-pink animate-ping"></div>
+          <h3 class="text-lg sm:text-xl font-display font-bold uppercase tracking-wider text-white flex items-center gap-2">
+            <span>TOP 3 TRANSMISJE // LIVE</span>
+          </h3>
+        </div>
+        <button type="button" id="open-top3-info-btn" class="top3-how-to-btn text-xs font-mono text-neon-cyan hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer px-3 py-1.5 rounded bg-cyan-950/30 border border-cyan-500/30 hover:border-neon-cyan">
+          <i data-lucide="help-circle" class="w-3.5 h-3.5 text-neon-cyan"></i>
+          <span>Jak zdobyć odznakę POLECANY i stałe TOP 3?</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        ${top3.map((streamer, idx) => this.renderTop3Card(streamer, idx)).join('')}
+      </div>
+    `;
+
+    if (typeof lucide !== 'undefined') lucide.createIcons({ root: container });
+  },
+
+  renderTop3Card(s, idx) {
+    const isPartner = s.isPartner === true || s.partner === true;
+    const safeName = typeof sanitize === 'function' ? sanitize(s.name) : s.name;
+    const safeTitle = typeof sanitize === 'function' ? sanitize(s.title || 'Transmisja na żywo') : (s.title || 'Transmisja na żywo');
+    const safeGame = typeof sanitize === 'function' ? sanitize(s.currentGame || 'Grand Theft Auto V') : (s.currentGame || 'Grand Theft Auto V');
+    const safePlatform = (s.platform || 'twitch').toUpperCase();
+    const safeViewers = s.viewers ? parseInt(s.viewers).toLocaleString('pl-PL') : '0';
+    const safeChannelUrl = typeof window.safeUrl === 'function' ? window.safeUrl(s.channelUrl) : s.channelUrl;
+    const safeAvatar = typeof window.safeUrl === 'function' ? window.safeUrl(s.avatar) : s.avatar;
+    const safeThumbnail = s.thumbnail && typeof window.safeUrl === 'function' ? window.safeUrl(s.thumbnail) : s.thumbnail;
+
+    const rankClasses = ['top3-rank-1', 'top3-rank-2', 'top3-rank-3'];
+    const rankClass = rankClasses[idx] || 'top3-rank-3';
+    const rankText = `#${idx + 1} LIVE`;
+
+    const partnerBadge = isPartner
+      ? `<span class="hud-pill hud-pill-pink text-[10px] flex items-center gap-1 font-bold shadow-sm whitespace-nowrap">
+           <span class="pulse-dot"></span> ⭐ POLECANY STREAM
+         </span>`
+      : `<span class="hud-pill hud-pill-cyan text-[10px] flex items-center gap-1 font-bold shadow-sm whitespace-nowrap">
+           <span class="pulse-dot"></span> 🔴 LIVE
+         </span>`;
+
+    const platformBadgeClass = safePlatform === 'KICK' ? 'hud-pill-green' : 'hud-pill-pink';
+
+    return `
+      <article class="top3-streamer-card ${isPartner ? 'is-partner' : ''}" data-streamer-id="${s.id || ''}">
+        <!-- Górna belka: Ranga + Status Partnera + Platforma -->
+        <div class="top3-card-header flex items-center justify-between gap-2 p-3.5 border-b border-white/10 bg-black/40">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="top3-rank-badge ${rankClass}">
+              ${rankText}
+            </span>
+            ${partnerBadge}
+          </div>
+          <span class="hud-pill ${platformBadgeClass} text-[10px] font-mono font-bold">${safePlatform}</span>
         </div>
 
-        <div class="spotlight-content">
-          <div class="spotlight-main-row flex flex-col md:flex-row items-center gap-6 w-full">
-            
-            ${safeThumbnail ? `
-              <div class="spotlight-preview-box">
-                <img src="${safeThumbnail}" alt="${safeName} live stream" class="spotlight-preview-img" loading="lazy">
-                <div class="spotlight-preview-overlay">
-                  <span class="streamer-live-viewers-badge">🔴 ${safeViewers} WIDZÓW</span>
-                </div>
-              </div>
-            ` : ''}
-
-            <img src="${safeAvatar}" alt="${safeName}" class="spotlight-avatar" loading="lazy" onerror="this.onerror=null;this.src='img/logo-vi.png'">
-            
-            <div class="spotlight-info flex-1">
-              <div class="flex items-center gap-2 flex-wrap mb-1">
-                <h2 class="spotlight-name">${safeName}</h2>
-                <span class="hud-pill ${safePlatform === 'KICK' ? 'hud-pill-green' : 'hud-pill-pink'} text-[10px]">${safePlatform}</span>
-                ${featured.isLive ? `<span class="hud-pill hud-pill-pink text-[10px] font-mono font-bold">🔴 ${safeViewers} WIDZÓW</span>` : '<span class="hud-pill hud-pill-amber text-[10px]">OFFLINE</span>'}
-              </div>
-              <p class="spotlight-title text-sm text-slate-300 font-mono mb-2">${safeTitle}</p>
-              <p class="text-xs text-slate-400 font-mono">STATUS: <strong class="text-white">${featured.isLive ? safeGame : 'Kanał Offline'}</strong></p>
+        <!-- Podgląd Streamu z licznikiem widzów -->
+        <div class="top3-preview-box relative w-full aspect-video bg-[#06080f] overflow-hidden border-b border-white/10">
+          ${safeThumbnail ? `
+            <img src="${safeThumbnail}" alt="${safeName} live stream" class="top3-preview-img w-full h-full object-cover transition-transform duration-500 hover:scale-105" loading="lazy">
+          ` : `
+            <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-pink-950/30 to-cyan-950/30 text-slate-400">
+              <i data-lucide="tv" class="w-10 h-10 text-pink-500/50 mb-1"></i>
+              <span class="text-xs font-mono">PODGLĄD TRANSMISJI</span>
             </div>
-
-            <div class="spotlight-action">
-              <a href="${safeChannelUrl}" target="_blank" rel="noopener noreferrer" class="btn-primary py-3 px-6 text-sm flex items-center justify-center gap-2">
-                <i data-lucide="play" class="w-4 h-4"></i>
-                <span>OGLĄDAJ TRANSMISJĘ</span>
-              </a>
-            </div>
+          `}
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0d111d] via-transparent to-transparent opacity-60 pointer-events-none"></div>
+          <div class="top3-viewers-tag">
+            <span class="streamer-live-viewers-badge font-mono font-bold">🔴 ${safeViewers} WIDZÓW</span>
           </div>
         </div>
-      </div>
+
+        <!-- Profil i Informacje -->
+        <div class="p-4 flex-1 flex flex-col justify-between gap-3">
+          <div class="flex items-start gap-3">
+            <img src="${safeAvatar}" alt="${safeName}" class="top3-avatar w-12 h-12 rounded-lg border-2 ${isPartner ? 'border-neon-pink shadow-pink-500/30' : 'border-slate-700 shadow-cyan-500/10'} shadow-lg object-cover flex-shrink-0" loading="lazy" onerror="this.onerror=null;this.src='img/logo-vi.png'">
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-1.5">
+                <h4 class="font-display text-lg text-white font-bold truncate">${safeName}</h4>
+                ${isPartner ? '<i data-lucide="check-circle" class="w-4 h-4 text-neon-pink flex-shrink-0" title="Zweryfikowany Partner VIRP"></i>' : ''}
+              </div>
+              <p class="text-[11px] text-neon-cyan font-mono truncate">🎮 ${safeGame}</p>
+            </div>
+          </div>
+
+          <!-- Tytuł transmisji -->
+          <p class="text-xs text-slate-300 font-mono line-clamp-2 leading-relaxed" title="${safeTitle}">
+            ${safeTitle}
+          </p>
+
+          <!-- Przycisk akcji -->
+          <div class="pt-1">
+            <a href="${safeChannelUrl}" target="_blank" rel="noopener noreferrer" class="btn-primary w-full py-2.5 px-4 text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-pink-500/20">
+              <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+              <span>OGLĄDAJ TRANSMISJĘ</span>
+            </a>
+          </div>
+        </div>
+      </article>
     `;
   },
 
@@ -900,6 +1006,81 @@ const StreamersHub = {
 
     // Jeśli otwarty jest podgląd tego klipu, zaktualizuj też licznik w modalu
     ClipViewerModal.updateVoteState(clip);
+  }
+};
+
+/* ============================================================
+   VIRP.pl — TOP 3 Barter & Spotlight Info Modal (Top3InfoModal)
+   ============================================================ */
+const Top3InfoModal = {
+  modal: null,
+  closeBtn: null,
+  closeActionBtn: null,
+  applyBtn: null,
+
+  init() {
+    this.modal = document.getElementById('top3-info-modal');
+    if (!this.modal) return;
+    this.closeBtn = document.getElementById('top3-info-modal-close-btn');
+    this.closeActionBtn = document.getElementById('top3-modal-close-action-btn');
+    this.applyBtn = document.getElementById('top3-modal-apply-btn');
+
+    this.bindEvents();
+  },
+
+  bindEvents() {
+    if (this.closeBtn) {
+      this.closeBtn.addEventListener('click', () => this.close());
+    }
+    if (this.closeActionBtn) {
+      this.closeActionBtn.addEventListener('click', () => this.close());
+    }
+    if (this.applyBtn) {
+      this.applyBtn.addEventListener('click', () => {
+        this.close();
+        StreamerApplicationModal.open();
+      });
+    }
+
+    this.modal.addEventListener('click', (e) => {
+      if (e.target === this.modal) this.close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.modal && this.modal.classList.contains('open')) {
+        this.close();
+      }
+    });
+
+    // Delegacja kliknięć w przyciski otwierające modal informacji TOP 3
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('#open-top3-info-btn, #top3-empty-how-btn, [data-action="open-top3-info"]');
+      if (btn) {
+        e.preventDefault();
+        this.open();
+      }
+      const emptyApply = e.target.closest('#top3-empty-apply-btn');
+      if (emptyApply) {
+        e.preventDefault();
+        StreamerApplicationModal.open();
+      }
+    });
+  },
+
+  open() {
+    if (!this.modal) return;
+    this.modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (typeof lucide !== 'undefined') lucide.createIcons({ root: this.modal });
+  },
+
+  close() {
+    if (!this.modal) return;
+    this.modal.classList.remove('open');
+    const portal = document.getElementById('streamers-portal');
+    if (!portal || portal.classList.contains('hidden')) {
+      document.body.style.overflow = '';
+    }
   }
 };
 

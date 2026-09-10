@@ -136,7 +136,7 @@
   <link rel="preload" as="image" href="img/hero-vice.jpg" fetchpriority="high">
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/style.css?v=1.3.5">
+  <link rel="stylesheet" href="css/style.css?v=1.4.0">
 </head>
 <body>
 
@@ -1567,6 +1567,88 @@
 
 
   <!-- ============================================================
+       TOP 3 INFO MODAL (JAK TRAFIĆ NA STRONĘ GŁÓWNĄ / BARTER)
+       ============================================================ -->
+  <div id="top3-info-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="top3-modal-title">
+    <div class="modal-content max-w-xl">
+      <div class="modal-header">
+        <div>
+          <span class="text-[10px] font-mono text-neon-cyan tracking-widest uppercase block mb-0.5">
+            PROGRAM PARTNERSKI // BARTER
+          </span>
+          <h2 id="top3-modal-title" class="modal-title gradient-text text-xl sm:text-2xl">
+            Jak Zdobyć Odznakę POLECANY i Stałe TOP 3?
+          </h2>
+        </div>
+        <button id="top3-info-modal-close-btn" class="btn-icon" aria-label="Zamknij">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="modal-body space-y-4">
+        <!-- Wstęp -->
+        <div class="p-4 rounded-lg bg-pink-950/20 border border-pink-500/25 flex items-start gap-3">
+          <div class="w-9 h-9 rounded-lg bg-neon-pink/20 flex items-center justify-center flex-shrink-0 mt-0.5 text-neon-pink">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="text-xs sm:text-sm font-bold text-white uppercase font-display mb-1">
+              Chcesz stałego miejsca w TOP 3 i odznaki ⭐ POLECANY STREAM?
+            </h4>
+            <p class="text-[11px] sm:text-xs text-slate-300 font-mono leading-relaxed">
+              Dla aktywnych twórców FiveM i GTA V prowadzimy program partnerski oparty o barter (darmową wymianę zasięgów). W zamian za dodanie panelu virp.pl na swoim kanale, zyskujesz odznakę Zweryfikowanego Partnera i gwarantowane pierwszeństwo na stronie głównej virp.pl za każdym razem, gdy prowadzisz transmisję na żywo!
+            </p>
+          </div>
+        </div>
+
+        <!-- 3 KROKI -->
+        <div class="space-y-2.5">
+          <div class="p-3 rounded-lg bg-[#0d121f] border border-white/10 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-cyan-500/20 text-neon-cyan font-mono font-bold text-xs flex items-center justify-center flex-shrink-0">1</span>
+            <div>
+              <h5 class="text-xs font-bold text-white uppercase font-display">Umieść baner virp.pl w bio</h5>
+              <p class="text-[11px] text-slate-400 font-mono mt-0.5">
+                Dodaj grafikę lub odnośnik do <strong class="text-white">https://virp.pl</strong> w panelach na swoim kanale Twitch lub Kick.
+              </p>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-lg bg-[#0d121f] border border-white/10 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-pink-500/20 text-neon-pink font-mono font-bold text-xs flex items-center justify-center flex-shrink-0">2</span>
+            <div>
+              <h5 class="text-xs font-bold text-white uppercase font-display">Zgłoś swój kanał do aktywacji</h5>
+              <p class="text-[11px] text-slate-400 font-mono mt-0.5">
+                Wypełnij formularz poniżej lub napisz do nas. Po szybkiej weryfikacji banera włączamy dla Ciebie status Zweryfikowanego Partnera.
+              </p>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-lg bg-[#0d121f] border border-white/10 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 font-mono font-bold text-xs flex items-center justify-center flex-shrink-0">3</span>
+            <div>
+              <h5 class="text-xs font-bold text-white uppercase font-display">Odznaka ⭐ POLECANY i stały priorytet TOP 3</h5>
+              <p class="text-[11px] text-slate-400 font-mono mt-0.5">
+                Gdy tylko odpalisz stream z GTA V / FiveM, system automatycznie umieszcza Cię na szczycie strony w boksach TOP 3 z prestiżową odznaką partnera.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Akcje -->
+        <div class="pt-2 flex flex-col sm:flex-row items-center gap-3">
+          <button type="button" id="top3-modal-apply-btn" class="btn-primary w-full sm:flex-1 py-3 text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-pink-500/20">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Zgłoś Swój Kanał do Barteru</span>
+          </button>
+          <button type="button" id="top3-modal-close-action-btn" class="btn-secondary w-full sm:w-auto py-3 px-6 text-xs flex items-center justify-center cursor-pointer">
+            <span>Rozumiem</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
        ADD STREAMER MODAL (DISCORD_WEBHOOK_2)
        ============================================================ -->
   <div id="add-streamer-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="streamer-modal-title">
@@ -2216,7 +2298,7 @@
        ============================================================ -->
   <script src="js/app.js?v=1.3.4"></script>
   <script src="js/servers.js?v=1.3.4"></script>
-  <script src="js/streamers.js?v=1.3.4"></script>
+  <script src="js/streamers.js?v=1.4.0"></script>
   <script src="js/modal.js?v=1.3.4"></script>
   <script src="js/toolkit.js?v=1.3.7"></script>
 
