@@ -526,7 +526,7 @@ const VIRP = {
 
     this.countUp('stat-servers', stats.servers, 1000);
     this.countUp('stat-slots', stats.slots, 1500);
-    this.countUp('stat-votes', stats.votes, 2000);
+    // Trzeci kafelek jest stałym wezwaniem do oceniania, a nie sztucznym licznikiem.
   },
 
   /**

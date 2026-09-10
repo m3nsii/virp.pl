@@ -308,7 +308,7 @@ const ServerCatalog = {
     const safeName = this.cleanServerName(server.name);
     const safeId = sanitize(server.id);
     const safeDesc = sanitize(server.shortDescription || server.description);
-    const safeBannerUrl = safeUrl(server.banner);
+    const safeBannerUrl = safeUrl(server.logo || server.banner);
     const safeDiscordUrl = safeUrl(server.discord);
     const safeWebsiteUrl = safeUrl(server.website);
     const safeDirect = sanitize(server.directConnect || '');
@@ -421,7 +421,7 @@ const ServerCatalog = {
         <div class="hud-card-cover">
           <!-- Logo Serwera z Neonowym Glow (Zoptymalizowane asynchroniczne dekodowanie) -->
           <div class="hud-logo-backdrop">
-            <img src="${safeBannerUrl}" alt="${safeName}" class="hud-server-brand-logo" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/logo-vi.png'" />
+            <img src="${safeBannerUrl}" alt="${safeName}" width="640" height="220" class="hud-server-brand-logo" loading="${index < 6 ? 'eager' : 'lazy'}" decoding="async" onerror="this.onerror=null;this.src='/img/logo-vi.png'" />
           </div>
           <div class="hud-card-overlay">
             <div class="hud-badges-row flex flex-wrap gap-1.5">
@@ -660,11 +660,11 @@ const ServerCatalog = {
 
     try {
       // Rozłożenie zapytań w czasie (staggering 80ms) zapobiega limitom zapytań (429) API FiveM CFX
-      await Promise.allSettled(
-        this.servers.map((s, idx) => 
-          new Promise(res => setTimeout(() => res(this.fetchServerLiveStats(s)), idx * 80))
-        )
-      );
+      // Ogranicz równoległość, aby nie wywoływać 429 u zewnętrznych list serwerów.
+      for (let index = 0; index < this.servers.length; index += 3) {
+        const batch = this.servers.slice(index, index + 3);
+        await Promise.allSettled(batch.map(server => this.fetchServerLiveStats(server)));
+      }
       this.updateHeroStats(); // Wywołane RAZ po aktualizacji wszystkich serwerów
     } finally {
       this._isRefreshing = false;
@@ -750,7 +750,7 @@ const ServerCatalog = {
 
     // Licznik w nagłówku
     const headerEl = document.querySelector(`[data-live-header="${safeSelectorId}"]`);
-    const isAvailable = Number.isInteger(online) && Number.isInteger(percent);
+    const isAvailable = Number.isInteger(online) && online >= 0;
     if (headerEl) headerEl.textContent = isAvailable ? online : '—';
 
     // Licznik w pasku obciążenia
@@ -761,12 +761,16 @@ const ServerCatalog = {
 
     // Procent
     const percentEl = document.querySelector(`[data-capacity-percent="${safeSelectorId}"]`);
-    if (percentEl) percentEl.textContent = isAvailable ? `${percent}% ZAPEŁNIENIA` : 'BRAK DANYCH';
+    if (percentEl) {
+      percentEl.textContent = isAvailable && Number.isInteger(percent)
+        ? `${percent}% ZAPEŁNIENIA`
+        : isAvailable ? 'LIMIT NIEZNANY' : 'BRAK DANYCH';
+    }
 
     // Pasek
     const barEl = document.querySelector(`[data-capacity-bar="${safeSelectorId}"]`);
     if (barEl) {
-      barEl.style.width = `${isAvailable ? percent : 0}%`;
+      barEl.style.width = `${isAvailable && Number.isInteger(percent) ? percent : 0}%`;
       if (percent >= 90) {
         barEl.className = 'bg-gradient-to-r from-pink-500 to-red-500 h-full rounded-full transition-all duration-700';
       } else if (percent >= 70) {

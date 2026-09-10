@@ -20,7 +20,7 @@ const StreamersHub = {
   FEATURED_KICK_CLIPS: [
     {
       id: 'kick-neexcsgo-01M1VV2FVDBFEEWT12QZF8SEYA',
-      title: 'Przykładowy klip Kick — neexcsgo',
+      title: 'DEMO — Przykładowy klip Kick — neexcsgo',
       streamer: 'neexcsgo',
       streamerLogin: 'neexcsgo',
       streamerAvatar: 'img/streamers/neexcsgo.webp',
@@ -28,8 +28,8 @@ const StreamersHub = {
       url: 'https://kick.com/neexcsgo/clips/clip_01M1VV2FVDBFEEWT12QZF8SEYA',
       thumbnail: '',
       duration: '—',
-      views: 0,
-      votes: 0,
+      views: 5000,
+      votes: 58,
       isFeaturedSample: true
     },
     {
@@ -898,11 +898,13 @@ const StreamersHub = {
     const safeViews = (parseInt(clip.views, 10) || 0).toLocaleString('pl-PL');
     const safeVotes = parseInt(clip.votes, 10) || 0;
     const safeAvatar = typeof safeUrl === 'function' ? safeUrl(clip.streamerAvatar) : clip.streamerAvatar;
-    const safeThumb = typeof safeUrl === 'function' ? safeUrl(clip.thumbnail) : clip.thumbnail;
+    const safeThumb = typeof safeUrl === 'function'
+      ? safeUrl(clip.thumbnail || 'img/hero-vice.jpg')
+      : (clip.thumbnail || 'img/hero-vice.jpg');
     const safeClipId = typeof sanitize === 'function' ? sanitize(clip.id) : clip.id;
     const hasVoted = this.userVotedClips.has(clip.id);
     const sampleBadge = clip.isFeaturedSample
-      ? '<span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-1 text-[9px] font-bold text-black">PRZYKŁADOWY KICK</span>'
+      ? '<span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-1 text-[9px] font-bold text-black">DEMO — DANE PRZYKŁADOWE</span>'
       : '';
 
     let rankBadge = '';

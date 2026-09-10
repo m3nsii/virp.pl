@@ -585,6 +585,12 @@ body::before {
   line-height: 1;
 }
 
+.stat-value-action {
+  font-size: 2rem;
+  color: var(--neon-pink);
+  text-transform: uppercase;
+}
+
 .stat-label {
   font-size: 0.7rem;
   color: #64748B;
