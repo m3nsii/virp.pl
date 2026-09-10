@@ -19,6 +19,12 @@
   --border-pink: 1px solid rgba(255, 31, 125, 0.3);
 }
 
+/* Publiczne zaproszenie VIRP jest tymczasowo wyłączone; Discord pozostaje kanałem obsługi zgłoszeń. */
+a[href="https://discord.gg/nwXxZybY9R"] {
+  display: none !important;
+  pointer-events: none !important;
+}
+
 * {
   box-sizing: border-box;
 }
