@@ -180,31 +180,44 @@ const VIRP = {
 
     // Mobile menu toggle
     if (mobileMenuBtn && mobileMenu) {
-      mobileMenuBtn.addEventListener('click', () => {
+      const updateMenuIcon = (isOpen) => {
+        mobileMenuBtn.innerHTML = `<i data-lucide="${isOpen ? 'x' : 'menu'}" class="w-5 h-5"></i>`;
+        if (typeof lucide !== 'undefined') lucide.createIcons({ root: mobileMenuBtn });
+      };
+
+      mobileMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const isOpen = mobileMenu.classList.contains('open');
         mobileMenu.classList.toggle('open');
-        
         mobileMenuBtn.setAttribute('aria-expanded', String(!isOpen));
-
-        // Update icon (użycie 'i, svg' z powodu zamiany tagu przez Lucide)
-        const icon = mobileMenuBtn.querySelector('i, svg');
-        if (icon) {
-          icon.setAttribute('data-lucide', isOpen ? 'menu' : 'x');
-          if (typeof lucide !== 'undefined') lucide.createIcons({ root: mobileMenuBtn });
-        }
+        updateMenuIcon(!isOpen);
       });
 
-      // Close mobile menu when clicking a link
-      mobileMenu.querySelectorAll('a').forEach(link => {
+      // Close mobile menu when clicking a link or button
+      mobileMenu.querySelectorAll('a, button').forEach(link => {
         link.addEventListener('click', () => {
           mobileMenu.classList.remove('open');
           mobileMenuBtn.setAttribute('aria-expanded', 'false');
-          const icon = mobileMenuBtn.querySelector('i, svg');
-          if (icon) {
-            icon.setAttribute('data-lucide', 'menu');
-            if (typeof lucide !== 'undefined') lucide.createIcons({ root: mobileMenuBtn });
-          }
+          updateMenuIcon(false);
         });
+      });
+
+      // Close menu when clicking outside navbar
+      document.addEventListener('click', (e) => {
+        if (mobileMenu.classList.contains('open') && navbar && !navbar.contains(e.target)) {
+          mobileMenu.classList.remove('open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+          updateMenuIcon(false);
+        }
+      });
+
+      // Close menu on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+          mobileMenu.classList.remove('open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+          updateMenuIcon(false);
+        }
       });
     }
   },
@@ -467,6 +480,20 @@ const VIRP = {
   initHeroStats() {
     const statsSection = document.querySelector('.hero-stats');
     if (!statsSection) return;
+
+    // Przycisk "Oceń" przewija płynnie do sekcji serwerów
+    const voteLink = document.getElementById('hero-stat-votes-link');
+    if (voteLink) {
+      voteLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const serversSec = document.getElementById('servers');
+        if (serversSec) {
+          serversSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          window.location.hash = 'servers';
+        }
+      });
+    }
 
     this._heroStatsVisible = false;
     const observer = new IntersectionObserver((entries) => {

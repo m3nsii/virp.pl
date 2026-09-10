@@ -247,11 +247,15 @@ body::before {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(13, 19, 34, 0.98);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .mobile-menu.open {
   max-height: 650px;
   overflow-y: auto;
+  display: block !important;
 }
 
 /* ============================================================
@@ -597,6 +601,21 @@ body::before {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-top: 0.25rem;
+}
+
+.hero-stat-clickable {
+  cursor: pointer !important;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-stat-clickable:hover {
+  transform: translateY(-3px);
+  border-color: var(--neon-pink) !important;
+  box-shadow: 0 4px 20px rgba(255, 31, 125, 0.25);
 }
 
 /* ============================================================
