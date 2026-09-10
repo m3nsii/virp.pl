@@ -50,8 +50,13 @@ const ServerCatalog = {
     const ids = this.servers.map(server => server.id).filter(Boolean);
     if (!ids.length) return;
 
+    // Resetuj głosy do 0 przed wczytaniem (gwarancja czystego startu nowego sezonu)
+    this.servers.forEach(server => {
+      this.remoteVotes[server.id] = 0;
+    });
+
     try {
-      const response = await fetch(`${this.VOTE_API_URL}?type=server&ids=${encodeURIComponent(ids.join(','))}`, {
+      const response = await fetch(`${this.VOTE_API_URL}?type=server&v=2&ids=${encodeURIComponent(ids.join(','))}`, {
         headers: { Accept: 'application/json' }
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -59,15 +64,19 @@ const ServerCatalog = {
       if (!data || typeof data.votes !== 'object' || Array.isArray(data.votes)) {
         throw new Error('Nieprawidłowa odpowiedź API głosów');
       }
-      Object.entries(data.votes).forEach(([id, count]) => {
-        if (this.servers.some(server => server.id === id) && Number.isInteger(count) && count >= 0) {
-          this.remoteVotes[id] = count;
-        }
-      });
-      if (Array.isArray(data.voted)) {
-        data.voted.forEach(id => {
-          if (this.servers.some(server => server.id === id)) this.votedServers.add(id);
+
+      // Załaduj głosy tylko wtedy, gdy pochodzą ze świeżego sezonu v2
+      if (data.v === 'v2') {
+        Object.entries(data.votes).forEach(([id, count]) => {
+          if (this.servers.some(server => server.id === id) && Number.isInteger(count) && count >= 0) {
+            this.remoteVotes[id] = count;
+          }
         });
+        if (Array.isArray(data.voted)) {
+          data.voted.forEach(id => {
+            if (this.servers.some(server => server.id === id)) this.votedServers.add(id);
+          });
+        }
       }
     } catch (error) {
       console.warn('[ServerCatalog] Głosy z serwera są chwilowo niedostępne:', error);
@@ -615,7 +624,7 @@ const ServerCatalog = {
       const response = await fetch(this.VOTE_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ type: 'server', id: serverId })
+        body: JSON.stringify({ type: 'server', id: serverId, v: 'v2' })
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {

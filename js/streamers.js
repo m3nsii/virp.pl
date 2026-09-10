@@ -460,22 +460,18 @@ const StreamersHub = {
     // Reguła 1: Wyróżnienie działa TYLKO wtedy, gdy streamer jest LIVE (isLive === true)
     const allLive = this.streamers.filter(s => s && s.isLive === true);
 
-    // Podział na partnerów (aktywna współpraca/barter) i pozostałych twórców
-    const livePartners = allLive.filter(s => s.isPartner === true || s.partner === true);
-    const liveOthers = allLive.filter(s => !(s.isPartner === true || s.partner === true));
+    // Na bieżąco w TOP 3 wyświetlane są osoby, które mają najwięcej widzów w GTA (GTA V / FiveM)
+    const gtaLive = allLive
+      .filter(s => isGtaCategory(s.currentGame))
+      .sort((a, b) => (b.viewers || 0) - (a.viewers || 0));
 
-    // Priorytet 1: Partnerzy grający w GTA V / FiveM (losowa rotacja dla równego barteru)
-    const partnersGta = livePartners.filter(s => isGtaCategory(s.currentGame)).sort(() => 0.5 - Math.random());
-    // Priorytet 2: Partnerzy grający w inne gry (losowa rotacja)
-    const partnersOther = livePartners.filter(s => !isGtaCategory(s.currentGame)).sort(() => 0.5 - Math.random());
+    // Jeśli brakuje do pełnego TOP 3 z GTA, dopełnij pozostałymi aktywnymi transmisjami wg widzów
+    const otherLive = allLive
+      .filter(s => !isGtaCategory(s.currentGame))
+      .sort((a, b) => (b.viewers || 0) - (a.viewers || 0));
 
-    // Priorytet 3: Pozostali twórcy grający w GTA V / FiveM (posortowani wg widzów)
-    const othersGta = liveOthers.filter(s => isGtaCategory(s.currentGame)).sort((a, b) => (b.viewers || 0) - (a.viewers || 0));
-    // Priorytet 4: Pozostali twórcy grający w inne gry (posortowani wg widzów)
-    const othersOther = liveOthers.filter(s => !isGtaCategory(s.currentGame)).sort((a, b) => (b.viewers || 0) - (a.viewers || 0));
-
-    // TOP 3: GTA Partnerzy -> Pozostali Partnerzy -> GTA Twórcy -> Pozostali Twórcy
-    const top3 = [...partnersGta, ...partnersOther, ...othersGta, ...othersOther].slice(0, 3);
+    // TOP 3: GTA (najwięcej widzów) -> Pozostałe transmisje (najwięcej widzów)
+    const top3 = [...gtaLive, ...otherLive].slice(0, 3);
 
     if (top3.length === 0) {
       container.innerHTML = `
