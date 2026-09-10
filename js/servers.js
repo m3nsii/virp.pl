@@ -31,10 +31,19 @@ const ServerCatalog = {
       return;
     }
     this.bindEvents();
-    await this.loadRemoteVotes();
+
+    // 1. Natychmiastowy render kafelków z bazy JSON (0ms opóźnienia, brak blokowania na sieć)
     this.applyFilters();
-    this.initLiveTracking();
     this.updateHeroStats();
+
+    // 2. Pobierz głosy w tle bez blokowania pierwszego widoku
+    this.loadRemoteVotes().then(() => {
+      this.applyFilters();
+      this.updateHeroStats();
+    });
+
+    // 3. Inicjalizacja cyklicznego pobierania statystyk live
+    this.initLiveTracking();
   },
 
   async loadRemoteVotes() {
@@ -353,17 +362,21 @@ const ServerCatalog = {
     const tagsArray = Array.isArray(server.tags) ? server.tags : [];
     const tagsHTML = tagsArray.slice(0, 3).map(tag => `<span class="hud-tag">#${sanitize(tag)}</span>`).join('');
     const maxSlots = parseInt(server.slots, 10) || 300;
+    const baseP = Number.isInteger(server.live?.basePlayers) ? server.live.basePlayers : null;
+    const defaultAvailable = Number.isInteger(baseP);
 
     const liveInfo = this.liveStatusData[server.id] || {
-      online: null,
+      online: defaultAvailable ? baseP : null,
       slots: maxSlots,
-      percent: null,
-      available: false
+      percent: defaultAvailable && maxSlots > 0 ? Math.min(Math.round((baseP / maxSlots) * 100), 100) : null,
+      available: defaultAvailable,
+      isEstimated: defaultAvailable
     };
-    const liveOnline = Number.isInteger(liveInfo.online) ? liveInfo.online : '—';
+    const isEstimated = liveInfo.isEstimated;
+    const liveOnline = Number.isInteger(liveInfo.online) ? (isEstimated ? `~${liveInfo.online}` : liveInfo.online) : '—';
     const liveSlots = Number.isInteger(liveInfo.slots) ? liveInfo.slots : maxSlots;
     const livePercent = Number.isInteger(liveInfo.percent) ? `${liveInfo.percent}% ZAPEŁNIENIA` : 'BRAK DANYCH';
-    const liveState = liveInfo.available ? 'LIVE' : 'BRAK DANYCH LIVE';
+    const liveState = liveInfo.available ? (isEstimated ? 'AKTYWNY' : 'LIVE') : 'BRAK DANYCH LIVE';
 
     // Kaskada przekierowania: WWW -> Discord -> Direct Connect (F8)
     let mainActionBtn = '';
@@ -421,7 +434,7 @@ const ServerCatalog = {
         <div class="hud-card-cover">
           <!-- Logo Serwera z Neonowym Glow (Zoptymalizowane asynchroniczne dekodowanie) -->
           <div class="hud-logo-backdrop">
-            <img src="${safeBannerUrl}" alt="${safeName}" width="640" height="220" class="hud-server-brand-logo" loading="${index < 6 ? 'eager' : 'lazy'}" decoding="async" onerror="this.onerror=null;this.src='/img/logo-vi.png'" />
+            <img src="${safeBannerUrl}" alt="${safeName}" width="640" height="220" class="hud-server-brand-logo" loading="${index < 6 ? 'eager' : 'lazy'}" decoding="async" onerror="this.onerror=null;this.src='img/logo-vi.png'" />
           </div>
           <div class="hud-card-overlay">
             <div class="hud-badges-row flex flex-wrap gap-1.5">
@@ -659,12 +672,12 @@ const ServerCatalog = {
     this._isRefreshing = true;
 
     try {
-      // Rozłożenie zapytań w czasie (staggering 80ms) zapobiega limitom zapytań (429) API FiveM CFX
-      // Ogranicz równoległość, aby nie wywoływać 429 u zewnętrznych list serwerów.
-      for (let index = 0; index < this.servers.length; index += 3) {
-        const batch = this.servers.slice(index, index + 3);
-        await Promise.allSettled(batch.map(server => this.fetchServerLiveStats(server)));
-      }
+      // Rozłożenie zapytań w czasie (staggering 200ms) zapobiega limitom zapytań (429) API FiveM CFX
+      await Promise.allSettled(
+        this.servers.map((s, idx) => 
+          new Promise(res => setTimeout(() => res(this.fetchServerLiveStats(s)), idx * 200))
+        )
+      );
       this.updateHeroStats(); // Wywołane RAZ po aktualizacji wszystkich serwerów
     } finally {
       this._isRefreshing = false;
@@ -730,32 +743,41 @@ const ServerCatalog = {
     }
 
     const hasLiveData = Number.isInteger(onlineCount) && onlineCount >= 0;
-    const percent = hasLiveData && maxSlots > 0
-      ? Math.min(Math.round((onlineCount / maxSlots) * 100), 100)
+
+    // Fallback dla serwerów bez statsUrl (np. V-Life, NoPixel) lub przy chwilowej niedostępności API
+    const baseFallback = Number.isInteger(server.live?.basePlayers) ? server.live.basePlayers : null;
+    const finalOnline = hasLiveData ? onlineCount : baseFallback;
+    const isEstimated = !hasLiveData && Number.isInteger(finalOnline);
+    const isAvailable = hasLiveData || isEstimated;
+
+    const percent = isAvailable && maxSlots > 0
+      ? Math.min(Math.round((finalOnline / maxSlots) * 100), 100)
       : null;
 
     this.liveStatusData[serverId] = {
-      online: hasLiveData ? onlineCount : null,
+      online: finalOnline,
       slots: maxSlots,
       percent: percent,
-      available: hasLiveData,
+      available: isAvailable,
+      isEstimated: isEstimated,
       lastUpdated: Date.now()
     };
 
-    this.updateServerCardLiveUI(serverId, onlineCount, maxSlots, percent);
+    this.updateServerCardLiveUI(serverId, finalOnline, maxSlots, percent, isEstimated);
   },
 
-  updateServerCardLiveUI(serverId, online, slots, percent) {
+  updateServerCardLiveUI(serverId, online, slots, percent, isEstimated = false) {
     const safeSelectorId = window.CSS?.escape ? CSS.escape(serverId) : serverId;
 
     // Licznik w nagłówku
     const headerEl = document.querySelector(`[data-live-header="${safeSelectorId}"]`);
     const isAvailable = Number.isInteger(online) && online >= 0;
-    if (headerEl) headerEl.textContent = isAvailable ? online : '—';
+    const displayCount = isAvailable ? (isEstimated ? `~${online}` : online) : '—';
+    if (headerEl) headerEl.textContent = displayCount;
 
     // Licznik w pasku obciążenia
     const playerEl = document.querySelector(`[data-live-players="${safeSelectorId}"]`);
-    if (playerEl) playerEl.textContent = isAvailable ? online : '—';
+    if (playerEl) playerEl.textContent = displayCount;
     const slotsEl = document.querySelector(`[data-live-slots="${safeSelectorId}"]`);
     if (slotsEl && Number.isInteger(slots)) slotsEl.textContent = slots;
 
@@ -781,8 +803,9 @@ const ServerCatalog = {
     }
     const statusEl = document.querySelector(`[data-live-status="${safeSelectorId}"]`);
     if (statusEl) {
+      const label = isAvailable ? (isEstimated ? 'AKTYWNY' : 'LIVE') : 'BRAK DANYCH LIVE';
       statusEl.className = `font-mono text-[10px] ${isAvailable ? 'text-emerald-400 bg-emerald-950/40 border-emerald-500/25' : 'text-slate-400 bg-slate-900/60 border-slate-700'} border px-2 py-0.5 rounded flex items-center gap-1`;
-      statusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${isAvailable ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}"></span> ${isAvailable ? 'LIVE' : 'BRAK DANYCH LIVE'}`;
+      statusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${isAvailable ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}"></span> ${label}`;
     }
   },
 

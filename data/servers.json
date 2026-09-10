@@ -54,7 +54,7 @@
   {
     "id": "v-rp",
     "name": "Vibe Role Play",
-    "banner": "img/servers/v-rp.png",
+    "banner": "img/servers/v-rp-icon.png",
     "platform": "text",
     "category": "roleplay",
     "type": "text",
@@ -81,7 +81,7 @@
   {
     "id": "hyperp",
     "name": "HypeRP",
-    "banner": "img/servers/hyperp.png",
+    "banner": "img/servers/hyperp-icon.png",
     "platform": "fivem",
     "category": "roleplay",
     "type": "voice",
@@ -107,7 +107,7 @@
   {
     "id": "77rp",
     "name": "77RP",
-    "banner": "img/servers/77rp.png",
+    "banner": "img/servers/77rp-icon.png",
     "platform": "fivem",
     "category": "roleplay",
     "type": "voice",
@@ -133,7 +133,7 @@
   {
     "id": "futurerp",
     "name": "Future Roleplay",
-    "banner": "img/servers/futurerp.png",
+    "banner": "img/servers/futurerp-icon.png",
     "platform": "fivem",
     "category": "roleplay",
     "type": "voice",
@@ -159,7 +159,7 @@
   {
     "id": "oslorp",
     "name": "OSLORP",
-    "banner": "img/servers/oslorp.png",
+    "banner": "img/servers/oslorp-icon.png",
     "platform": "fivem",
     "category": "roleplay",
     "type": "voice",
@@ -185,7 +185,7 @@
   {
     "id": "myrp",
     "name": "MyRP.pl",
-    "banner": "img/servers/myrp.png",
+    "banner": "img/servers/myrp-icon.png",
     "platform": "fivem",
     "category": "roleplay",
     "type": "voice",
@@ -211,7 +211,7 @@
   {
     "id": "exoticrp",
     "name": "ExoticRP",
-    "banner": "img/servers/exoticrp.png",
+    "banner": "img/servers/exoticrp-icon.png",
     "platform": "fivem",
     "category": "roleplay",
     "type": "voice",
@@ -237,7 +237,7 @@
   {
     "id": "onbeat",
     "name": "OnBeat",
-    "banner": "img/servers/onbeat.png",
+    "banner": "img/servers/onbeat-icon.png",
     "platform": "fivem",
     "category": "roleplay",
     "type": "voice",
@@ -263,7 +263,7 @@
   {
     "id": "nopixel",
     "name": "NoPixel Studios",
-    "banner": "img/servers/nopixel.png",
+    "banner": "img/servers/nopixel-discordIcon.png",
     "platform": "fivem",
     "category": "roleplay",
     "type": "voice",
