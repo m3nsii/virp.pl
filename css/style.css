@@ -593,6 +593,19 @@ body::before {
   font-size: 2rem;
   color: var(--neon-pink);
   text-transform: uppercase;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-family: var(--font-display);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.stat-value-action:hover,
+.stat-value-action:focus-visible {
+  color: #fff;
+  transform: translateY(-2px);
+  outline: none;
 }
 
 .stat-label {

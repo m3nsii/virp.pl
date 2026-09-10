@@ -356,7 +356,7 @@ const RPToolkit = {
 
     this._currentCharData = null;
     this.setFormValues(randomData);
-    this.generateCharacterCard();
+    this.generateCharacterCard({ notify: false });
     VIRP.showToast(`Wylosowano postać: ${randomData.name} 🎲`, 'success');
   },
 
@@ -454,7 +454,7 @@ const RPToolkit = {
       this.setFormValues(data);
       this._currentCharData = data;
       if (data.flaws && data.backstory && data.backstory.length >= 80) {
-        this.generateCharacterCard();
+        this.generateCharacterCard({ notify: false });
       } else {
         this.renderLiveIdPreview();
       }
@@ -514,7 +514,7 @@ const RPToolkit = {
   /**
    * Generowanie sformatowanej karty postaci + render Canvas ID
    */
-  generateCharacterCard() {
+  generateCharacterCard(options = {}) {
     const name = document.getElementById('char-name')?.value.trim();
     const age = document.getElementById('char-age')?.value || '28';
     const gender = document.getElementById('char-gender')?.value || 'Mężczyzna';
@@ -618,7 +618,9 @@ const RPToolkit = {
     // 2. Render graficznej karty ID na Canvas
     this.renderIdCardCanvas(charData);
 
-    VIRP.showToast('Karta postaci oraz Dowód ID wygenerowane! ✨', 'success');
+    if (options.notify !== false) {
+      VIRP.showToast('Karta postaci oraz Dowód ID wygenerowane! ✨', 'success');
+    }
   },
 
   /**

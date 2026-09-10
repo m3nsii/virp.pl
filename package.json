@@ -1,7 +1,7 @@
 {
   "name": "virp-pl",
   "private": true,
-  "version": "1.3.4",
+  "version": "1.5.0",
   "description": "VIRP.pl - polski hub społeczności GTA Roleplay",
   "scripts": {
     "check": "node scripts/validate.mjs"
