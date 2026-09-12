@@ -7,7 +7,7 @@
   <!-- Strona Główna VIRP.pl (Katalog Serwerów, Streamerzy, Klipy, RP Toolkit) -->
   <url>
     <loc>https://virp.pl/</loc>
-    <lastmod>2026-09-07</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -15,7 +15,7 @@
   <!-- Dedykowana Podstrona: GTA 6 RP Polska (Leonida State & Vice City Roleplay) -->
   <url>
     <loc>https://virp.pl/gta6</loc>
-    <lastmod>2026-09-07</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>

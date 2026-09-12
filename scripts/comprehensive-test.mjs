@@ -49,7 +49,8 @@ for (const f of jsonFiles) {
     const parsed = JSON.parse(content);
     if (f.includes('servers')) serversData = Array.isArray(parsed) ? parsed : (parsed.servers || []);
     if (f.includes('streamers')) streamersData = Array.isArray(parsed) ? parsed : (parsed.streamers || []);
-    logPass(`Poprawny JSON: ${f} (${parsed.length} wpisów)`);
+    const count = f.includes('servers') ? serversData.length : streamersData.length;
+    logPass(`Poprawny JSON: ${f} (${count} wpisów)`);
   } catch (err) {
     logFail(`Błąd parsowania JSON ${f}: ${err.message}`);
   }
