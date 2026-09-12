@@ -229,11 +229,11 @@
       </div>
       <div class="streamer-stat-card">
         <span class="streamer-stat-label">ODDANE GŁOSY</span>
-        <div id="clips-stat-votes" class="streamer-stat-value text-neon-pink">2 910</div>
+        <div id="clips-stat-votes" class="streamer-stat-value text-neon-pink">2 811</div>
       </div>
       <div class="streamer-stat-card">
         <span class="streamer-stat-label">ŁĄCZNE WYŚWIETLENIA</span>
-        <div id="clips-stat-views" class="streamer-stat-value text-neon-amber">77 049</div>
+        <div id="clips-stat-views" class="streamer-stat-value text-neon-amber">72 715</div>
       </div>
       <div class="streamer-stat-card">
         <span class="streamer-stat-label">NAGRODY DLA TOP 3</span>
@@ -263,8 +263,12 @@
 
         <div class="flex flex-wrap items-center gap-2.5">
           <!-- Filtry Czasowe Klipów -->
-          <div class="flex items-center gap-1 bg-[#0b0f19] p-1 rounded-lg border border-white/10">
+          <div class="flex items-center gap-1 bg-[#0b0f19] p-1 rounded-lg border border-white/10 flex-wrap">
             <button type="button" class="clip-time-btn active" data-clip-time="all">Wszystkie</button>
+            <button type="button" class="clip-time-btn text-neon-pink font-semibold flex items-center gap-1" data-clip-time="trending">
+              <i data-lucide="flame" class="w-3.5 h-3.5 text-neon-pink fill-neon-pink"></i>
+              <span>Ostatnio popularne</span>
+            </button>
             <button type="button" class="clip-time-btn" data-clip-time="day">Dzień</button>
             <button type="button" class="clip-time-btn" data-clip-time="week">Tydzień</button>
             <button type="button" class="clip-time-btn" data-clip-time="month">Miesiąc</button>
@@ -330,44 +334,49 @@
         </div>
       </div>
 
+      <!-- KARTA WYRÓŻNIONA: KATEGORIA OSTATNIO POPULARNE // ŚWIEŻY HIT -->
+      <div class="mb-6 p-4 rounded-xl bg-gradient-to-r from-[#180d1e]/90 via-[#101426]/90 to-[#0c1322]/90 border border-rose-500/30 shadow-[0_4px_20px_rgba(255,31,125,0.12)] backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="relative w-20 h-14 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer clip-play-action group border border-rose-500/40" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP" style="background-image: url('https://clips.kick.com/clips/e5/clip_01M2BRH7NV04D42EQEVKV3BZBP/thumbnail.webp'); background-size: cover; background-position: center;">
+            <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 flex items-center justify-center transition-colors">
+              <i data-lucide="play" class="w-5 h-5 text-white fill-white"></i>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap mb-1">
+              <span class="rounded bg-gradient-to-r from-neon-pink to-rose-600 px-2 py-0.5 text-[9px] font-bold text-white flex items-center gap-1 shadow">
+                <i data-lucide="flame" class="w-3 h-3 fill-white"></i>
+                OSTATNIO POPULARNE
+              </span>
+              <span class="rounded bg-emerald-500/90 px-2 py-0.5 text-[9px] font-bold text-black flex items-center gap-1 shadow">
+                KICK SPOTLIGHT
+              </span>
+              <span class="text-[10px] font-mono text-neon-pink font-semibold">ŚWIEŻY KLIP</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-bold text-white hover:text-neon-cyan transition-colors cursor-pointer clip-play-action" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP">
+              explain something — xmerghani
+            </h3>
+            <div class="flex items-center gap-3 text-[11px] font-mono text-slate-400 mt-1">
+              <span class="flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i> 1 840 wyświetleń</span>
+              <span class="flex items-center gap-1 text-neon-pink font-semibold"><i data-lucide="flame" class="w-3 h-3 text-neon-pink fill-neon-pink"></i> 54 głosy</span>
+              <span class="text-slate-500 hidden sm:inline">• 0:42</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0 self-start sm:self-center">
+          <button type="button" class="btn-vice py-1.5 px-3.5 text-xs clip-play-action flex items-center gap-1.5 cursor-pointer shadow-md" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP">
+            <i data-lucide="play" class="w-3.5 h-3.5 fill-white"></i>
+            <span>ODTWÓRZ KLIP</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Siatka Klipów (Pre-renderowana pod kątem SEO / Crawlera Google, hydratowana przez streamers.js) -->
       <div id="clips-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Pre-renderowane kafelki startowe dla crawlerów -->
-        <article class="clip-card" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP">
-          <div class="clip-thumb-box clip-play-action cursor-pointer" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP" style="background-image: url('https://clips.kick.com/clips/e5/clip_01M2BRH7NV04D42EQEVKV3BZBP/thumbnail.webp');">
-            <span class="clip-rank-badge rank-1">🏆 #1 TOP KLIP</span>
-            <span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-0.5 text-[9px] font-bold text-black flex items-center gap-1 shadow">KICK SPOTLIGHT</span>
-            <div class="clip-duration">0:42</div>
-            <div class="clip-play-overlay">
-              <i data-lucide="play" class="w-5 h-5 text-white fill-white"></i>
-            </div>
-            <div class="clip-views-badge">
-              <i data-lucide="eye" class="w-3 h-3"></i>
-              <span>6 180</span>
-            </div>
-          </div>
-          <div class="clip-body">
-            <h3 class="clip-title clip-play-action cursor-pointer hover:text-neon-cyan transition-colors" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP" title="explain something">
-              explain something
-            </h3>
-            <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-              <div class="flex items-center gap-2 overflow-hidden">
-                <img src="/img/streamers/xmerghani.webp" alt="xmerghani" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='/img/logo-vi.png'">
-                <div class="overflow-hidden">
-                  <span class="text-xs font-bold text-slate-200 block truncate">xmerghani</span>
-                </div>
-              </div>
-              <button type="button" class="clip-vote-btn" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP" aria-label="Zagłosuj na klip">
-                <i data-lucide="flame" class="w-4 h-4 text-neon-pink fill-neon-pink"></i>
-                <span class="clip-vote-count font-mono font-bold text-xs text-neon-pink">154</span>
-              </button>
-            </div>
-          </div>
-        </article>
-
         <article class="clip-card" data-clip-id="twitch-SucculentArbitrarySrirachaMVGame-k9VxScJXI-IYrAxD">
           <div class="clip-thumb-box clip-play-action cursor-pointer" data-clip-id="twitch-SucculentArbitrarySrirachaMVGame-k9VxScJXI-IYrAxD" style="background-image: url('https://static-cdn.jtvnw.net/twitch-video-assets/twitch-vap-video-assets-prod-us-west-2/f0138ab0-390b-440f-93b7-02a440505d1b/landscape/thumb/thumb-0000000000-480x272.jpg');">
-            <span class="clip-rank-badge rank-2">🥈 #2 TOP</span>
+            <span class="clip-rank-badge rank-1">🏆 #1 TOP KLIP</span>
             <div class="clip-duration">0:08</div>
             <div class="clip-play-overlay">
               <i data-lucide="play" class="w-5 h-5 text-white fill-white"></i>
@@ -398,7 +407,7 @@
 
         <article class="clip-card" data-clip-id="kick-rybsonlol-01KZW0GWXWCVV21YWFXE6S9TTR">
           <div class="clip-thumb-box clip-play-action cursor-pointer" data-clip-id="kick-rybsonlol-01KZW0GWXWCVV21YWFXE6S9TTR">
-            <span class="clip-rank-badge rank-3">🥉 #3 TOP</span>
+            <span class="clip-rank-badge rank-2">🥈 #2 TOP</span>
             <span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-0.5 text-[9px] font-bold text-black flex items-center gap-1 shadow">KICK SPOTLIGHT</span>
             <div class="clip-duration">0:39</div>
             <div class="clip-play-overlay">
@@ -423,6 +432,37 @@
               <button type="button" class="clip-vote-btn" data-clip-id="kick-rybsonlol-01KZW0GWXWCVV21YWFXE6S9TTR" aria-label="Zagłosuj na klip">
                 <i data-lucide="flame" class="w-4 h-4 text-neon-pink fill-neon-pink"></i>
                 <span class="clip-vote-count font-mono font-bold text-xs text-neon-pink">143</span>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="clip-card" data-clip-id="twitch-AbstruseJollyMonkeyDatBoi-FmuVm7svvvjQ0XeN">
+          <div class="clip-thumb-box clip-play-action cursor-pointer" data-clip-id="twitch-AbstruseJollyMonkeyDatBoi-FmuVm7svvvjQ0XeN" style="background-image: url('https://static-cdn.jtvnw.net/twitch-video-assets/twitch-vap-video-assets-prod-us-west-2/137263f8-c05d-47d9-acfa-ae73ef648788/landscape/thumb/thumb-0000000000-480x272.jpg');">
+            <span class="clip-rank-badge rank-3">🥉 #3 TOP</span>
+            <div class="clip-duration">0:09</div>
+            <div class="clip-play-overlay">
+              <i data-lucide="play" class="w-5 h-5 text-white fill-white"></i>
+            </div>
+            <div class="clip-views-badge">
+              <i data-lucide="eye" class="w-3 h-3"></i>
+              <span>5 239</span>
+            </div>
+          </div>
+          <div class="clip-body">
+            <h3 class="clip-title clip-play-action cursor-pointer hover:text-neon-cyan transition-colors" data-clip-id="twitch-AbstruseJollyMonkeyDatBoi-FmuVm7svvvjQ0XeN" title="rage">
+              rage
+            </h3>
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+              <div class="flex items-center gap-2 overflow-hidden">
+                <img src="/img/streamers/mrdzinold.png" alt="MrDzinold" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='/img/logo-vi.png'">
+                <div class="overflow-hidden">
+                  <span class="text-xs font-bold text-slate-200 block truncate">MrDzinold</span>
+                </div>
+              </div>
+              <button type="button" class="clip-vote-btn" data-clip-id="twitch-AbstruseJollyMonkeyDatBoi-FmuVm7svvvjQ0XeN" aria-label="Zagłosuj na klip">
+                <i data-lucide="flame" class="w-4 h-4 text-neon-pink fill-neon-pink"></i>
+                <span class="clip-vote-count font-mono font-bold text-xs text-neon-pink">118</span>
               </button>
             </div>
           </div>

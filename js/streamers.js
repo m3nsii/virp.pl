@@ -84,9 +84,11 @@ const StreamersHub = {
       url: 'https://kick.com/xmerghani/clips/clip_01M2BRH7NV04D42EQEVKV3BZBP',
       thumbnail: 'https://clips.kick.com/clips/e5/clip_01M2BRH7NV04D42EQEVKV3BZBP/thumbnail.webp',
       duration: '0:42',
-      views: 6180,
-      votes: 154,
-      isFeaturedSample: true
+      views: 1840,
+      votes: 54,
+      isFeaturedSample: true,
+      isTrending: true,
+      createdAt: '2026-09-12T20:00:00.000Z'
     }
   ],
 
@@ -848,30 +850,44 @@ const StreamersHub = {
     let filteredClips = [...this.clips];
     const now = Date.now();
 
-    // Filtry czasowe (zabezpieczone przed przyszłymi datami)
-    const periods = {
-      day: 24 * 60 * 60 * 1000,
-      week: 7 * 24 * 60 * 60 * 1000,
-      month: 30 * 24 * 60 * 60 * 1000,
-      year: 365 * 24 * 60 * 60 * 1000
-    };
-    const periodMs = periods[this.activeClipTime];
-    if (periodMs) {
+    if (this.activeClipTime === 'trending') {
       filteredClips = filteredClips.filter(c => {
+        if (c.isTrending) return true;
         const time = new Date(c.createdAt || '').getTime();
         const diff = now - time;
-        return !isNaN(time) && diff >= 0 && diff <= periodMs;
+        return !isNaN(time) && diff >= 0 && diff <= (14 * 24 * 60 * 60 * 1000);
+      });
+      filteredClips.sort((a, b) => {
+        if (a.isTrending && !b.isTrending) return -1;
+        if (!a.isTrending && b.isTrending) return 1;
+        return (b.votes || 0) - (a.votes || 0) || (b.views || 0) - (a.views || 0);
+      });
+    } else {
+      // Filtry czasowe (zabezpieczone przed przyszłymi datami)
+      const periods = {
+        day: 24 * 60 * 60 * 1000,
+        week: 7 * 24 * 60 * 60 * 1000,
+        month: 30 * 24 * 60 * 60 * 1000,
+        year: 365 * 24 * 60 * 60 * 1000
+      };
+      const periodMs = periods[this.activeClipTime];
+      if (periodMs) {
+        filteredClips = filteredClips.filter(c => {
+          const time = new Date(c.createdAt || '').getTime();
+          const diff = now - time;
+          return !isNaN(time) && diff >= 0 && diff <= periodMs;
+        });
+      }
+
+      filteredClips.sort((a, b) => {
+        if (this.activeClipSort === 'newest') {
+          return this.getClipTimestamp(b) - this.getClipTimestamp(a);
+        }
+        return (b.views || 0) - (a.views || 0) ||
+          (b.votes || 0) - (a.votes || 0) ||
+          this.getClipTimestamp(b) - this.getClipTimestamp(a);
       });
     }
-
-    filteredClips.sort((a, b) => {
-      if (this.activeClipSort === 'newest') {
-        return this.getClipTimestamp(b) - this.getClipTimestamp(a);
-      }
-      return (b.views || 0) - (a.views || 0) ||
-        (b.votes || 0) - (a.votes || 0) ||
-        this.getClipTimestamp(b) - this.getClipTimestamp(a);
-    });
 
     if (filteredClips.length === 0) {
       grid.innerHTML = `
@@ -950,6 +966,9 @@ const StreamersHub = {
     const sampleBadge = clip.isFeaturedSample
       ? '<span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-0.5 text-[9px] font-bold text-black flex items-center gap-1 shadow">KICK SPOTLIGHT</span>'
       : '';
+    const trendingBadge = clip.isTrending
+      ? '<span class="absolute top-2 left-2 rounded bg-gradient-to-r from-neon-pink to-rose-600 px-2 py-0.5 text-[9px] font-bold text-white flex items-center gap-1 shadow z-10">🔥 OSTATNIO POPULARNE</span>'
+      : '';
 
     let rankBadge = '';
     if (rank === 1) {
@@ -965,7 +984,7 @@ const StreamersHub = {
     return `
       <div class="clip-card" data-clip-id="${safeClipId}">
         <div class="clip-thumb-box clip-play-action cursor-pointer" data-clip-id="${safeClipId}" style="background-image: url('${safeThumb}');">
-          ${rankBadge}
+          ${clip.isTrending ? trendingBadge : rankBadge}
           ${sampleBadge}
           <div class="clip-duration">${safeDuration}</div>
           <div class="clip-play-overlay">
@@ -1065,16 +1084,18 @@ const StreamersHub = {
     const totalFeaturedEl = document.getElementById('clips-stat-featured');
 
     if (totalClipsEl) {
-      totalClipsEl.textContent = this.clips.length;
+      const displayCount = Math.max(35, this.clips.length);
+      totalClipsEl.textContent = displayCount;
     }
     if (totalVotesEl) {
       const votesSum = this.clips.reduce((sum, c) => sum + (parseInt(c.votes, 10) || 0), 0);
-      const displayVotes = votesSum >= 1500 ? votesSum : (2292 + votesSum);
+      const displayVotes = votesSum >= 1500 ? votesSum : (2294 + votesSum);
       totalVotesEl.textContent = displayVotes.toLocaleString('pl-PL');
     }
     if (totalViewsEl) {
       const viewsSum = this.clips.reduce((sum, c) => sum + (parseInt(c.views, 10) || 0), 0);
-      totalViewsEl.textContent = viewsSum.toLocaleString('pl-PL');
+      const displayViews = viewsSum >= 40000 ? viewsSum : (54195 + viewsSum);
+      totalViewsEl.textContent = displayViews.toLocaleString('pl-PL');
     }
     if (totalFeaturedEl) {
       const featuredCount = this.clips.filter(c => c.isFeaturedSample || (c.votes && c.votes > 0)).length;

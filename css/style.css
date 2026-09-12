@@ -2857,6 +2857,13 @@ input[type="range"]::-webkit-slider-thumb {
   box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
 }
 
+.clip-time-btn[data-clip-time="trending"].active {
+  background: rgba(255, 31, 125, 0.18);
+  color: var(--neon-pink);
+  border: 1px solid rgba(255, 31, 125, 0.35);
+  box-shadow: 0 0 10px rgba(255, 31, 125, 0.25);
+}
+
 /* Baner rekrutacyjny streamerów */
 .streamer-apply-banner {
   transition: transform 0.25s ease, box-shadow 0.25s ease;

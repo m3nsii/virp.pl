@@ -1844,8 +1844,12 @@
 
           <div class="flex flex-wrap items-center gap-2.5">
             <!-- Filtry Czasowe Klipów -->
-            <div class="flex items-center gap-1 bg-[#0b0f19] p-1 rounded-lg border border-white/10">
+            <div class="flex items-center gap-1 bg-[#0b0f19] p-1 rounded-lg border border-white/10 flex-wrap">
               <button type="button" class="clip-time-btn active" data-clip-time="all">Wszystkie</button>
+              <button type="button" class="clip-time-btn text-neon-pink font-semibold flex items-center gap-1" data-clip-time="trending">
+                <i data-lucide="flame" class="w-3.5 h-3.5 text-neon-pink fill-neon-pink"></i>
+                <span>Ostatnio popularne</span>
+              </button>
               <button type="button" class="clip-time-btn" data-clip-time="day">Dzień</button>
               <button type="button" class="clip-time-btn" data-clip-time="week">Tydzień</button>
               <button type="button" class="clip-time-btn" data-clip-time="month">Miesiąc</button>
