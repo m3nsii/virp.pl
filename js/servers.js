@@ -24,10 +24,15 @@ const ServerCatalog = {
   },
 
   async init() {
-    this.showSkeletonLoading();
+    const grid = document.getElementById('server-grid');
+    if (grid && grid.children.length === 0) {
+      this.showSkeletonLoading();
+    }
     const success = await this.fetchServers();
     if (!success || !Array.isArray(this.servers) || this.servers.length === 0) {
-      this.showError();
+      if (grid && grid.children.length === 0) {
+        this.showError();
+      }
       return;
     }
     this.bindEvents();

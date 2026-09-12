@@ -356,86 +356,6 @@ const VIRP = {
    * Inicjalizacja Portalu GTA VI (Leonida State Hub)
    */
   initGta6Portal() {
-    const portal = document.getElementById('gta6-portal');
-    if (!portal) return;
-
-    window.Gta6Portal = {
-      isOpen: false,
-      portal,
-
-      openPortal() {
-        if (!portal) return;
-        this.isOpen = true;
-        // Zamknij portal streamerów jeśli otwarty
-        if (typeof StreamersHub !== 'undefined' && StreamersHub.isOpen) {
-          StreamersHub.closePortal();
-        }
-        portal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-        portal.scrollTop = 0;
-
-        if (window.location.hash !== '#gta6') {
-          window.history.pushState(null, '', '#gta6');
-        }
-        if (typeof lucide !== 'undefined') lucide.createIcons({ root: portal });
-      },
-
-      closePortal() {
-        if (!portal) return;
-        this.isOpen = false;
-        portal.classList.add('hidden');
-        document.body.style.overflow = '';
-
-        if (window.location.hash === '#gta6') {
-          window.history.replaceState(null, '', window.location.pathname + window.location.search);
-        }
-      }
-    };
-
-    // Nawigacja — linki z href="#gta6"
-    document.querySelectorAll('a[href="#gta6"]').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.Gta6Portal.openPortal();
-      });
-    });
-
-    // Przycisk powrotu / zamknięcia
-    const closeBtn = document.getElementById('gta6-close-btn');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => window.Gta6Portal.closePortal());
-    }
-
-    // Przyciski akcji wewnątrz portalu GTA VI
-    const browseBtn = document.getElementById('gta6-browse-servers-btn');
-    if (browseBtn) {
-      browseBtn.addEventListener('click', () => {
-        window.Gta6Portal.closePortal();
-        const serversSec = document.getElementById('servers');
-        if (serversSec) serversSec.scrollIntoView({ behavior: 'smooth' });
-      });
-    }
-
-    const addProjectBtn = document.getElementById('gta6-add-project-btn');
-    if (addProjectBtn) {
-      addProjectBtn.addEventListener('click', () => {
-        window.Gta6Portal.closePortal();
-        if (typeof AddServerModal !== 'undefined' && typeof AddServerModal.open === 'function') {
-          AddServerModal.open();
-        }
-      });
-    }
-
-    // Obsługa Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && window.Gta6Portal.isOpen) {
-        const anyModalOpen = document.querySelector('.modal-overlay.open');
-        if (!anyModalOpen) {
-          window.Gta6Portal.closePortal();
-        }
-      }
-    });
-
     // Hash check — przekierowanie starych linków #gta6 na dedykowaną podstronę /gta6
     const checkGta6Hash = () => {
       if (window.location.hash === '#gta6') {
@@ -446,6 +366,14 @@ const VIRP = {
     window.addEventListener('hashchange', checkGta6Hash);
     window.addEventListener('popstate', checkGta6Hash);
     checkGta6Hash();
+
+    // Nawigacja — linki z href="#gta6" przenoszą na /gta6
+    document.querySelectorAll('a[href="#gta6"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'gta6';
+      });
+    });
   },
 
   /* ----------------------------------------------------------
