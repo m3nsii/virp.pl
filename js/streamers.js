@@ -23,7 +23,7 @@ const StreamersHub = {
       title: 'Przykładowy klip Kick — neexcsgo',
       streamer: 'neexcsgo',
       streamerLogin: 'neexcsgo',
-      streamerAvatar: 'img/streamers/neexcsgo.webp',
+      streamerAvatar: '/img/streamers/neexcsgo.webp',
       platform: 'kick',
       url: 'https://kick.com/neexcsgo/clips/clip_01M1VV2FVDBFEEWT12QZF8SEYA',
       thumbnail: '',
@@ -37,7 +37,7 @@ const StreamersHub = {
       title: 'Przykładowy klip Kick — lequ',
       streamer: 'lequ',
       streamerLogin: 'lequ',
-      streamerAvatar: 'img/streamers/lequ.webp',
+      streamerAvatar: '/img/streamers/lequ.webp',
       platform: 'kick',
       url: 'https://kick.com/lequ/clips/clip_01M1F9HYVGFN3WBANQ6RSN2QVE',
       thumbnail: '',
@@ -51,7 +51,7 @@ const StreamersHub = {
       title: 'Przykładowy klip Kick — niter',
       streamer: 'niter',
       streamerLogin: 'niter',
-      streamerAvatar: 'img/streamers/niter.webp',
+      streamerAvatar: '/img/streamers/niter.webp',
       platform: 'kick',
       url: 'https://kick.com/niter/clips/clip_01M1HM5ZEZSY8MEWXZ6XGBYW4V',
       thumbnail: '',
@@ -65,7 +65,7 @@ const StreamersHub = {
       title: 'Przykładowy klip Kick — rybsonlol',
       streamer: 'rybsonlol',
       streamerLogin: 'rybsonlol',
-      streamerAvatar: 'img/streamers/rybsonlol.webp',
+      streamerAvatar: '/img/streamers/rybsonlol.webp',
       platform: 'kick',
       url: 'https://kick.com/rybsonlol/clips/clip_01KZW0GWXWCVV21YWFXE6S9TTR',
       thumbnail: '',
@@ -79,7 +79,7 @@ const StreamersHub = {
       title: 'Przykładowy klip Kick — xmerghani',
       streamer: 'xmerghani',
       streamerLogin: 'xmerghani',
-      streamerAvatar: 'img/streamers/xmerghani.webp',
+      streamerAvatar: '/img/streamers/xmerghani.webp',
       platform: 'kick',
       url: 'https://kick.com/xmerghani/clips/clip_01M1AME5XWDGRVFQWT7JT1S8CP',
       thumbnail: '',
@@ -92,10 +92,24 @@ const StreamersHub = {
 
   async init() {
     this.portal = document.getElementById('streamers-portal');
+    this.isStandaloneClipsPage = !this.portal && !!document.getElementById('clips-grid') && !document.getElementById('streamers-grid');
+    this.isStandaloneStreamersPage = !this.portal && !!document.getElementById('streamers-grid');
     this.loadVotedClips();
     await this.fetchData();
     this.bindEvents();
-    this.checkHash();
+    if (this.isStandaloneClipsPage) {
+      this.renderClips();
+      this.updateClipsTelemetry();
+      this.startLivePolling();
+    } else if (this.isStandaloneStreamersPage) {
+      this.isOpen = true;
+      this.updateTelemetry();
+      this.renderSpotlight();
+      this.applyFilters();
+      this.startLivePolling();
+    } else {
+      this.checkHash();
+    }
     Top3InfoModal.init();
     StreamerApplicationModal.init();
     ClipApplicationModal.init();
@@ -123,7 +137,15 @@ const StreamersHub = {
 
   async fetchData() {
     try {
-      const response = await fetch('data/streamers.json');
+      const dataUrl = (window.location.origin && window.location.origin !== 'null') 
+        ? `${window.location.origin}/data/streamers.json` 
+        : '/data/streamers.json';
+      let response;
+      try {
+        response = await fetch(dataUrl);
+      } catch (_) {
+        response = await fetch('data/streamers.json');
+      }
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       
@@ -240,7 +262,10 @@ const StreamersHub = {
         }));
         this.clips = this.withFeaturedKickClips(remoteClips);
         this.syncLocalClipVotes();
-        if (this.isOpen) this.renderClips();
+        if (this.isOpen || this.isStandaloneClipsPage) {
+          this.renderClips();
+          if (this.isStandaloneClipsPage) this.updateClipsTelemetry();
+        }
       }
     } catch (err) {
       console.warn('[StreamersHub] Statusy live z Workera chwilowo niedostępne:', err);
@@ -253,7 +278,7 @@ const StreamersHub = {
     this.stopLivePolling();
     this._liveInterval = setInterval(() => {
       if (document.hidden) return;
-      if (this.isOpen) {
+      if (this.isOpen || this.isStandaloneClipsPage) {
         this.fetchLiveStatusFromWorker();
       }
     }, 45000);
@@ -279,14 +304,7 @@ const StreamersHub = {
     document.querySelectorAll('a[href="#clips"]').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        if (!this.isOpen) {
-          this.openPortal('clips');
-        } else {
-          this.scrollToClips();
-          if (window.location.hash !== '#clips') {
-            window.history.pushState(null, '', '#clips');
-          }
-        }
+        window.location.href = 'klipy';
       });
     });
 
@@ -371,10 +389,10 @@ const StreamersHub = {
     if (window.location.hash === '#streamers') {
       if (!this.isOpen) this.openPortal('streamers');
     } else if (window.location.hash === '#clips') {
-      if (!this.isOpen) {
-        this.openPortal('clips');
-      } else {
+      if (this.isStandaloneClipsPage) {
         this.scrollToClips();
+      } else {
+        window.location.replace('klipy');
       }
     } else if (this.isOpen) {
       this.closePortal();
@@ -594,7 +612,7 @@ const StreamersHub = {
         <!-- Profil i Informacje -->
         <div class="p-4 flex-1 flex flex-col justify-between gap-3">
           <div class="flex items-start gap-3">
-            <img src="${safeAvatar}" alt="${safeName}" class="top3-avatar w-12 h-12 rounded-lg border-2 ${isPartner ? 'border-neon-pink shadow-pink-500/30' : 'border-slate-700 shadow-cyan-500/10'} shadow-lg object-cover flex-shrink-0" loading="lazy" onerror="this.onerror=null;this.src='img/logo-vi.png'">
+            <img src="${safeAvatar}" alt="${safeName}" class="top3-avatar w-12 h-12 rounded-lg border-2 ${isPartner ? 'border-neon-pink shadow-pink-500/30' : 'border-slate-700 shadow-cyan-500/10'} shadow-lg object-cover flex-shrink-0" loading="lazy" onerror="this.onerror=null;this.src='/img/logo-vi.png'">
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-1.5">
                 <h4 class="font-display text-lg text-white font-bold truncate">${safeName}</h4>
@@ -762,7 +780,7 @@ const StreamersHub = {
 
         <div class="streamer-card-body">
           <div class="flex items-center gap-3 mb-3">
-            <img src="${safeAvatarUrl}" alt="${safeName}" class="streamer-avatar" loading="lazy" onerror="this.onerror=null;this.src='img/logo-vi.png'">
+            <img src="${safeAvatarUrl}" alt="${safeName}" class="streamer-avatar" loading="lazy" onerror="this.onerror=null;this.src='/img/logo-vi.png'">
             <div class="overflow-hidden">
               <h3 class="streamer-name truncate">${safeName}</h3>
               <p class="streamer-role text-[11px] text-slate-400 font-mono">@${safeLogin}</p>
@@ -934,7 +952,7 @@ const StreamersHub = {
 
           <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
             <div class="flex items-center gap-2 overflow-hidden">
-              <img src="${safeAvatar}" alt="${safeStreamer}" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='img/logo-vi.png'">
+              <img src="${safeAvatar}" alt="${safeStreamer}" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='/img/logo-vi.png'">
               <div class="overflow-hidden">
                 <span class="text-xs font-bold text-slate-200 block truncate">${safeStreamer}</span>
                 ${safeServer ? `<span class="text-[10px] text-slate-400 font-mono block truncate">${safeServer}</span>` : ''}
@@ -1002,6 +1020,33 @@ const StreamersHub = {
 
     // Jeśli otwarty jest podgląd tego klipu, zaktualizuj też licznik w modalu
     ClipViewerModal.updateVoteState(clip);
+
+    if (this.isStandaloneClipsPage) {
+      this.updateClipsTelemetry();
+    }
+  },
+
+  updateClipsTelemetry() {
+    const totalClipsEl = document.getElementById('clips-stat-count');
+    const totalVotesEl = document.getElementById('clips-stat-votes');
+    const totalViewsEl = document.getElementById('clips-stat-views');
+    const totalFeaturedEl = document.getElementById('clips-stat-featured');
+
+    if (totalClipsEl) {
+      totalClipsEl.textContent = this.clips.length;
+    }
+    if (totalVotesEl) {
+      const votesSum = this.clips.reduce((sum, c) => sum + (parseInt(c.votes, 10) || 0), 0);
+      totalVotesEl.textContent = votesSum.toLocaleString('pl-PL');
+    }
+    if (totalViewsEl) {
+      const viewsSum = this.clips.reduce((sum, c) => sum + (parseInt(c.views, 10) || 0), 0);
+      totalViewsEl.textContent = viewsSum.toLocaleString('pl-PL');
+    }
+    if (totalFeaturedEl) {
+      const featuredCount = this.clips.filter(c => c.isFeaturedSample || (c.votes && c.votes > 0)).length;
+      totalFeaturedEl.textContent = featuredCount;
+    }
   }
 };
 
@@ -1738,7 +1783,7 @@ const ClipViewerModal = {
     if (this.streamerEl) {
       this.streamerEl.innerHTML = `
         <div class="flex items-center gap-2">
-          <img src="${safeAvatar}" alt="${safeStreamer}" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='img/logo-vi.png'">
+          <img src="${safeAvatar}" alt="${safeStreamer}" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='/img/logo-vi.png'">
           <span class="font-bold text-white">${safeStreamer}</span>
           ${safeServer ? `<span class="text-neon-cyan font-mono text-[11px]">• ${safeServer}</span>` : ''}
         </div>

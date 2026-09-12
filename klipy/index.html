@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <!-- Sprzętowa detekcja GPU / Fallback dla Chrome bez akceleracji sprzętowej -->
+  <script>
+    (function() {
+      try {
+        var canvas = document.createElement('canvas');
+        var gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (!gl) {
+          document.documentElement.classList.add('no-gpu');
+          return;
+        }
+        var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        if (debugInfo) {
+          var renderer = (gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '').toLowerCase();
+          if (
+            renderer.indexOf('swiftshader') !== -1 ||
+            renderer.indexOf('llvmpipe') !== -1 ||
+            renderer.indexOf('software') !== -1 ||
+            renderer.indexOf('basic render') !== -1 ||
+            renderer.indexOf('gdi generic') !== -1 ||
+            renderer.indexOf('mesa offscreen') !== -1
+          ) {
+            document.documentElement.classList.add('no-gpu');
+          }
+        }
+      } catch (e) {
+        document.documentElement.classList.add('no-gpu');
+      }
+    })();
+  </script>
+
+  <!-- Oznaczenie sesji jako zainicjalizowanej, aby powrót na stronę główną nie wymagał ponownej inicjacji -->
+  <script>
+    try {
+      sessionStorage.setItem('virp_splash_dismissed', 'true');
+      localStorage.setItem('virp_splash_dismissed', 'true');
+    } catch (e) {}
+  </script>
+
+  <!-- ============================================================
+       VIRP.pl — Najlepsze Klipy i Akcje GTA RP (Polska Scena Roleplay)
+       Statyczna podstrona SEO | HTML5 + Tailwind + Vanilla JS
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://virp-proxy.chojmarcel.workers.dev https://challenges.cloudflare.com https://frontend.cfx-services.net https://cdn.rage.mp https://api.strefarp.gg https://stream.nightride.fm https://*.spotify.com https://*.spotifycdn.com https://*.scdn.co; media-src 'self' https://stream.nightride.fm https: data: blob:; frame-src 'self' https://challenges.cloudflare.com https://open.spotify.com https://*.spotify.com https://*.scdn.co https://*.youtube.com https://*.youtube-nocookie.com https://clips.twitch.tv https://*.twitch.tv https://player.kick.com https://*.kick.com https://medal.tv https://*.medal.tv https://streamable.com https://*.streamable.com https://www.tiktok.com https://*.tiktok.com;">
+
+  <!-- SEO Primary Meta Tags -->
+  <title>Najlepsze Klipy i Akcje GTA RP — Twitch &amp; Kick Polska | VIRP.pl</title>
+  <meta name="title" content="Najlepsze Klipy i Akcje GTA RP — Twitch &amp; Kick Polska | VIRP.pl">
+  <meta name="description" content="Oglądaj, oceniaj i zgłaszaj najlepsze klipy z polskich serwerów GTA Roleplay (FiveM, RageMP). Pościgi 10-80, akcje policyjne, zabawne momenty ze streamów Twitch i Kick.">
+  <meta name="keywords" content="klipy GTA RP, najlepsze klipy FiveM, akcje GTA RP, Twitch GTA Polska, Kick GTA RP, śmieszne momenty FiveM, pościgi GTA RP, VIRP klipy, zgłoś klip RP">
+  <meta name="author" content="VIRP.pl">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://virp.pl/klipy">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <!-- Cloudflare Turnstile Anti-Bot API (Explicit Render) -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+
+  <!-- OpenGraph / Facebook / Discord -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Najlepsze Klipy i Akcje GTA RP — Twitch &amp; Kick Polska | VIRP.pl">
+  <meta property="og:description" content="Oglądaj, oceniaj i zgłaszaj najlepsze klipy z polskich serwerów GTA Roleplay (FiveM, RageMP). Pościgi 10-80, akcje policyjne, zabawne momenty ze streamów.">
+  <meta property="og:url" content="https://virp.pl/klipy">
+  <meta property="og:site_name" content="VIRP.pl">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:image" content="https://virp.pl/img/hero-vice.jpg">
+  <meta property="og:image:secure_url" content="https://virp.pl/img/hero-vice.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675">
+  <meta property="og:image:alt" content="Najlepsze Klipy GTA Roleplay — VIRP.pl">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Najlepsze Klipy i Akcje GTA RP — Twitch &amp; Kick Polska | VIRP.pl">
+  <meta name="twitter:description" content="Oglądaj, oceniaj i zgłaszaj najlepsze klipy z polskich serwerów GTA Roleplay.">
+  <meta name="twitter:image" content="https://virp.pl/img/hero-vice.jpg">
+
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" sizes="48x48" href="/img/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/img/favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+
+  <!-- Precompiled Static Tailwind CSS -->
+  <link rel="stylesheet" href="/css/tailwind.min.css?v=1.6.0">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js" defer></script>
+
+  <!-- Google Fonts: Space Mono & Teko -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Teko:wght@500;600;700&display=swap">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/style.css?v=1.6.0">
+
+  <!-- Structured Data: JSON-LD (WebPage, BreadcrumbList, CollectionPage) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://virp.pl/klipy#webpage",
+        "url": "https://virp.pl/klipy",
+        "name": "Najlepsze Klipy i Akcje GTA RP — Twitch & Kick Polska | VIRP.pl",
+        "description": "Oglądaj, dodawaj i oceniaj najlepsze klipy z polskich serwerów GTA Roleplay (FiveM, RageMP). Pościgi 10-80, akcje policyjne, zabawne momenty ze streamów.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://virp.pl/#website",
+          "url": "https://virp.pl/",
+          "name": "VIRP.pl"
+        },
+        "breadcrumb": {
+          "@id": "https://virp.pl/klipy#breadcrumb"
+        },
+        "inLanguage": "pl-PL"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://virp.pl/klipy#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "VIRP.pl",
+            "item": "https://virp.pl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Klipy GTA RP",
+            "item": "https://virp.pl/klipy"
+          }
+        ]
+      },
+      {
+        "@type": "CollectionPage",
+        "@id": "https://virp.pl/klipy#collection",
+        "name": "Kolekcja Najlepszych Klipów GTA RP Polska",
+        "description": "Zbiór najpopularniejszych i najwyżej ocenianych klipów wideo ze sceny polskich serwerów GTA Roleplay.",
+        "url": "https://virp.pl/klipy"
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-[#06080F] text-slate-100 font-sans antialiased selection:bg-neon-pink selection:text-white min-h-screen relative overflow-x-hidden">
+
+  <!-- Tła atmosferyczne Vice City -->
+  <div class="streamers-portal-bg"></div>
+  <div class="streamers-portal-glow"></div>
+  <div class="streamers-portal-grid"></div>
+
+  <main class="streamers-portal-container max-w-6xl mx-auto px-4 py-6 sm:py-8">
+    <!-- Górna belka nawigacyjna z logo i linkami -->
+    <header class="streamers-portal-header flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-3 group" title="Przejdź do strony głównej VIRP.pl">
+          <div class="logo-badge-vi">
+            <span class="logo-text-vi">VI</span>
+            <div class="logo-scanlines"></div>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-display text-2xl font-black text-white tracking-wider leading-none uppercase">
+              VIRP<span class="text-neon-pink">.PL</span>
+            </span>
+            <span class="font-data text-[8.5px] text-neon-cyan tracking-widest uppercase font-bold mt-0.5">
+              GTA COMMUNITY HUB
+            </span>
+          </div>
+        </a>
+        <div class="hidden sm:flex items-center ml-2 pl-3 border-l border-white/10">
+          <span class="author-glitch" data-text="M3NSI">M3NSI</span>
+        </div>
+      </div>
+
+      <!-- Szybka nawigacja między sekcjami -->
+      <nav class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" aria-label="Nawigacja podstrony">
+        <a href="/#servers" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          SERWERY
+        </a>
+        <a href="/streamerzy" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          STREAMERZY
+        </a>
+        <a href="/gta6" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-neon-pink/30 text-neon-pink hover:bg-neon-pink/10 transition-colors whitespace-nowrap font-bold">
+          GTA 6 RP
+        </a>
+        <a href="/toolkit" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          TOOLKIT
+        </a>
+        <a href="/" class="btn-vice text-xs py-1.5 px-3.5 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition-all ml-1" title="Powrót do strony głównej">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>GŁÓWNA</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- Pasek Telemetrii Klipów Społeczności -->
+    <section aria-label="Telemetria Klipów" class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">DOSTĘPNE KLIPY</span>
+        <div id="clips-stat-count" class="streamer-stat-value text-neon-cyan">5+</div>
+      </div>
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">ODDANE GŁOSY</span>
+        <div id="clips-stat-votes" class="streamer-stat-value text-neon-pink">0</div>
+      </div>
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">ŁĄCZNE WYŚWIETLENIA</span>
+        <div id="clips-stat-views" class="streamer-stat-value text-neon-amber">1 000+</div>
+      </div>
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">NAGRODY DLA TOP 3</span>
+        <div class="streamer-stat-value text-status-green flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-status-green animate-ping"></span>
+          <span>W PRZYGOTOWANIU</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Główny Nagłówek i Filtry Klipów -->
+    <section id="clips-section" aria-label="Baza Klipów Społeczności" class="mb-12">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-white/10 pb-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="hud-pill hud-pill-cyan text-[10px] uppercase tracking-widest font-bold">STREFA WIDEO // VIRP.PL</span>
+            <span class="hud-pill hud-pill-pink text-[10px] uppercase tracking-widest font-bold">FIVEM &amp; RAGEMP</span>
+          </div>
+          <h1 class="font-display text-2xl sm:text-3xl text-white uppercase tracking-wider flex items-center gap-2 font-black">
+            <i data-lucide="film" class="w-6 h-6 text-neon-cyan"></i>
+            TOP KLIPY &amp; AKCJE Z SERWERÓW RP
+          </h1>
+          <p class="text-xs text-slate-400 font-mono mt-0.5 max-w-2xl leading-relaxed">
+            Najlepsze momenty, pościgi, zabawne wpadki i epickie akcje z polskich streamów Twitch i Kick. Głosuj na swoich faworytów lub dodaj własny klip do bazy!
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Filtry Czasowe Klipów -->
+          <div class="flex items-center gap-1 bg-[#0b0f19] p-1 rounded-lg border border-white/10">
+            <button type="button" class="clip-time-btn active" data-clip-time="all">Wszystkie</button>
+            <button type="button" class="clip-time-btn" data-clip-time="day">Dzień</button>
+            <button type="button" class="clip-time-btn" data-clip-time="week">Tydzień</button>
+            <button type="button" class="clip-time-btn" data-clip-time="month">Miesiąc</button>
+            <button type="button" class="clip-time-btn" data-clip-time="year">Rok</button>
+          </div>
+
+          <!-- Sortowanie Klipów -->
+          <select id="clip-sort-select" class="sort-select text-xs" aria-label="Sortuj klipy">
+            <option value="best">Najlepsze</option>
+            <option value="newest">Najnowsze</option>
+          </select>
+
+          <!-- Przycisk Zgłoś Klip -->
+          <button type="button" id="open-clip-modal-btn" class="btn-primary py-2 px-4 text-xs flex items-center gap-2 cursor-pointer shadow-lg shadow-cyan-500/20 bg-gradient-to-r from-neon-cyan to-blue-600 border-none text-black font-bold hover:brightness-110">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>ZGŁOŚ KLIP</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- BANER INFORMACYJNY: STREFA TWÓRCÓW & NAGRODY DLA TOP 3 -->
+      <div class="mb-6 p-4 sm:p-5 rounded-xl bg-gradient-to-r from-[#0d121f]/95 via-[#131929]/95 to-[#0d121f]/95 border border-cyan-500/30 shadow-[0_4px_25px_rgba(0,0,0,0.6)] backdrop-blur-md relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 w-48 h-48 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-neon-pink/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-start gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-cyan/20 to-blue-600/20 border border-neon-cyan/40 flex items-center justify-center text-neon-cyan flex-shrink-0 mt-0.5 shadow-[0_0_15px_rgba(0,240,255,0.25)]">
+              <i data-lucide="trophy" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap mb-1">
+                <span class="hud-pill hud-pill-cyan text-[10px] font-bold tracking-wider uppercase">CIEKAWOSTKA &amp; PLANY SPOŁECZNOŚCI</span>
+                <span class="text-[10px] font-mono text-neon-pink font-semibold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-neon-pink animate-pulse"></span>
+                  NAGRODY DLA TOP 3 KLIPÓW
+                </span>
+              </div>
+              <h2 class="font-display text-base sm:text-lg text-white tracking-wide uppercase">
+                Wrzucasz klipy z serwerów RP? W przyszłości czekają nagrody dla najlepszych twórców!
+              </h2>
+              <p class="text-xs text-slate-300 font-mono mt-1 leading-relaxed max-w-3xl">
+                Wraz z rozwojem VIRP.pl i pozyskaniem partnerów sponsorskich, dla autorów <strong class="text-neon-cyan font-bold">TOP 3</strong> najwyżej ocenianych klipów planujemy nagrody rzeczowe i promocyjne.
+              </p>
+              <div class="flex items-center gap-2 mt-2.5 text-[11px] font-mono text-slate-300 flex-wrap">
+                <span class="inline-flex items-center gap-1.5 text-amber-400 bg-amber-950/40 border border-amber-500/30 px-2 py-0.5 rounded font-semibold">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                  Zasada weryfikacji autorstwa:
+                </span>
+                <span class="text-slate-400">
+                  Wymagana będzie <strong class="text-slate-200">zgodność nicku</strong> z Twitch/Kick i oficjalnego Discorda VIRP.pl oraz potwierdzenie, że to Twój klip.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex-shrink-0 self-start md:self-center">
+            <button type="button" id="banner-clip-submit-btn" class="btn-ghost text-xs py-2 px-3.5 border border-cyan-500/40 text-neon-cyan hover:bg-cyan-500/10 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition-colors" aria-label="Zgłoś Swój Klip">
+              <i data-lucide="video" class="w-3.5 h-3.5"></i>
+              <span>Zgłoś Swój Klip</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Siatka Klipów (Pre-renderowana pod kątem SEO / Crawlera Google, hydratowana przez streamers.js) -->
+      <div id="clips-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Pre-renderowane kafelki startowe dla crawlerów -->
+        <article class="clip-card" data-clip-id="kick-neexcsgo-01M1VV2FVDBFEEWT12QZF8SEYA">
+          <div class="clip-thumb-box clip-play-action cursor-pointer" data-clip-id="kick-neexcsgo-01M1VV2FVDBFEEWT12QZF8SEYA">
+            <span class="clip-rank-badge rank-1">🏆 #1 TOP KLIP</span>
+            <span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-1 text-[9px] font-bold text-black">PRZYKŁADOWY KICK</span>
+            <div class="clip-duration">—</div>
+            <div class="clip-play-overlay">
+              <i data-lucide="play" class="w-5 h-5 text-white fill-white"></i>
+            </div>
+            <div class="clip-views-badge">
+              <i data-lucide="eye" class="w-3 h-3"></i>
+              <span>0</span>
+            </div>
+          </div>
+          <div class="clip-body">
+            <h3 class="clip-title clip-play-action cursor-pointer hover:text-neon-cyan transition-colors" data-clip-id="kick-neexcsgo-01M1VV2FVDBFEEWT12QZF8SEYA" title="Przykładowy klip Kick — neexcsgo">
+              Przykładowy klip Kick — neexcsgo
+            </h3>
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+              <div class="flex items-center gap-2 overflow-hidden">
+                <img src="/img/streamers/neexcsgo.webp" alt="neexcsgo" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='/img/logo-vi.png'">
+                <div class="overflow-hidden">
+                  <span class="text-xs font-bold text-slate-200 block truncate">neexcsgo</span>
+                </div>
+              </div>
+              <button type="button" class="clip-vote-btn" data-clip-id="kick-neexcsgo-01M1VV2FVDBFEEWT12QZF8SEYA" aria-label="Zagłosuj na klip">
+                <i data-lucide="flame" class="w-4 h-4 text-slate-400"></i>
+                <span class="clip-vote-count font-mono font-bold text-xs text-slate-300">0</span>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="clip-card" data-clip-id="kick-lequ-01M1F9HYVGFN3WBANQ6RSN2QVE">
+          <div class="clip-thumb-box clip-play-action cursor-pointer" data-clip-id="kick-lequ-01M1F9HYVGFN3WBANQ6RSN2QVE">
+            <span class="clip-rank-badge rank-2">🥈 #2 TOP</span>
+            <span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-1 text-[9px] font-bold text-black">PRZYKŁADOWY KICK</span>
+            <div class="clip-duration">—</div>
+            <div class="clip-play-overlay">
+              <i data-lucide="play" class="w-5 h-5 text-white fill-white"></i>
+            </div>
+            <div class="clip-views-badge">
+              <i data-lucide="eye" class="w-3 h-3"></i>
+              <span>0</span>
+            </div>
+          </div>
+          <div class="clip-body">
+            <h3 class="clip-title clip-play-action cursor-pointer hover:text-neon-cyan transition-colors" data-clip-id="kick-lequ-01M1F9HYVGFN3WBANQ6RSN2QVE" title="Przykładowy klip Kick — lequ">
+              Przykładowy klip Kick — lequ
+            </h3>
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+              <div class="flex items-center gap-2 overflow-hidden">
+                <img src="/img/streamers/lequ.webp" alt="lequ" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='/img/logo-vi.png'">
+                <div class="overflow-hidden">
+                  <span class="text-xs font-bold text-slate-200 block truncate">lequ</span>
+                </div>
+              </div>
+              <button type="button" class="clip-vote-btn" data-clip-id="kick-lequ-01M1F9HYVGFN3WBANQ6RSN2QVE" aria-label="Zagłosuj na klip">
+                <i data-lucide="flame" class="w-4 h-4 text-slate-400"></i>
+                <span class="clip-vote-count font-mono font-bold text-xs text-slate-300">0</span>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="clip-card" data-clip-id="kick-niter-01M1HM5ZEZSY8MEWXZ6XGBYW4V">
+          <div class="clip-thumb-box clip-play-action cursor-pointer" data-clip-id="kick-niter-01M1HM5ZEZSY8MEWXZ6XGBYW4V">
+            <span class="clip-rank-badge rank-3">🥉 #3 TOP</span>
+            <span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-1 text-[9px] font-bold text-black">PRZYKŁADOWY KICK</span>
+            <div class="clip-duration">—</div>
+            <div class="clip-play-overlay">
+              <i data-lucide="play" class="w-5 h-5 text-white fill-white"></i>
+            </div>
+            <div class="clip-views-badge">
+              <i data-lucide="eye" class="w-3 h-3"></i>
+              <span>0</span>
+            </div>
+          </div>
+          <div class="clip-body">
+            <h3 class="clip-title clip-play-action cursor-pointer hover:text-neon-cyan transition-colors" data-clip-id="kick-niter-01M1HM5ZEZSY8MEWXZ6XGBYW4V" title="Przykładowy klip Kick — niter">
+              Przykładowy klip Kick — niter
+            </h3>
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+              <div class="flex items-center gap-2 overflow-hidden">
+                <img src="/img/streamers/niter.webp" alt="niter" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='/img/logo-vi.png'">
+                <div class="overflow-hidden">
+                  <span class="text-xs font-bold text-slate-200 block truncate">niter</span>
+                </div>
+              </div>
+              <button type="button" class="clip-vote-btn" data-clip-id="kick-niter-01M1HM5ZEZSY8MEWXZ6XGBYW4V" aria-label="Zagłosuj na klip">
+                <i data-lucide="flame" class="w-4 h-4 text-slate-400"></i>
+                <span class="clip-vote-count font-mono font-bold text-xs text-slate-300">0</span>
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div id="clips-empty" class="empty-state hidden py-12 text-center">
+        <p class="font-mono text-xs text-slate-400">// Brak klipów spełniających wybrane kryteria czasowe.</p>
+      </div>
+    </section>
+
+    <!-- Pasek FAQ / Informacje o zgłaszaniu klipów -->
+    <section aria-label="Informacje o dodawaniu materiałów" class="p-5 rounded-xl bg-[#0d121f]/90 border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+      <div class="flex items-start gap-3">
+        <div class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-neon-cyan flex-shrink-0 mt-0.5">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider font-display">
+            Chcesz, aby Twój klip pojawił się na stronie?
+          </h3>
+          <p class="text-[11px] text-slate-400 font-mono leading-relaxed mt-0.5">
+            Zgłoszenie jest bezpłatne i otwarte dla każdego. Wystarczy podać link do klipu z Twitcha, Kicka, YouTube, Medala, Streamable lub TikToka. Po weryfikacji moderatora klip zasili katalog!
+          </p>
+        </div>
+      </div>
+      <button type="button" onclick="if(window.ClipApplicationModal) window.ClipApplicationModal.open();" class="btn-secondary text-xs py-2 px-4 whitespace-nowrap flex items-center gap-2 flex-shrink-0 cursor-pointer">
+        <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+        <span>Zgłoś Akcję Teraz</span>
+      </button>
+    </section>
+
+    <!-- Stopka -->
+    <footer class="text-center text-[11px] font-mono text-slate-500 py-6 border-t border-white/5">
+      VIRP.pl © 2026 — Społeczność GTA Roleplay w Polsce. Wszelkie prawa zastrzeżone.
+    </footer>
+  </main>
+
+
+  <!-- ============================================================
+       ADD CLIP MODAL (DISCORD_WEBHOOK_3)
+       ============================================================ -->
+  <div id="add-clip-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="clip-modal-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="text-[10px] font-mono text-neon-cyan tracking-widest uppercase block mb-0.5">
+            COMMUNITY CLIPS // VIRP.PL
+          </span>
+          <h2 id="clip-modal-title" class="modal-title gradient-text text-xl sm:text-2xl">
+            Zgłoś Klip z Akcji
+          </h2>
+        </div>
+        <button id="clip-modal-close-btn" class="btn-icon" aria-label="Zamknij">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Pasek powitalny -->
+        <div class="mb-5 p-3.5 rounded-lg bg-cyan-950/30 border border-cyan-500/25 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-neon-cyan/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i data-lucide="film" class="w-4 h-4 text-neon-cyan"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-white uppercase font-display mb-1">
+              Widziałeś epicką akcję na streamie? Zgłoś klip!
+            </h4>
+            <p class="text-[11px] text-slate-300 font-mono leading-relaxed">
+              Wklej link do klipu (Twitch, Kick, YouTube, Medal, Streamable, TikTok). Po akceptacji moderacji klip pojawi się na stronie z możliwością głosowania!
+            </p>
+          </div>
+        </div>
+
+        <form id="add-clip-form" action="javascript:void(0);" novalidate>
+          <!-- Honeypot antybotowy -->
+          <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1; overflow: hidden;" aria-hidden="true">
+            <label for="form-clip-hp" aria-hidden="true">Leave this field empty</label>
+            <input type="text" id="form-clip-hp" name="clip_hp_check" tabindex="-1" autocomplete="off" aria-hidden="true">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-clip-url">Bezpośredni Link do Klipu <span class="required">*</span></label>
+            <input type="url" id="form-clip-url" class="form-input" placeholder="https://clips.twitch.tv/... lub https://kick.com/... lub https://youtube.com/..." required>
+            <p class="form-hint">Obsługiwane: Twitch Clips, Kick Clips, YouTube Shorts/Clips, Medal.tv, Streamable, TikTok.</p>
+            <p class="form-error hidden" id="error-clip-url"></p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-clip-title">Tytuł Akcji / Klipu <span class="required">*</span></label>
+            <input type="text" id="form-clip-title" class="form-input" placeholder="np. Pościg 10-80 przez autostradę w Los Santos" maxlength="90" required>
+            <p class="form-error hidden" id="error-clip-title"></p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="form-clip-streamer">Streamer / Twórca <span class="required">*</span></label>
+              <input type="text" id="form-clip-streamer" class="form-input" placeholder="np. MrDzinold, AspenTV, EWROON" maxlength="60" required>
+              <p class="form-error hidden" id="error-clip-streamer"></p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-clip-server">Serwer RP / Gra</label>
+              <input type="text" id="form-clip-server" class="form-input" placeholder="np. StrefaRP, 5City, Nopixel" maxlength="60">
+              <p class="form-error hidden" id="error-clip-server"></p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-clip-submitter">Twój Nick / Discord (opcjonalnie)</label>
+            <input type="text" id="form-clip-submitter" class="form-input" placeholder="np. TwójNick z Twitch/Kick lub Discord" maxlength="50">
+            <p class="form-hint text-[10px] text-slate-400 mt-1">💡 <strong>Wskazówka dla autorów:</strong> Jeśli to Twój własny klip, podaj spójny nick z Twitch/Kick i Discorda, aby w przyszłości zakwalifikować się do nagród dla TOP 3!</p>
+            <p class="form-error hidden" id="error-clip-submitter"></p>
+          </div>
+
+          <!-- Cloudflare Turnstile Anti-Bot Protection (Lazy Render) -->
+          <div id="turnstile-clip-container" class="my-3 flex justify-center min-h-[65px] items-center"></div>
+
+          <button type="submit" id="form-clip-submit-btn" class="btn-primary w-full py-3 mt-2 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-500/25 bg-gradient-to-r from-neon-cyan to-blue-600 text-black font-bold">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span>Wyślij Klip do Weryfikacji</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       CLIP VIEWER MODAL
+       ============================================================ -->
+  <div id="clip-viewer-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Odtwarzacz Klipu">
+    <div class="modal-content max-w-3xl">
+      <div class="modal-header">
+        <div>
+          <span class="text-[10px] font-mono text-neon-cyan tracking-widest uppercase block mb-0.5">
+            VIRP.PL // COMMUNITY CLIP PLAYER
+          </span>
+          <h3 id="clip-viewer-title" class="font-display text-lg text-white font-bold truncate">
+            Odtwarzacz Klipu
+          </h3>
+        </div>
+        <button id="clip-viewer-close-btn" class="btn-icon" aria-label="Zamknij">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="modal-body p-0">
+        <div id="clip-viewer-player-container" class="aspect-video w-full bg-black relative flex items-center justify-center overflow-hidden">
+          <!-- Renderowany odtwarzacz iframe lub wideo -->
+        </div>
+        <div class="p-4 bg-[#0d121f] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-white/10">
+          <div class="flex items-center gap-3">
+            <div id="clip-viewer-streamer" class="text-xs text-slate-300 font-mono"></div>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <button type="button" id="clip-viewer-vote-btn" class="btn-vice text-xs py-2 px-4 flex items-center gap-2 cursor-pointer">
+              <i data-lucide="flame" class="w-4 h-4 text-neon-pink"></i>
+              <span id="clip-viewer-vote-count">0</span> Głosów
+            </button>
+            <a id="clip-viewer-external-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary text-xs py-2 px-3 flex items-center gap-1.5">
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              <span>Otwórz Źródło</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       VICE CITY DUAL RADIO HUD (STREAM / SPOTIFY)
+       ============================================================ -->
+  <div id="vice-radio-hud" class="fixed bottom-4 left-4 right-4 sm:right-auto sm:bottom-6 sm:left-6 z-[70] transition-all duration-300 max-w-[calc(100vw-2rem)]">
+    <!-- Przycisk minimalizacji (widoczny gdy panel zwinięty) -->
+    <button id="radio-minimize-btn" class="radio-mini-btn hidden" title="Rozwiń radio" aria-label="Rozwiń radio">
+      <div class="hud-equalizer flex items-end gap-0.5 h-3 cursor-pointer">
+        <div class="hud-eq-bar bg-neon-pink" style="height:40%"></div>
+        <div class="hud-eq-bar bg-neon-cyan" style="height:70%"></div>
+        <div class="hud-eq-bar bg-neon-amber" style="height:55%"></div>
+      </div>
+    </button>
+
+    <!-- Główny panel sterowania HUD -->
+    <div id="radio-full-panel" class="hud-panel p-2.5 bg-[#0D111D]/95 border border-cyan-500/30 shadow-[0_0_25px_rgba(0,0,0,0.85)] backdrop-blur-md hud-cut flex flex-col gap-2 w-full sm:w-80 max-w-full">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2 px-1">
+        <div class="flex items-center gap-1.5">
+          <button id="src-stream-btn" class="radio-source-btn active" data-source="stream">
+            <i data-lucide="radio" class="w-3 h-3"></i> VICE FM
+          </button>
+          <button id="src-spotify-btn" class="radio-source-btn" data-source="spotify">
+            <i data-lucide="disc" class="w-3 h-3"></i> SPOTIFY
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1">
+          <button id="radio-expand-btn" class="text-slate-400 hover:text-white transition-colors p-1 cursor-pointer" title="Zwiń / Rozwiń panel" aria-label="Zwiń lub rozwiń radio">
+            <i data-lucide="chevron-down" id="radio-expand-arrow" class="w-4 h-4 transition-transform duration-300"></i>
+          </button>
+          <button id="radio-collapse-btn" class="text-slate-400 hover:text-neon-pink transition-colors p-1 cursor-pointer" title="Minimalizuj radio" aria-label="Minimalizuj radio">
+            <i data-lucide="minus" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-2 px-1">
+        <div class="flex items-center gap-2.5 cursor-pointer" id="radio-track-info-click" role="button" tabindex="0" aria-label="Włącz lub zatrzymaj radio">
+          <button id="radio-master-play" class="w-8 h-8 rounded bg-gradient-to-br from-[#FF1F7D] to-[#FF9E00] flex items-center justify-center text-white hover:scale-105 transition-transform shadow-[0_0_12px_rgba(255,31,125,0.5)] cursor-pointer" aria-label="Odtwarzaj / Zatrzymaj">
+            <i data-lucide="play" class="w-4 h-4" id="radio-master-icon"></i>
+          </button>
+
+          <div class="flex flex-col">
+            <span class="font-display text-sm text-white uppercase tracking-wider leading-none" id="radio-track-title">CHILLSYNTH // NIGHTRIDE FM</span>
+            <span class="text-[9px] text-neon-cyan font-mono tracking-wider mt-0.5" id="radio-track-status">KLIKNIJ ABY WŁĄCZYĆ</span>
+          </div>
+        </div>
+
+        <div class="hud-equalizer flex items-end gap-0.5 h-4 px-1 cursor-pointer" id="radio-eq" role="button" tabindex="0" title="Kliknij, aby włączyć/wyłączyć" aria-label="Włącz lub zatrzymaj radio">
+          <div class="hud-eq-bar bg-neon-pink"></div>
+          <div class="hud-eq-bar bg-neon-cyan"></div>
+          <div class="hud-eq-bar bg-neon-amber"></div>
+          <div class="hud-eq-bar bg-status-green"></div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 px-1 pt-1.5 border-t border-white/5">
+        <button id="radio-mute-btn" class="text-slate-400 hover:text-neon-cyan transition-colors cursor-pointer" title="Wycisz / Włącz dźwięk" aria-label="Wycisz lub włącz dźwięk">
+          <i data-lucide="volume-2" id="radio-volume-icon" class="w-3.5 h-3.5"></i>
+        </button>
+        <input type="range" id="radio-volume-slider" min="0" max="1" step="0.05" value="0.2" class="w-full accent-[#FF1F7D] h-1.5 bg-slate-800 rounded-lg cursor-pointer transition-all hover:bg-slate-700" title="Regulacja głośności" aria-label="Głośność radia">
+        <span id="radio-volume-val" class="text-[9px] font-mono text-neon-cyan w-7 text-right">20%</span>
+      </div>
+
+      <div id="radio-spotify-container" class="hidden pt-2 border-t border-white/10 mt-1">
+        <div class="flex items-center justify-between mb-2 px-1">
+          <span class="text-[10px] text-neon-cyan font-mono font-bold tracking-wider">SPOTIFY // FLASH FM VICE CITY</span>
+          <span class="hud-pill hud-pill-pink text-[9px]">PLAYLISTA</span>
+        </div>
+
+        <div id="spotify-embed-root">
+          <iframe 
+            data-testid="embed-iframe" 
+            title="Spotify Web Player - Flash FM Vice City"
+            style="border-radius:12px; border:0;" 
+            data-src="https://open.spotify.com/embed/playlist/7dKunw6i8S8cqF8DOANExj?utm_source=generator&theme=0" 
+            width="100%" 
+            height="352" 
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </div>
+
+    <audio id="bg-audio" loop preload="none">
+      <source src="https://stream.nightride.fm/chillsynth.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+
+  <!-- ============================================================
+       COOKIE CONSENT BANNER
+       ============================================================ -->
+  <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-[80] transition-all duration-500 translate-y-24 opacity-0 pointer-events-none" role="region" aria-label="Zgoda na pliki cookies">
+    <div class="p-4 rounded-xl bg-[#0d121f]/95 border border-cyan-500/30 shadow-[0_10px_35px_rgba(0,0,0,0.85)] backdrop-blur-md">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-neon-pink/20 border border-neon-pink/30 flex items-center justify-center text-neon-pink flex-shrink-0 mt-0.5">
+          <i data-lucide="cookie" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <h4 class="text-xs font-bold text-white uppercase font-display tracking-wider">
+            Pliki Cookies &amp; Pamięć Lokalna
+          </h4>
+          <p class="text-[11px] text-slate-300 font-mono mt-1 leading-relaxed">
+            VIRP.pl korzysta z pamięci lokalnej (Local Storage) oraz niezbędnych cookies w celu zapamiętania Twoich ulubionych serwerów, głosów, ustawień radia i ochrony anty-botowej Cloudflare. Nie stosujemy inwazyjnych ciasteczek śledzących.
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2.5 border-t border-white/10">
+        <button type="button" id="cookie-accept-btn" class="btn-primary text-xs py-1.5 px-4 cursor-pointer shadow-md shadow-pink-500/20">
+          Rozumiem i Akceptuję
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       TOAST CONTAINER
+       ============================================================ -->
+  <div id="toast-container" class="toast-container"></div>
+
+
+  <!-- ============================================================
+       SCRIPTS (modular, ES6+)
+       ============================================================ -->
+  <script src="/js/app.js?v=1.6.0"></script>
+  <script src="/js/streamers.js?v=1.6.0"></script>
+
+</body>
+</html>
+

@@ -2018,6 +2018,11 @@ input[type="range"]::-webkit-slider-thumb {
   pointer-events: none;
 }
 
+html.splash-bypassed #splash-gate,
+html.splash-bypassed .splash-overlay {
+  display: none !important;
+}
+
 .splash-bg-glow {
   position: absolute;
   inset: 0;
@@ -2638,6 +2643,7 @@ input[type="range"]::-webkit-slider-thumb {
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

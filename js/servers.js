@@ -90,7 +90,15 @@ const ServerCatalog = {
 
   async fetchServers() {
     try {
-      const response = await fetch('data/servers.json');
+      const dataUrl = (window.location.origin && window.location.origin !== 'null') 
+        ? `${window.location.origin}/data/servers.json` 
+        : '/data/servers.json';
+      let response;
+      try {
+        response = await fetch(dataUrl);
+      } catch (_) {
+        response = await fetch('data/servers.json');
+      }
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       this.servers = Array.isArray(data) ? data : (Array.isArray(data.servers) ? data.servers : []);
@@ -448,7 +456,7 @@ const ServerCatalog = {
         <div class="hud-card-cover">
           <!-- Logo Serwera z Neonowym Glow (Zoptymalizowane asynchroniczne dekodowanie) -->
           <div class="hud-logo-backdrop">
-            <img src="${safeBannerUrl}" alt="${safeName}" width="640" height="220" class="hud-server-brand-logo" loading="${index < 6 ? 'eager' : 'lazy'}" decoding="async" onerror="this.onerror=null;this.src='img/logo-vi.png'" />
+            <img src="${safeBannerUrl}" alt="${safeName}" width="640" height="220" class="hud-server-brand-logo" loading="${index < 6 ? 'eager' : 'lazy'}" decoding="async" onerror="this.onerror=null;this.src='/img/logo-vi.png'" />
           </div>
           <div class="hud-card-overlay">
             <div class="hud-badges-row flex flex-wrap gap-1.5">

@@ -86,7 +86,7 @@ for (const streamer of streamersData) {
 
 // 5. Weryfikacja markerów konfliktów w plikach źródłowych
 console.log('\n--- Weryfikacja markerów konfliktów Git w projekcie ---');
-const allTextFiles = [...jsFiles, ...jsonFiles, 'index.html', 'css/style.css'];
+const allTextFiles = [...jsFiles, ...jsonFiles, 'index.html', 'gta6/index.html', 'klipy/index.html', 'toolkit/index.html', 'streamerzy/index.html', 'css/style.css'];
 for (const f of allTextFiles) {
   try {
     const text = await readFile(f, 'utf8');

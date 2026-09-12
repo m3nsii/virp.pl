@@ -31,6 +31,14 @@
     })();
   </script>
 
+  <!-- Oznaczenie sesji jako zainicjalizowanej, aby powrót na stronę główną nie wymagał ponownej inicjacji -->
+  <script>
+    try {
+      sessionStorage.setItem('virp_splash_dismissed', 'true');
+      localStorage.setItem('virp_splash_dismissed', 'true');
+    } catch (e) {}
+  </script>
+
   <!-- ============================================================
        VIRP.pl — Dedykowane Polskie Centrum GTA 6 Roleplay (Leonida RP)
        Statyczna podstrona SEO | HTML5 + Tailwind + Vanilla JS
@@ -77,7 +85,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
 
   <!-- Precompiled Static Tailwind CSS (0ms JIT, 0 MutationObservers, 120 FPS in Chrome) -->
-  <link rel="stylesheet" href="/css/tailwind.min.css?v=1.5.1">
+  <link rel="stylesheet" href="/css/tailwind.min.css?v=1.6.0">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js" defer></script>
@@ -88,7 +96,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Teko:wght@500;600;700&display=swap">
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="/css/style.css?v=1.5.1">
+  <link rel="stylesheet" href="/css/style.css?v=1.6.0">
 
   <!-- Structured Data: JSON-LD (WebPage, BreadcrumbList) -->
   <script type="application/ld+json">
@@ -164,11 +172,25 @@
         </div>
       </div>
 
-      <a href="/" class="btn-vice text-xs py-2.5 px-4 sm:px-5 flex items-center gap-2 cursor-pointer transition-all" title="Powrót do strony głównej">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i>
-        <span class="hidden xs:inline sm:inline">POWRÓT DO STRONY GŁÓWNEJ</span>
-        <span class="xs:hidden sm:hidden">POWRÓT</span>
-      </a>
+      <!-- Szybka nawigacja między sekcjami -->
+      <nav class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" aria-label="Nawigacja podstrony">
+        <a href="/#servers" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          SERWERY
+        </a>
+        <a href="/streamerzy" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          STREAMERZY
+        </a>
+        <a href="/klipy" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          KLIPY
+        </a>
+        <a href="/toolkit" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          TOOLKIT
+        </a>
+        <a href="/" class="btn-vice text-xs py-1.5 px-3.5 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition-all ml-1" title="Powrót do strony głównej">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>GŁÓWNA</span>
+        </a>
+      </nav>
     </header>
 
     <!-- Pasek Telemetrii i Statystyk GTA VI -->
@@ -327,5 +349,6 @@
     lucide.createIcons();
   }
 </script>
+  <script src="/js/app.js?v=1.6.0"></script>
 </body>
 </html>

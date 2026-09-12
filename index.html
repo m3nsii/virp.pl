@@ -31,6 +31,24 @@
     })();
   </script>
 
+  <!-- Natychmiastowe pominięcie ekranu powitalnego dla powracających użytkowników -->
+  <script>
+    (function() {
+      try {
+        var isDismissed = sessionStorage.getItem('virp_splash_dismissed') === 'true' ||
+                          localStorage.getItem('virp_splash_dismissed') === 'true' ||
+                          (document.referrer && document.referrer.indexOf(window.location.host) !== -1) ||
+                          (window.location.hash && window.location.hash.length > 1) ||
+                          (new URLSearchParams(window.location.search).get('nosplash') === '1');
+        if (isDismissed) {
+          document.documentElement.classList.add('splash-bypassed');
+          sessionStorage.setItem('virp_splash_dismissed', 'true');
+          localStorage.setItem('virp_splash_dismissed', 'true');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <!-- ============================================================
        VIRP.pl — Polski Hub i Katalog Społeczności GTA Roleplay
        Statyczna aplikacja SPA | HTML5 + Tailwind + Vanilla JS
@@ -38,23 +56,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://virp-proxy.chojmarcel.workers.dev https://challenges.cloudflare.com https://frontend.cfx-services.net https://cdn.rage.mp https://api.strefarp.gg https://stream.nightride.fm https://*.spotify.com https://*.spotifycdn.com https://*.scdn.co; media-src 'self' https://stream.nightride.fm https: data: blob:; frame-src 'self' https://challenges.cloudflare.com https://open.spotify.com https://*.spotify.com https://*.scdn.co https://*.youtube.com https://*.youtube-nocookie.com https://clips.twitch.tv https://*.twitch.tv;">
-  <title>VIRP.pl — Polski Hub Społeczności GTA VI Roleplay i nie tylko</title>
+  <title>Serwery GTA RP Polska — Lista Serwerów FiveM &amp; Polski Hub GTA VI | VIRP.pl</title>
   <meta name="referrer" content="strict-origin-when-cross-origin">
 
   <!-- Cloudflare Turnstile Anti-Bot API (Explicit Render) -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 
-  <!-- SEO Meta -->
-  <meta name="description" content="VIRP.pl to największy polski katalog serwerów GTA Roleplay. Znajdź serwer RP, stwórz postać, poznaj kody radiowe i dołącz do społeczności.">
-  <meta name="keywords" content="GTA RP, Roleplay, serwery RP, FiveM, RAGEMP, Voice RP, Text RP, Polska, katalog serwerów">
+  <!-- SEO Meta (Zoptymalizowane pod wyszukiwania Google w Polsce) -->
+  <meta name="description" content="Największy polski katalog i ranking serwerów GTA Roleplay (FiveM, Rage:MP). Sprawdź statusy live graczy, klipy ze streamów, kody radiowe 10- oraz hub GTA 6 RP na VIRP.pl.">
+  <meta name="keywords" content="serwery GTA RP, polskie serwery FiveM, lista serwerów GTA RP, ranking serwerów FiveM, FiveM Polska, GTA 6 RP, kody radiowe GTA RP, generator postaci GTA RP, klipy GTA RP, VIRP.pl">
   <meta name="author" content="VIRP.pl">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://virp.pl/">
 
   <!-- OpenGraph (Facebook, Discord, Messenger, LinkedIn) -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="VIRP.pl — Polski Hub Społeczności GTA Roleplay &amp; GTA VI">
-  <meta property="og:description" content="Największy polski katalog serwerów GTA RP, rankingi na żywo, baza twórców, kody radiowe, generator postaci i portal GTA VI w stanie Leonida.">
+  <meta property="og:title" content="Serwery GTA RP Polska — Ranking Live &amp; Hub GTA VI | VIRP.pl">
+  <meta property="og:description" content="Oficjalny polski katalog serwerów GTA Roleplay. Sprawdź liczbę graczy na żywo, najlepsze klipy ze streamów, kody radiowe oraz strefę GTA VI na VIRP.pl.">
   <meta property="og:url" content="https://virp.pl/">
   <meta property="og:site_name" content="VIRP.pl">
   <meta property="og:locale" content="pl_PL">
@@ -225,7 +243,7 @@
   </script>
 
   <!-- Precompiled Static Tailwind CSS (0ms JIT, 0 MutationObservers, 120 FPS in Chrome) -->
-  <link rel="stylesheet" href="css/tailwind.min.css?v=1.5.1">
+  <link rel="stylesheet" href="css/tailwind.min.css?v=1.6.0">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js" defer></script>
@@ -243,7 +261,7 @@
   <link rel="preload" as="image" href="img/hero-vice.jpg" fetchpriority="high">
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/style.css?v=1.5.1">
+  <link rel="stylesheet" href="css/style.css?v=1.6.0">
 </head>
 <body>
 
@@ -251,6 +269,12 @@
        LEONIDA CITY 2026 // SPLASH GATEWAY
        ============================================================ -->
   <div id="splash-gate" class="splash-overlay">
+    <script>
+      if (document.documentElement.classList.contains('splash-bypassed')) {
+        var _sg = document.getElementById('splash-gate');
+        if (_sg) _sg.style.display = 'none';
+      }
+    </script>
     <div class="splash-bg-glow"></div>
     <div class="splash-grid"></div>
 
@@ -312,7 +336,7 @@
             </span>
             <span class="text-slate-300 font-semibold">🔥 11 Polskich Serwerów RP Online</span>
             <span class="text-slate-600">•</span>
-            <a href="#streamers" class="ticker-streamers-link inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-cyan-500/15 border border-cyan-500/35 text-neon-cyan hover:text-white hover:bg-cyan-500/25 transition-all font-semibold cursor-pointer shadow-[0_0_10px_rgba(0,240,255,0.15)] group">
+            <a href="streamerzy" class="ticker-streamers-link inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-cyan-500/15 border border-cyan-500/35 text-neon-cyan hover:text-white hover:bg-cyan-500/25 transition-all font-semibold cursor-pointer shadow-[0_0_10px_rgba(0,240,255,0.15)] group">
               <i data-lucide="tv" class="w-3 h-3 text-neon-cyan group-hover:scale-110 transition-transform"></i>
               <span>Sprawdź zakładkę streamerów &amp; klipy!</span>
               <i data-lucide="arrow-right" class="w-3 h-3 transition-transform group-hover:translate-x-0.5"></i>
@@ -331,7 +355,7 @@
             </span>
             <span class="text-slate-300 font-semibold">🔥 11 Polskich Serwerów RP Online</span>
             <span class="text-slate-600">•</span>
-            <a href="#streamers" class="ticker-streamers-link inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-cyan-500/15 border border-cyan-500/35 text-neon-cyan hover:text-white hover:bg-cyan-500/25 transition-all font-semibold cursor-pointer shadow-[0_0_10px_rgba(0,240,255,0.15)] group">
+            <a href="streamerzy" class="ticker-streamers-link inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-cyan-500/15 border border-cyan-500/35 text-neon-cyan hover:text-white hover:bg-cyan-500/25 transition-all font-semibold cursor-pointer shadow-[0_0_10px_rgba(0,240,255,0.15)] group">
               <i data-lucide="tv" class="w-3 h-3 text-neon-cyan group-hover:scale-110 transition-transform"></i>
               <span>Sprawdź zakładkę streamerów &amp; klipy!</span>
               <i data-lucide="arrow-right" class="w-3 h-3 transition-transform group-hover:translate-x-0.5"></i>
@@ -380,14 +404,14 @@
 
         <!-- Desktop Nav Links -->
         <div class="hidden md:flex items-center gap-5">
-          <a href="#clips" class="nav-link">Klipy</a>
+          <a href="klipy" class="nav-link">Klipy</a>
           <a href="#servers" class="nav-link">Serwery</a>
-          <a href="#streamers" class="nav-link">Streamerzy</a>
+          <a href="streamerzy" class="nav-link">Streamerzy</a>
           <a href="gta6" class="nav-link nav-link-gta6 flex items-center gap-1.5 font-bold text-neon-pink">
             <span class="hud-pill hud-pill-pink text-[9px] px-1.5 py-0.5">VI</span>
             <span>GTA VI</span>
           </a>
-          <a href="#toolkit" class="nav-link">RP Toolkit</a>
+          <a href="toolkit" class="nav-link">RP Toolkit</a>
           <a href="#about" class="nav-link">O Projekcie</a>
           <button type="button" id="nav-contact-btn" class="nav-link flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-neon-cyan transition-colors" title="Kontakt &amp; Biznes" aria-label="Kontakt &amp; Biznes">
             <i data-lucide="mail" class="w-3.5 h-3.5 text-neon-cyan"></i>
@@ -421,14 +445,14 @@
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="mobile-menu bg-bg-secondary border-t border-white/5">
       <div class="px-4 py-4 space-y-3">
-        <a href="#clips" class="block py-2 nav-link">Klipy</a>
+        <a href="klipy" class="block py-2 nav-link">Klipy</a>
         <a href="#servers" class="block py-2 nav-link">Serwery</a>
-        <a href="#streamers" class="block py-2 nav-link">Streamerzy</a>
+        <a href="streamerzy" class="block py-2 nav-link">Streamerzy</a>
         <a href="gta6" class="block py-2 nav-link nav-link-gta6 flex items-center gap-2 text-neon-pink font-bold">
           <span class="hud-pill hud-pill-pink text-[9px] px-1.5 py-0.5">VI</span>
           <span>GTA VI</span>
         </a>
-        <a href="#toolkit" class="block py-2 nav-link">RP Toolkit</a>
+        <a href="toolkit" class="block py-2 nav-link">RP Toolkit</a>
         <a href="#about" class="block py-2 nav-link">O Projekcie</a>
         <button type="button" id="mobile-contact-btn" class="block w-full text-left py-2 nav-link flex items-center gap-2 cursor-pointer text-slate-300 hover:text-neon-cyan transition-colors" aria-label="Kontakt &amp; Biznes">
           <i data-lucide="mail" class="w-4 h-4 text-neon-cyan"></i>
@@ -478,14 +502,14 @@
           </div>
 
           <!-- Heading -->
-          <h1 class="glitch-title text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-tight animate-slide-up stagger-1" data-text="Twój Hub do Świata GTA RP">
-            Twój Hub do Świata
-            <span class="gradient-text">GTA RP</span>
+          <h1 class="glitch-title text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-tight animate-slide-up stagger-1" data-text="Polskie Serwery GTA RP &amp; Hub GTA VI">
+            Polskie Serwery
+            <span class="gradient-text">GTA RP</span> &amp; Hub GTA VI
           </h1>
 
           <!-- Subheading -->
           <p class="text-lg sm:text-xl text-slate-400 mb-8 max-w-2xl leading-relaxed animate-slide-up stagger-2">
-            Odkryj najlepsze polskie serwery RP i Online, stwórz unikalną postać, poznaj stronę i dołącz do społeczności tysięcy graczy.
+            Odkryj najlepsze polskie serwery RP i Online, monitoruj graczy na żywo, stwórz unikalną postać, poznaj kody radiowe i dołącz do społeczności graczy.
           </p>
 
           <!-- CTA Buttons -->
@@ -494,7 +518,7 @@
               <i data-lucide="gamepad-2" class="w-5 h-5"></i>
               Przeglądaj Serwery
             </a>
-            <a href="#toolkit" class="btn-secondary text-base py-3 px-6">
+            <a href="toolkit" class="btn-secondary text-base py-3 px-6">
               <i data-lucide="wrench" class="w-5 h-5"></i>
               RP Toolkit
             </a>
@@ -1629,376 +1653,205 @@
 
 
   <!-- ============================================================
-       RP TOOLKIT
+       RP TOOLKIT — TEASER & CTA DO /toolkit
        ============================================================ -->
-  <section id="toolkit" class="py-20 lg:py-28 bg-bg-secondary/50">
+  <section id="toolkit" class="py-16 lg:py-24 relative overflow-hidden bg-bg-secondary/50 border-t border-b border-white/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Section Header -->
-      <div class="text-center mb-12 animate-slide-up">
-        <span class="section-badge">
-          <i data-lucide="wrench" class="w-3.5 h-3.5"></i>
-          Narzędzia
-        </span>
-        <h2 class="section-title">
-          RP <span class="gradient-text-secondary">Toolkit</span>
-        </h2>
-        <p class="section-subtitle mx-auto">
-          Zestaw narzędzi dla każdego gracza RP. Stwórz postać, poznaj kody radiowe, przelicz zarobki.
-        </p>
-      </div>
-
-      <!-- Toolkit Nav Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10 animate-slide-up stagger-1">
-        <button class="toolkit-card card-pink active" data-toolkit="character" id="toolkit-btn-character">
-          <div class="toolkit-icon icon-pink">
-            <i data-lucide="user-plus" class="w-6 h-6"></i>
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="hud-pill hud-pill-pink text-[10px] uppercase tracking-widest font-bold">ZESTAW NARZĘDZI RP</span>
+            <span class="hud-pill hud-pill-cyan text-[10px] uppercase tracking-widest font-bold">FIVEM &amp; RAGEMP</span>
           </div>
-          <h3 class="font-semibold text-white mb-1">Generator Postaci</h3>
-          <p class="text-sm text-slate-400">Stwórz biografię postaci do podania WL</p>
-        </button>
+          <h2 class="font-display text-2xl sm:text-4xl text-white uppercase tracking-wider font-black">
+            RP <span class="gradient-text-secondary">TOOLKIT</span> — NARZĘDZIOWNIK GRACZA
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-400 font-mono mt-1 max-w-2xl">
+            Wszystko, czego potrzebujesz na serwerach Roleplay: generator karty postaci z dowodem ID Leonida na Whitelist, błyskawiczna wyszukiwarka kodów radiowych 10- oraz kalkulator zarobków.
+          </p>
+        </div>
 
-        <button class="toolkit-card card-purple" data-toolkit="codes" id="toolkit-btn-codes">
-          <div class="toolkit-icon icon-cyan">
-            <i data-lucide="radio" class="w-6 h-6"></i>
-          </div>
-          <h3 class="font-semibold text-white mb-1">Kody Radiowe</h3>
-          <p class="text-sm text-slate-400">10-codes, procedury policyjne i medyczne</p>
-        </button>
-
-        <button class="toolkit-card card-amber relative overflow-hidden" data-toolkit="calculator" id="toolkit-btn-calculator">
-          <div class="caution-tape-badge">W BUDOWIE</div>
-          <div class="toolkit-icon icon-amber">
-            <i data-lucide="calculator" class="w-6 h-6"></i>
-          </div>
-          <h3 class="font-semibold text-white mb-1">Kalkulator Ekonomii</h3>
-          <p class="text-sm text-slate-400">Przelicz zarobki z prac i napadów</p>
-        </button>
-      </div>
-
-      <!-- ============ TOOLKIT PANEL: Character Generator ============ -->
-      <div id="panel-character" class="toolkit-panel active animate-slide-up stagger-2">
-        <div class="glass-card p-6 lg:p-8">
-          <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
-            <h3 class="text-xl font-bold flex items-center gap-2">
-              <i data-lucide="user-plus" class="w-5 h-5 text-accent-pink"></i>
-              Generator Karty Postaci &amp; ID Leonida
-            </h3>
-            <span class="hud-pill hud-pill-cyan text-xs">LEONIDA DMV // VIRP.PL</span>
-          </div>
-
-          <!-- Pasek Szybkich Archetypów & Losowania -->
-          <div class="mb-6 p-3.5 bg-[#0B0F19]/90 border border-pink-500/25 rounded-lg shadow-lg">
-            <div class="flex items-center justify-between flex-wrap gap-2 mb-2.5">
-              <span class="text-xs font-mono text-neon-pink font-bold flex items-center gap-1.5">
-                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> GOTOWE ARCHETYPY &amp; 1-CLICK PRESETS
-              </span>
-              <button type="button" id="char-random-btn" class="btn-primary py-1 px-3 text-xs flex items-center gap-1.5 cursor-pointer">
-                <i data-lucide="dice-5" class="w-3.5 h-3.5"></i> Wylosuj Postać
-              </button>
-            </div>
-            <div class="flex items-center gap-1.5 flex-wrap" id="char-archetypes-bar">
-              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="cop">
-                <i data-lucide="shield" class="w-3.5 h-3.5 text-blue-400"></i>
-                <span>Szeryf / LSPD</span>
-              </button>
-              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="medic">
-                <i data-lucide="heart-pulse" class="w-3.5 h-3.5 text-red-400"></i>
-                <span>Paramedyk / EMS</span>
-              </button>
-              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="mechanic">
-                <i data-lucide="wrench" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span>Tuner / Mechanik</span>
-              </button>
-              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="gang">
-                <i data-lucide="skull" class="w-3.5 h-3.5 text-purple-400"></i>
-                <span>Kartel / Crime</span>
-              </button>
-              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="business">
-                <i data-lucide="briefcase" class="w-3.5 h-3.5 text-emerald-400"></i>
-                <span>Biznesmen</span>
-              </button>
-              <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="driver">
-                <i data-lucide="gauge" class="w-3.5 h-3.5 text-neon-pink"></i>
-                <span>Kierowca / Getaway</span>
-              </button>
-            </div>
-            <p class="mt-3 text-[10px] text-slate-400 font-mono">Archetypy są wyłącznie inspiracją — przed użyciem sprawdź zasady konkretnego serwera RP.</p>
-          </div>
-
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Formularz tworzenia postaci -->
-            <div class="space-y-4">
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="char-name">Imię i Nazwisko <span class="required">*</span></label>
-                  <input type="text" id="char-name" class="form-input" placeholder="np. Marco Valentino" maxlength="50" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="char-avatar-type">Styl Wizualny / Zdjęcie ID</label>
-                  <select id="char-avatar-type" class="form-select">
-                    <option value="police">Mundur Policyjny / Służby</option>
-                    <option value="medic">Kombinezon Medyczny / EMS</option>
-                    <option value="street">Streetwear / Luźny</option>
-                    <option value="suit">Garnitur / Biznes</option>
-                    <option value="racer">Kask / Kombinezon Rajdowy</option>
-                    <option value="crime">Skórzana Kurtka / Crime</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="char-age">Wiek</label>
-                  <input type="number" id="char-age" class="form-input" placeholder="np. 28" min="16" max="85" value="28">
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="char-gender">Płeć</label>
-                  <select id="char-gender" class="form-select">
-                    <option value="Mężczyzna">Mężczyzna</option>
-                    <option value="Kobieta">Kobieta</option>
-                    <option value="Inna">Inna</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="char-origin">Pochodzenie / Miejsce Urodzenia</label>
-                  <input type="text" id="char-origin" class="form-input" placeholder="np. Leonida, Włochy">
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="char-job">Zawód / Rola Społeczna</label>
-                  <input type="text" id="char-job" class="form-input" placeholder="np. Detektyw LSPD, Mechanik, Inwestor">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="char-traits">Zalety i Mocne Strony (oddziel przecinkami)</label>
-                <input type="text" id="char-traits" class="form-input" placeholder="np. Opanowany, lojalny, szybki refleks">
-              </div>
-
-              <!-- Klucz do zdania Whitelist: Wady, Fobie, Ograniczenia -->
-              <div class="p-3 bg-red-950/20 border border-red-500/20 rounded-md space-y-3">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-mono text-red-400 font-bold flex items-center gap-1">
-                    <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> ZBALANSOWANIE POSTACI (ANTI-POWERGAMING)
-                  </span>
-                  <span class="text-[10px] text-slate-400 font-mono">WYMÓG WHITELIST</span>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label text-slate-300" for="char-flaws">Wady Charakteru <span class="text-red-400">*</span></label>
-                  <input type="text" id="char-flaws" class="form-input border-red-500/30" placeholder="np. Hazardzista, impulsywny, pamiętliwy, chciwy" required>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label text-slate-300" for="char-phobias">Fobie i Ograniczenia Fizyczne</label>
-                  <input type="text" id="char-phobias" class="form-input border-red-500/30" placeholder="np. Lęk wysokości, astma, blizna po postrzale, problem z zaufaniem">
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label text-slate-300" for="char-features">Znaki Szczególne &amp; Styl</label>
-                  <input type="text" id="char-features" class="form-input border-red-500/30" placeholder="np. Tatuaż z wężem na szyi, południowy akcent, garnitury retro">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="char-backstory">Historia / Backstory <span class="required">*</span></label>
-                <textarea id="char-backstory" class="form-textarea" rows="4" minlength="80" placeholder="Opisz historię życia postaci, dlaczego przyjechała do Leonida..."></textarea>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="char-goals">Cele i Motywacje</label>
-                <textarea id="char-goals" class="form-textarea" rows="2" placeholder="Co postać chce osiągnąć w mieście? Jakie ma plany?"></textarea>
-              </div>
-
-              <div class="flex gap-3">
-                <button type="button" id="char-generate-btn" class="btn-primary flex-1 py-3">
-                  <i data-lucide="sparkles" class="w-4 h-4"></i>
-                  Generuj Kartę &amp; Dokument ID
-                </button>
-                <button type="button" id="char-clear-btn" class="btn-secondary px-4" title="Wyczyść formularz">
-                  <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
-              </div>
-              <div class="flex flex-wrap gap-2">
-                <button type="button" id="char-save-btn" class="btn-secondary text-xs py-2 px-3">Zapisz postać</button>
-                <select id="char-saved-select" class="form-select text-xs flex-1 min-w-[180px]" aria-label="Wczytaj zapisaną postać">
-                  <option value="">Wczytaj zapisaną postać</option>
-                </select>
-                <button type="button" id="char-load-btn" class="btn-secondary text-xs py-2 px-3">Wczytaj</button>
-              </div>
-            </div>
-
-            <!-- Podgląd Karty Tożsamości i Podania -->
-            <div class="flex flex-col">
-              <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
-                <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <i data-lucide="contact" class="w-4 h-4 text-neon-cyan"></i>
-                  Podgląd ID Stanu Leonida
-                </h4>
-                
-                <!-- Przyciski Eksportu -->
-                <div class="flex items-center gap-1.5 flex-wrap">
-                  <button type="button" id="char-export-png-btn" class="btn-ghost text-xs py-1 px-2 text-neon-cyan hover:bg-cyan-500/10 border border-cyan-500/30" title="Pobierz Kartę ID jako obraz PNG">
-                    <i data-lucide="image" class="w-3.5 h-3.5"></i>
-                    Pobierz ID (.PNG)
-                  </button>
-                  <button type="button" id="char-export-pdf-btn" class="btn-ghost text-xs py-1 px-2 text-neon-pink hover:bg-pink-500/10 border border-pink-500/30" title="Pobierz Kompletne Podanie w formacie PDF">
-                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-                    Pobierz PDF
-                  </button>
-                  <button type="button" id="char-copy-discord-btn" class="btn-ghost text-xs py-1 px-2 text-indigo-400 hover:bg-indigo-500/10 border border-indigo-500/30" title="Kopiuj z formatowaniem pod Discord Markdown">
-                    <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
-                    Kopiuj na Discord
-                  </button>
-                  <button type="button" id="char-copy-btn" class="btn-ghost text-xs py-1 px-2" title="Kopiuj zwykły tekst">
-                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                    Kopiuj TXT
-                  </button>
-                  <button type="button" id="char-export-btn" class="btn-ghost text-xs py-1 px-2" title="Pobierz plik .txt">
-                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                    .TXT
-                  </button>
-                </div>
-              </div>
-
-              <!-- Interaktywny Canvas: Prawo Jazdy / Karta ID Stanu Leonida -->
-              <div class="relative mb-4 bg-black/40 rounded-lg overflow-hidden border border-cyan-500/25 p-1 flex justify-center">
-                <canvas id="char-id-canvas" width="856" height="540" class="w-full max-w-[500px] h-auto rounded shadow-2xl block"></canvas>
-              </div>
-
-              <!-- Zakładki wyboru widoku podglądu tekstu -->
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-mono text-slate-400 uppercase">Treść podania Whitelist:</span>
-                <span class="text-[10px] font-mono text-neon-cyan font-bold">VIRP.PL</span>
-              </div>
-
-              <div id="char-output" class="character-output flex-1 min-h-[180px]">
-<span class="text-slate-500">// Wypełnij formularz lub kliknij "Wylosuj Postać" aby wygenerować dokument...</span>
-              </div>
-            </div>
-          </div>
+        <div class="flex-shrink-0">
+          <a href="toolkit" class="btn-primary py-2.5 px-5 text-xs flex items-center gap-2 font-bold shadow-lg shadow-pink-500/20">
+            <i data-lucide="wrench" class="w-4 h-4"></i>
+            <span>OTWÓRZ PEŁNY RP TOOLKIT</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-0.5"></i>
+          </a>
         </div>
       </div>
 
-      <!-- ============ TOOLKIT PANEL: Radio Codes ============ -->
-      <div id="panel-codes" class="toolkit-panel">
-        <div class="glass-card p-6 lg:p-8">
-          <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
-            <i data-lucide="radio" class="w-5 h-5 text-accent-cyan"></i>
-            Kody Radiowe &amp; Procedury
+      <!-- 3 Karty Prezentujące Narzędzia -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Karta 1: Generator Postaci & ID -->
+        <a href="toolkit" class="toolkit-card card-pink group block text-left">
+          <div class="flex items-center justify-between mb-4">
+            <div class="toolkit-icon icon-pink">
+              <i data-lucide="user-plus" class="w-6 h-6"></i>
+            </div>
+            <span class="hud-pill hud-pill-pink text-[9px] font-mono">DOWÓD ID HD</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-pink transition-colors flex items-center justify-between">
+            <span>Generator Postaci &amp; ID</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-neon-pink transform group-hover:translate-x-1 transition-transform"></i>
           </h3>
-
-          <!-- Tabs -->
-          <div class="tab-nav mb-6">
-            <button class="tab-btn active" data-codes-tab="10codes">10-Codes</button>
-            <button class="tab-btn" data-codes-tab="police">Procedury Policyjne</button>
-            <button class="tab-btn" data-codes-tab="medical">Procedury Medyczne</button>
+          <p class="text-xs text-slate-400 font-mono leading-relaxed mb-4">
+            Stwórz zbalansowaną postać na Whitelist (wady, fobie, backstory), wygeneruj unikalny dokument ID Stanu Leonida i pobierz jako plik PNG lub PDF.
+          </p>
+          <div class="flex items-center gap-2 pt-3 border-t border-white/5 text-[11px] text-neon-pink font-mono font-bold">
+            <span>Uruchom Generator</span> &rarr;
           </div>
+        </a>
 
-          <!-- Search -->
-          <div class="search-container mb-6">
-            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <input type="text" id="codes-search" class="search-input" placeholder="Szukaj kodu lub opisu..." autocomplete="off" aria-label="Szukaj kodu lub opisu">
+        <!-- Karta 2: Kody Radiowe -->
+        <a href="toolkit" class="toolkit-card card-purple group block text-left">
+          <div class="flex items-center justify-between mb-4">
+            <div class="toolkit-icon icon-cyan">
+              <i data-lucide="radio" class="w-6 h-6"></i>
+            </div>
+            <span class="hud-pill hud-pill-cyan text-[9px] font-mono">50+ KODÓW</span>
           </div>
+          <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors flex items-center justify-between">
+            <span>Kody Radiowe &amp; Procedury</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-neon-cyan transform group-hover:translate-x-1 transition-transform"></i>
+          </h3>
+          <p class="text-xs text-slate-400 font-mono leading-relaxed mb-4">
+            Kompletna baza kodów 10-codes, procedur pościgowych LSPD oraz protokołów ratunkowych EMS z błyskawiczną wyszukiwarką na żywo.
+          </p>
+          <div class="flex items-center gap-2 pt-3 border-t border-white/5 text-[11px] text-neon-cyan font-mono font-bold">
+            <span>Przeglądaj Kody 10-</span> &rarr;
+          </div>
+        </a>
 
-          <!-- Codes Content -->
-          <div id="codes-content" class="overflow-x-auto" style="max-height: 500px; overflow-y: auto;">
-            <!-- Rendered by JS -->
+        <!-- Karta 3: Kalkulator Ekonomii -->
+        <a href="toolkit" class="toolkit-card card-amber group block text-left">
+          <div class="flex items-center justify-between mb-4">
+            <div class="toolkit-icon icon-amber">
+              <i data-lucide="calculator" class="w-6 h-6"></i>
+            </div>
+            <span class="hud-pill hud-pill-amber text-[9px] font-mono">ESTYMOWANE STAWKI</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-amber transition-colors flex items-center justify-between">
+            <span>Kalkulator Ekonomii RP</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-neon-amber transform group-hover:translate-x-1 transition-transform"></i>
+          </h3>
+          <p class="text-xs text-slate-400 font-mono leading-relaxed mb-4">
+            Przelicz opłacalność legalnych prac dorywczych, stawek frakcyjnych i napadów na banki z możliwością regulacji mnożnika gospodarki serwera.
+          </p>
+          <div class="flex items-center gap-2 pt-3 border-t border-white/5 text-[11px] text-neon-amber font-mono font-bold">
+            <span>Oblicz Zarobki</span> &rarr;
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       TOP KLIPY SPOŁECZNOŚCI — TEASER & CTA DO /klipy
+       ============================================================ -->
+  <section id="community-clips" class="py-16 lg:py-24 relative overflow-hidden border-t border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="hud-pill hud-pill-cyan text-[10px] uppercase tracking-widest font-bold">WIDEO SPOŁECZNOŚCI</span>
+            <span class="hud-pill hud-pill-pink text-[10px] uppercase tracking-widest font-bold">TWITCH &amp; KICK</span>
+          </div>
+          <h2 class="font-display text-2xl sm:text-4xl text-white uppercase tracking-wider font-black">
+            TOP <span class="gradient-text">KLIPY &amp; AKCJE</span> Z POLSKICH SERWERÓW RP
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-400 font-mono mt-1 max-w-2xl">
+            Najlepsze momenty, pościgi policyjne i zabawne sytuacje z transmisji live. Sprawdź najciekawsze akcje lub przejdź do pełnego katalogu klipów z odtwarzaczem i głosowaniem.
+          </p>
+        </div>
+
+        <div class="flex-shrink-0">
+          <a href="klipy" class="btn-primary py-2.5 px-5 text-xs flex items-center gap-2 font-bold shadow-lg shadow-cyan-500/20">
+            <i data-lucide="film" class="w-4 h-4"></i>
+            <span>ZOBACZ WSZYSTKIE KLIPY</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-0.5"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Kafelki zajawkowe -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Klip 1 -->
+        <div class="clip-card">
+          <div class="clip-thumb-box" style="background-image: url('img/hero-vice.jpg');">
+            <span class="clip-rank-badge rank-1">🏆 #1 TOP KLIP</span>
+            <span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-1 text-[9px] font-bold text-black">KICK</span>
+            <div class="clip-play-overlay">
+              <i data-lucide="play" class="w-5 h-5 text-white fill-white"></i>
+            </div>
+          </div>
+          <div class="clip-body">
+            <h3 class="clip-title text-white">Przykładowy klip Kick — neexcsgo</h3>
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+              <div class="flex items-center gap-2">
+                <img src="img/streamers/neexcsgo.webp" alt="neexcsgo" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='img/logo-vi.png'">
+                <span class="text-xs font-bold text-slate-200">neexcsgo</span>
+              </div>
+              <a href="klipy" class="text-neon-cyan text-xs font-mono flex items-center gap-1 hover:underline">
+                Odtwórz <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Klip 2 -->
+        <div class="clip-card">
+          <div class="clip-thumb-box" style="background-image: url('img/hero-vice.jpg');">
+            <span class="clip-rank-badge rank-2">🥈 #2 TOP</span>
+            <span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-1 text-[9px] font-bold text-black">KICK</span>
+            <div class="clip-play-overlay">
+              <i data-lucide="play" class="w-5 h-5 text-white fill-white"></i>
+            </div>
+          </div>
+          <div class="clip-body">
+            <h3 class="clip-title text-white">Przykładowy klip Kick — lequ</h3>
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+              <div class="flex items-center gap-2">
+                <img src="img/streamers/lequ.webp" alt="lequ" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='img/logo-vi.png'">
+                <span class="text-xs font-bold text-slate-200">lequ</span>
+              </div>
+              <a href="klipy" class="text-neon-cyan text-xs font-mono flex items-center gap-1 hover:underline">
+                Odtwórz <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Klip 3 -->
+        <div class="clip-card">
+          <div class="clip-thumb-box" style="background-image: url('img/hero-vice.jpg');">
+            <span class="clip-rank-badge rank-3">🥉 #3 TOP</span>
+            <span class="absolute top-2 right-2 rounded bg-emerald-500/90 px-2 py-1 text-[9px] font-bold text-black">KICK</span>
+            <div class="clip-play-overlay">
+              <i data-lucide="play" class="w-5 h-5 text-white fill-white"></i>
+            </div>
+          </div>
+          <div class="clip-body">
+            <h3 class="clip-title text-white">Przykładowy klip Kick — niter</h3>
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+              <div class="flex items-center gap-2">
+                <img src="img/streamers/niter.webp" alt="niter" class="w-6 h-6 rounded-full border border-white/20 object-cover" onerror="this.onerror=null;this.src='img/logo-vi.png'">
+                <span class="text-xs font-bold text-slate-200">niter</span>
+              </div>
+              <a href="klipy" class="text-neon-cyan text-xs font-mono flex items-center gap-1 hover:underline">
+                Odtwórz <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ============ TOOLKIT PANEL: Economy Calculator ============ -->
-      <div id="panel-calculator" class="toolkit-panel">
-        <div class="glass-card p-6 lg:p-8">
-          <div class="flex items-center justify-between flex-wrap gap-2 mb-6">
-            <h3 class="text-xl font-bold flex items-center gap-2">
-              <i data-lucide="calculator" class="w-5 h-5 text-accent-amber"></i>
-              Kalkulator Ekonomii RP
-            </h3>
-            <span class="hud-pill hud-pill-amber text-[10px]">MODUŁ W TRAKCIE ROZBUDOWY</span>
-          </div>
-
-          <!-- Pasek Ostrzegawczy: Moduł w trakcie budowy -->
-          <div class="hazard-stripe-banner mb-6 flex items-start gap-3">
-            <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0 mt-0.5">
-              <i data-lucide="hard-hat" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h4 class="text-xs font-bold text-amber-300 uppercase tracking-wider font-display">
-                MODUŁ W TRAKCIE BUDOWY &amp; KALIBRACJI STAWEK // UNDER CONSTRUCTION
-              </h4>
-              <p class="text-xs text-slate-300 font-mono leading-relaxed mt-0.5">
-                Trwają prace nad zaktualizowaniem realnych stawek gospodarczych (prace dorywcze, frakcje państwowe, czarny rynek i napady) z najpopularniejszych polskich serwerów RP. Poniższy kalkulator prezentuje wersję poglądową.
-              </p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Inputs -->
-            <div class="space-y-5">
-              <div class="form-group">
-                <label class="form-label" for="calc-activity">Typ Aktywności</label>
-                <select id="calc-activity" class="form-select">
-                  <option value="">Wybierz aktywność...</option>
-                  <optgroup label="Prace Legalne">
-                    <option value="mechanic" data-rate="250" data-unit="h">Mechanik ($250/h)</option>
-                    <option value="trucker" data-rate="180" data-unit="kurs">Kierowca TIR ($180/kurs)</option>
-                    <option value="taxi" data-rate="120" data-unit="kurs">Taksówkarz ($120/kurs)</option>
-                    <option value="fisherman" data-rate="90" data-unit="h">Rybak ($90/h)</option>
-                    <option value="miner" data-rate="200" data-unit="h">Górnik ($200/h)</option>
-                    <option value="lumberjack" data-rate="150" data-unit="h">Drwal ($150/h)</option>
-                    <option value="medic" data-rate="350" data-unit="zmiana">Paramedyk ($350/zmianę)</option>
-                    <option value="police" data-rate="400" data-unit="zmiana">Policjant ($400/zmianę)</option>
-                  </optgroup>
-                  <optgroup label="Nielegalne">
-                    <option value="store-rob" data-rate="2500" data-unit="napad">Napad na sklep ($2,500)</option>
-                    <option value="bank-small" data-rate="15000" data-unit="napad">Mały bank ($15,000)</option>
-                    <option value="bank-big" data-rate="50000" data-unit="napad">Duży bank ($50,000)</option>
-                    <option value="jewelry" data-rate="25000" data-unit="napad">Jubiler ($25,000)</option>
-                    <option value="drugs" data-rate="500" data-unit="sprzedaż">Sprzedaż narkotyków ($500/szt.)</option>
-                  </optgroup>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="calc-quantity">Ilość (godzin / kursów / napadów)</label>
-                <input type="number" id="calc-quantity" class="form-input" placeholder="np. 8" min="1" max="100" value="1">
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="calc-multiplier">Mnożnik serwera (x)</label>
-                <div class="flex items-center gap-3">
-                  <input type="range" id="calc-multiplier" min="0.5" max="5" step="0.1" value="1" aria-label="Mnożnik serwera">
-                  <span id="calc-multiplier-value" class="text-sm font-mono font-semibold text-accent-amber min-w-[3rem] text-right">1.0x</span>
-                </div>
-              </div>
-
-              <button id="calc-btn" class="btn-primary w-full">
-                <i data-lucide="calculator" class="w-4 h-4"></i>
-                Oblicz Zarobek
-              </button>
-            </div>
-
-            <!-- Result -->
-            <div class="flex flex-col justify-center">
-              <div class="calc-result">
-                <p class="text-sm text-slate-400 mb-2 uppercase tracking-wider font-semibold">Szacowany Zarobek</p>
-                <div class="calc-amount" id="calc-result-amount">$0</div>
-                <p class="text-sm text-slate-500 mt-2" id="calc-result-desc">Wybierz aktywność i oblicz</p>
-              </div>
-
-              <div class="mt-6 p-4 rounded-lg bg-bg-primary/50 border border-white/5">
-                <p class="text-xs text-slate-500 flex items-start gap-2">
-                  <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 flex-shrink-0"></i>
-                  Wartości są orientacyjne i mogą różnić się w zależności od serwera. Sprawdź ekonomię na swoim serwerze RP.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- Dolny pasek CTA -->
+      <div class="mt-8 text-center">
+        <a href="klipy" class="inline-flex items-center gap-2 text-xs font-mono text-neon-cyan hover:text-white transition-colors">
+          <span>Oglądaj wszystkie materiały, filtruj po dacie i głosuj na podstronie Klipów</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
       </div>
     </div>
   </section>
@@ -2008,7 +1861,6 @@
        STREAMERS & CONTENT CREATORS SPA PORTAL (TRANSLUCENT VIEW)
        ============================================================ -->
   <section id="streamers" class="sr-only" aria-hidden="true"></section>
-  <section id="clips" class="sr-only" aria-hidden="true"></section>
   <div id="streamers-portal" class="streamers-portal-overlay hidden" role="dialog" aria-modal="true" aria-label="Streamerzy Społeczności">
     <!-- Tło portalowe: neonowy blask i siatka 3D -->
     <div class="streamers-portal-bg"></div>
@@ -2183,6 +2035,12 @@
               <option value="best">Najlepsze</option>
               <option value="newest">Najnowsze</option>
             </select>
+
+            <!-- Przycisk Pełna Podstrona Klipów -->
+            <a href="klipy" class="btn-secondary py-2 px-3.5 text-xs flex items-center gap-1.5 cursor-pointer text-slate-200 hover:text-white" title="Przejdź do dedykowanej podstrony /klipy">
+              <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-neon-cyan"></i>
+              <span class="hidden sm:inline">PEŁNA PODSTRONA</span>
+            </a>
 
             <!-- Przycisk Zgłoś Klip -->
             <button type="button" id="open-clip-modal-btn" class="btn-primary py-2 px-4 text-xs flex items-center gap-2 cursor-pointer shadow-lg shadow-cyan-500/20 bg-gradient-to-r from-neon-cyan to-blue-600 border-none text-black font-bold hover:brightness-110">
@@ -3011,11 +2869,11 @@
         <div>
           <h4 class="font-semibold text-white mb-3 text-sm uppercase tracking-wider">Nawigacja</h4>
           <ul class="space-y-2">
-            <li><a href="#clips" class="text-sm text-slate-400 hover:text-white transition-colors">Top Klipy Społeczności</a></li>
+            <li><a href="klipy" class="text-sm text-slate-400 hover:text-white transition-colors">Top Klipy Społeczności</a></li>
             <li><a href="#servers" class="text-sm text-slate-400 hover:text-white transition-colors">Katalog Serwerów</a></li>
-            <li><a href="#streamers" class="text-sm text-slate-400 hover:text-white transition-colors">Streamerzy &amp; Media</a></li>
+            <li><a href="streamerzy" class="text-sm text-slate-400 hover:text-white transition-colors">Streamerzy &amp; Media</a></li>
             <li><a href="gta6" class="text-sm text-slate-400 hover:text-white transition-colors">GTA VI Hub (Leonida)</a></li>
-            <li><a href="#toolkit" class="text-sm text-slate-400 hover:text-white transition-colors">RP Toolkit</a></li>
+            <li><a href="toolkit" class="text-sm text-slate-400 hover:text-white transition-colors">RP Toolkit</a></li>
             <li><a href="#about" class="text-sm text-slate-400 hover:text-white transition-colors">O Projekcie</a></li>
             <li><button type="button" id="footer-contact-btn" class="text-sm text-slate-400 hover:text-neon-cyan transition-colors flex items-center gap-1.5 cursor-pointer"><i data-lucide="mail" class="w-3.5 h-3.5 text-neon-cyan"></i> Kontakt &amp; Biznes</button></li>
             <li><button type="button" id="footer-privacy-btn" class="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-slate-400"></i> Polityka Prywatności</button></li>
@@ -3027,9 +2885,9 @@
         <div>
           <h4 class="font-semibold text-white mb-3 text-sm uppercase tracking-wider">Narzędzia</h4>
           <ul class="space-y-2">
-            <li><a href="#toolkit" class="text-sm text-slate-400 hover:text-white transition-colors" data-toolkit-link="character">Generator Postaci</a></li>
-            <li><a href="#toolkit" class="text-sm text-slate-400 hover:text-white transition-colors" data-toolkit-link="codes">Kody Radiowe</a></li>
-            <li><a href="#toolkit" class="text-sm text-slate-400 hover:text-white transition-colors" data-toolkit-link="calculator">Kalkulator Ekonomii</a></li>
+            <li><a href="toolkit" class="text-sm text-slate-400 hover:text-white transition-colors">Generator Postaci</a></li>
+            <li><a href="toolkit" class="text-sm text-slate-400 hover:text-white transition-colors">Kody Radiowe</a></li>
+            <li><a href="toolkit" class="text-sm text-slate-400 hover:text-white transition-colors">Kalkulator Ekonomii</a></li>
           </ul>
         </div>
       </div>
@@ -3195,11 +3053,10 @@
   <!-- ============================================================
        SCRIPTS (modular, ES6+)
        ============================================================ -->
-  <script src="js/app.js?v=1.5.1"></script>
-  <script src="js/servers.js?v=1.5.1"></script>
-  <script src="js/streamers.js?v=1.5.1"></script>
-  <script src="js/modal.js?v=1.5.1"></script>
-  <script src="js/toolkit.js?v=1.5.1"></script>
+  <script src="js/app.js?v=1.6.0"></script>
+  <script src="js/servers.js?v=1.6.0"></script>
+  <script src="js/streamers.js?v=1.6.0"></script>
+  <script src="js/modal.js?v=1.6.0"></script>
 
 </body>
 </html>

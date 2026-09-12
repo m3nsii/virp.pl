@@ -40,7 +40,11 @@ function safeUrl(url) {
       return '';
     }
 
-    return trimmed.startsWith('http://') || trimmed.startsWith('https://') ? parsed.href : trimmed;
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return parsed.href;
+    }
+
+    return trimmed.startsWith('/') ? trimmed : '/' + trimmed;
   } catch (e) {
     return '';
   }
@@ -56,7 +60,7 @@ window.safeUrl = safeUrl;
  */
 const VIRP = {
   /** Wersja aplikacji */
-  version: '1.5.1',
+  version: '1.6.0',
 
   /** Sprawdza, czy użytkownik zaakceptował zewnętrzne multimedia. */
   hasCookieConsent() {
@@ -163,6 +167,9 @@ const VIRP = {
     this.initHeroGridOptimization();
     this.initRadioWidget();
     this.initGta6Portal();
+    this.initClipsSubpageRedirect();
+    this.initToolkitSubpageRedirect();
+    this.initStreamersSubpageRedirect();
     this.initContactModal();
     this.initPrivacyModal();
     this.initCookieConsent();
@@ -332,7 +339,7 @@ const VIRP = {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', (e) => {
         const targetId = anchor.getAttribute('href');
-        if (!targetId || targetId === '#' || targetId === '#streamers' || targetId === '#gta6') return;
+        if (!targetId || targetId === '#' || targetId === '#streamers' || targetId === '#gta6' || targetId === '#clips' || targetId === '#toolkit') return;
 
         try {
           const target = document.querySelector(targetId);
@@ -359,7 +366,7 @@ const VIRP = {
     // Hash check — przekierowanie starych linków #gta6 na dedykowaną podstronę /gta6
     const checkGta6Hash = () => {
       if (window.location.hash === '#gta6') {
-        window.location.href = 'gta6';
+        window.location.href = '/gta6';
       }
     };
 
@@ -371,7 +378,73 @@ const VIRP = {
     document.querySelectorAll('a[href="#gta6"]').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        window.location.href = 'gta6';
+        window.location.href = '/gta6';
+      });
+    });
+  },
+
+  /**
+   * Przekierowanie linków #clips na dedykowaną podstronę /klipy
+   */
+  initClipsSubpageRedirect() {
+    const checkClipsHash = () => {
+      if (window.location.hash === '#clips') {
+        window.location.href = '/klipy';
+      }
+    };
+
+    window.addEventListener('hashchange', checkClipsHash);
+    window.addEventListener('popstate', checkClipsHash);
+    checkClipsHash();
+
+    document.querySelectorAll('a[href="#clips"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = '/klipy';
+      });
+    });
+  },
+
+  /**
+   * Przekierowanie linków #toolkit na dedykowaną podstronę /toolkit
+   */
+  initToolkitSubpageRedirect() {
+    const checkToolkitHash = () => {
+      if (window.location.hash === '#toolkit') {
+        window.location.href = '/toolkit';
+      }
+    };
+
+    window.addEventListener('hashchange', checkToolkitHash);
+    window.addEventListener('popstate', checkToolkitHash);
+    checkToolkitHash();
+
+    document.querySelectorAll('a[href="#toolkit"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = '/toolkit';
+      });
+    });
+  },
+
+  /**
+   * Przekierowanie linków #streamers na dedykowaną podstronę /streamerzy
+   */
+  initStreamersSubpageRedirect() {
+    const checkStreamersHash = () => {
+      if (window.location.hash === '#streamers') {
+        window.location.href = '/streamerzy';
+      }
+    };
+
+    window.addEventListener('hashchange', checkStreamersHash);
+    window.addEventListener('popstate', checkStreamersHash);
+    checkStreamersHash();
+
+    document.querySelectorAll('a[href="#streamers"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = '/streamerzy';
       });
     });
   },
@@ -556,9 +629,45 @@ const VIRP = {
    * Obsługa ekranu wejściowego i odblokowanie audio
    */
   initSplashScreen() {
+    const splash = document.getElementById('splash-gate');
+
+    // Jeśli strona nie posiada bramki powitalnej (np. podstrony /klipy, /toolkit, /gta6),
+    // zapamiętujemy wejście do portalu, aby powrót na stronę główną nie wymagał ponownej inicjacji
+    if (!splash) {
+      try {
+        sessionStorage.setItem('virp_splash_dismissed', 'true');
+        localStorage.setItem('virp_splash_dismissed', 'true');
+      } catch (_) {}
+      return;
+    }
+
+    const shouldBypass = () => {
+      try {
+        if (sessionStorage.getItem('virp_splash_dismissed') === 'true') return true;
+        if (localStorage.getItem('virp_splash_dismissed') === 'true') return true;
+        if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) return true;
+        if (window.location.hash && window.location.hash.length > 1) return true;
+        if (new URLSearchParams(window.location.search).get('nosplash') === '1') return true;
+      } catch (_) {}
+      return false;
+    };
+
+    if (shouldBypass()) {
+      try {
+        sessionStorage.setItem('virp_splash_dismissed', 'true');
+        localStorage.setItem('virp_splash_dismissed', 'true');
+      } catch (_) {}
+      document.documentElement.classList.add('splash-bypassed');
+      if (splash.parentNode) splash.remove();
+      return;
+    }
+
     // Definicja globalnej funkcji zwalniającej ekran powitalny
     window.dismissSplashGateway = () => {
-      const splash = document.getElementById('splash-gate');
+      try {
+        sessionStorage.setItem('virp_splash_dismissed', 'true');
+        localStorage.setItem('virp_splash_dismissed', 'true');
+      } catch (_) {}
 
       // Płynne ukrycie bramki powitalnej (radio pozostaje wyłączone na starcie — użytkownik włącza je ręcznie)
       if (splash) {

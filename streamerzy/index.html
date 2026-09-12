@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <!-- Sprzętowa detekcja GPU / Fallback dla Chrome bez akceleracji sprzętowej -->
+  <script>
+    (function() {
+      try {
+        var canvas = document.createElement('canvas');
+        var gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (!gl) {
+          document.documentElement.classList.add('no-gpu');
+          return;
+        }
+        var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        if (debugInfo) {
+          var renderer = (gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '').toLowerCase();
+          if (
+            renderer.indexOf('swiftshader') !== -1 ||
+            renderer.indexOf('llvmpipe') !== -1 ||
+            renderer.indexOf('software') !== -1 ||
+            renderer.indexOf('basic render') !== -1 ||
+            renderer.indexOf('gdi generic') !== -1 ||
+            renderer.indexOf('mesa offscreen') !== -1
+          ) {
+            document.documentElement.classList.add('no-gpu');
+          }
+        }
+      } catch (e) {
+        document.documentElement.classList.add('no-gpu');
+      }
+    })();
+  </script>
+
+  <!-- Oznaczenie sesji jako zainicjalizowanej, aby powrót na stronę główną nie wymagał ponownej inicjacji -->
+  <script>
+    try {
+      sessionStorage.setItem('virp_splash_dismissed', 'true');
+      localStorage.setItem('virp_splash_dismissed', 'true');
+    } catch (e) {}
+  </script>
+
+  <!-- ============================================================
+       VIRP.pl — Streamerzy i Twórcy GTA RP (Polska Scena Roleplay)
+       Statyczna podstrona SEO | HTML5 + Tailwind + Vanilla JS
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://virp-proxy.chojmarcel.workers.dev https://challenges.cloudflare.com https://frontend.cfx-services.net https://cdn.rage.mp https://api.strefarp.gg https://stream.nightride.fm https://*.spotify.com https://*.spotifycdn.com https://*.scdn.co; media-src 'self' https://stream.nightride.fm https: data: blob:; frame-src 'self' https://challenges.cloudflare.com https://open.spotify.com https://*.spotify.com https://*.scdn.co https://*.youtube.com https://*.youtube-nocookie.com https://clips.twitch.tv https://*.twitch.tv https://player.kick.com https://*.kick.com https://medal.tv https://*.medal.tv https://streamable.com https://*.streamable.com https://www.tiktok.com https://*.tiktok.com;">
+
+  <!-- SEO Primary Meta Tags -->
+  <title>Streamerzy GTA RP Polska — Transmisje Live Twitch &amp; Kick | VIRP.pl</title>
+  <meta name="title" content="Streamerzy GTA RP Polska — Transmisje Live Twitch &amp; Kick | VIRP.pl">
+  <meta name="description" content="Katalog i transmisje na żywo polskich streamerów GTA Roleplay (FiveM, RageMP). Sprawdź statusy live, liczbę widzów, kanały Twitch i Kick oraz zgłoś swój kanał na VIRP.pl.">
+  <meta name="keywords" content="streamerzy GTA RP, polscy streamerzy FiveM, Twitch GTA RP, Kick GTA RP, transmisje live FiveM, ranking streamerów GTA, VIRP streamerzy, zgłoś streamera RP">
+  <meta name="author" content="VIRP.pl">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://virp.pl/streamerzy">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <!-- Cloudflare Turnstile Anti-Bot API (Explicit Render) -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+
+  <!-- OpenGraph / Facebook / Discord -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Streamerzy GTA RP Polska — Transmisje Live Twitch &amp; Kick | VIRP.pl">
+  <meta property="og:description" content="Katalog i transmisje na żywo polskich streamerów GTA Roleplay (FiveM, RageMP). Sprawdź statusy live, liczbę widzów, kanały Twitch i Kick oraz zgłoś swój kanał na VIRP.pl.">
+  <meta property="og:url" content="https://virp.pl/streamerzy">
+  <meta property="og:site_name" content="VIRP.pl">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:image" content="https://virp.pl/img/hero-vice.jpg">
+  <meta property="og:image:secure_url" content="https://virp.pl/img/hero-vice.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675">
+  <meta property="og:image:alt" content="Katalog Streamerów GTA Roleplay — VIRP.pl">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Streamerzy GTA RP Polska — Transmisje Live Twitch &amp; Kick | VIRP.pl">
+  <meta name="twitter:description" content="Katalog i transmisje na żywo polskich streamerów GTA Roleplay (FiveM, RageMP).">
+  <meta name="twitter:image" content="https://virp.pl/img/hero-vice.jpg">
+
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" sizes="48x48" href="/img/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/img/favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+
+  <!-- Precompiled Static Tailwind CSS -->
+  <link rel="stylesheet" href="/css/tailwind.min.css?v=1.6.0">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js" defer></script>
+
+  <!-- Google Fonts: Space Mono & Teko -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Teko:wght@500;600;700&display=swap">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/style.css?v=1.6.0">
+
+  <!-- Structured Data: JSON-LD (WebPage, BreadcrumbList, CollectionPage, FAQPage) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://virp.pl/streamerzy#webpage",
+        "url": "https://virp.pl/streamerzy",
+        "name": "Streamerzy GTA RP Polska — Transmisje Live Twitch & Kick | VIRP.pl",
+        "description": "Katalog i transmisje na żywo polskich streamerów GTA Roleplay (FiveM, RageMP). Sprawdź statusy live, liczbę widzów, kanały Twitch i Kick oraz zgłoś swój kanał.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://virp.pl/#website",
+          "url": "https://virp.pl/",
+          "name": "VIRP.pl"
+        },
+        "breadcrumb": {
+          "@id": "https://virp.pl/streamerzy#breadcrumb"
+        },
+        "inLanguage": "pl-PL"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://virp.pl/streamerzy#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "VIRP.pl",
+            "item": "https://virp.pl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Streamerzy GTA RP",
+            "item": "https://virp.pl/streamerzy"
+          }
+        ]
+      },
+      {
+        "@type": "CollectionPage",
+        "@id": "https://virp.pl/streamerzy#collection",
+        "name": "Katalog Polskich Streamerów GTA Roleplay",
+        "description": "Zbiór kanałów Twitch i Kick polskich twórców transmitujących rozgrywkę z serwerów GTA Roleplay.",
+        "url": "https://virp.pl/streamerzy"
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://virp.pl/streamerzy#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Jak dodać swój kanał Twitch lub Kick do katalogu streamerów VIRP.pl?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Wystarczy kliknąć przycisk 'Zgłoś się' w banerze rekrutacji i podać nick, link do kanału oraz główną platformę. Po krótkiej weryfikacji przez administrację Twój kanał pojawi się na liście z automatycznym wykrywaniem LIVE."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Jak działa system wykrywania transmisji na żywo (LIVE)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "System VIRP.pl stale odpytuje oficjalne API platform Twitch i Kick za pośrednictwem bezpiecznego proxy Cloudflare Worker. Gdy tylko uruchomisz stream, Twój kafelek zostanie podświetlony jako LIVE wraz z aktualną liczbą widzów."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Czym jest program partnerski i odznaka ⭐ POLECANY STREAM w TOP 3?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Twórcy, którzy dodadzą panel informacyjny VIRP.pl na swoim kanale, otrzymują odznakę Zweryfikowanego Partnera i stały priorytet wyświetlania w boksach TOP 3 LIVE na szczycie strony."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-[#06080F] text-slate-100 font-sans antialiased selection:bg-neon-pink selection:text-white min-h-screen relative overflow-x-hidden">
+
+  <!-- Tła atmosferyczne Vice City -->
+  <div class="streamers-portal-bg"></div>
+  <div class="streamers-portal-glow"></div>
+  <div class="streamers-portal-grid"></div>
+
+  <main class="streamers-portal-container max-w-6xl mx-auto px-4 py-6 sm:py-8">
+    <!-- Górna belka nawigacyjna z logo i linkami -->
+    <header class="streamers-portal-header flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-3 group" title="Przejdź do strony głównej VIRP.pl">
+          <div class="logo-badge-vi">
+            <span class="logo-text-vi">VI</span>
+            <div class="logo-scanlines"></div>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-display text-2xl font-black text-white tracking-wider leading-none uppercase">
+              VIRP<span class="text-neon-pink">.PL</span>
+            </span>
+            <span class="font-data text-[8.5px] text-neon-cyan tracking-widest uppercase font-bold mt-0.5">
+              GTA COMMUNITY HUB
+            </span>
+          </div>
+        </a>
+        <div class="hidden sm:flex items-center ml-2 pl-3 border-l border-white/10">
+          <span class="author-glitch" data-text="M3NSI">M3NSI</span>
+        </div>
+      </div>
+
+      <!-- Szybka nawigacja między sekcjami -->
+      <nav class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" aria-label="Nawigacja podstrony">
+        <a href="/#servers" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          SERWERY
+        </a>
+        <a href="/klipy" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          KLIPY
+        </a>
+        <a href="/toolkit" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          TOOLKIT
+        </a>
+        <a href="/gta6" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-neon-pink/30 text-neon-pink hover:bg-neon-pink/10 transition-colors whitespace-nowrap font-bold">
+          GTA 6 RP
+        </a>
+        <a href="/" class="btn-vice text-xs py-1.5 px-3.5 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition-all ml-1" title="Powrót do strony głównej">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>GŁÓWNA</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- Pasek Telemetrii i Statystyk na Żywo -->
+    <section aria-label="Telemetria Streamerów" class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">ŁĄCZNIE WIDZÓW</span>
+        <div class="streamer-stat-value text-neon-pink flex items-center gap-2">
+          <span class="pulse-dot"></span>
+          <span id="streamers-total-viewers">0</span>
+        </div>
+      </div>
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">NA ŻYWO (LIVE)</span>
+        <div class="streamer-stat-value text-neon-cyan" id="streamers-active-count">0</div>
+      </div>
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">PLATFORMY</span>
+        <div class="streamer-stat-value text-neon-amber">TWITCH / KICK / YT</div>
+      </div>
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">STATUS SYSTEMU</span>
+        <div class="streamer-stat-value text-status-green flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-status-green animate-ping"></span>
+          <span>FEED ONLINE</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spotlight: Wyróżniony Live Stream TOP 3 -->
+    <section id="streamers-spotlight" class="mb-8" aria-label="Wyróżnione Transmisje Live">
+      <!-- Renderowane przez streamers.js -->
+    </section>
+
+    <!-- Baner Zgłoszeniowy dla Twórców -->
+    <section class="streamer-apply-banner mb-8" aria-label="Dołącz do katalogu streamerów">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4 p-5 rounded-xl bg-gradient-to-r from-pink-950/40 via-[#0d121f] to-cyan-950/40 border border-pink-500/30 backdrop-blur-md shadow-xl">
+        <div class="flex items-center gap-4 text-left w-full md:w-auto">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-pink to-neon-cyan p-[1px] flex-shrink-0 flex items-center justify-center shadow-lg shadow-pink-500/20">
+            <div class="w-full h-full bg-[#0b0f19] rounded-[11px] flex items-center justify-center">
+              <i data-lucide="radio" class="w-6 h-6 text-neon-pink animate-pulse"></i>
+            </div>
+          </div>
+          <div>
+            <h2 class="font-display text-base sm:text-lg font-bold text-white tracking-wide uppercase flex items-center gap-2">
+              <span>Chcesz być na liście streamerów na naszej stronie?</span>
+              <span class="hud-pill hud-pill-pink text-[10px] hidden sm:inline-block">REKRUTACJA</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 font-mono mt-0.5">
+              Streamujesz GTA V RP, FiveM lub inne gry? Zgłoś swój kanał i zyskaj automatyczne wykrywanie LIVE w katalogu!
+            </p>
+          </div>
+        </div>
+        <button type="button" id="open-streamer-modal-btn" class="btn-primary py-2.5 px-6 text-xs sm:text-sm whitespace-nowrap flex items-center gap-2 cursor-pointer shadow-lg shadow-pink-500/25 w-full md:w-auto justify-center">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <span>ZGŁOŚ SIĘ</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Belka Filtrów i Wyszukiwarki -->
+    <section aria-label="Filtry i wyszukiwarka" class="flex flex-wrap items-center justify-between gap-4 mb-8 bg-bg-panel/80 p-4 border border-white/10 rounded-lg backdrop-blur-md">
+      <div class="flex flex-wrap items-center gap-2">
+        <button type="button" class="filter-chip active" data-streamer-filter="all">
+          <i data-lucide="layers" class="w-3.5 h-3.5"></i> Wszystkie
+        </button>
+        <button type="button" class="filter-chip" data-streamer-filter="live">
+          <span class="pulse-dot"></span> NA ŻYWO
+        </button>
+        <button type="button" class="filter-chip" data-streamer-filter="twitch">
+          <i data-lucide="tv" class="w-3.5 h-3.5 text-[#9146FF]"></i> Twitch
+        </button>
+        <button type="button" class="filter-chip" data-streamer-filter="kick">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-[#53FC18]"></i> Kick
+        </button>
+        <button type="button" class="filter-chip" data-streamer-filter="youtube">
+          <i data-lucide="video" class="w-3.5 h-3.5 text-[#FF0000]"></i> YouTube
+        </button>
+      </div>
+
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <div class="flex items-center gap-2">
+          <label for="streamer-sort-select" class="text-xs font-mono text-slate-400 whitespace-nowrap hidden sm:inline">SORTUJ:</label>
+          <select id="streamer-sort-select" class="form-select text-xs py-1.5 px-3 bg-[#0d121f] border border-white/15 rounded-md font-mono text-slate-200 cursor-pointer focus:border-neon-pink transition-colors" aria-label="Sortuj streamerów">
+            <option value="viewers">🔥 Najwięcej Widzów (GTA V)</option>
+            <option value="live">🔴 Status: Tylko LIVE</option>
+            <option value="name">🔤 Alfabetycznie (A-Z)</option>
+            <option value="kick">🟢 Najpierw KICK</option>
+            <option value="twitch">🟣 Najpierw TWITCH</option>
+          </select>
+        </div>
+
+        <div class="search-container flex-1 sm:w-64">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="streamer-search" class="search-input text-xs py-2 pl-9" placeholder="Szukaj twórcy, roli lub gry..." autocomplete="off" aria-label="Szukaj twórcy">
+        </div>
+      </div>
+    </section>
+
+    <!-- Główna Siatka Twórców i Streamerów -->
+    <section class="mb-14" aria-label="Lista Twórców Społeczności">
+      <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-2">
+        <h1 class="font-display text-xl text-white uppercase tracking-wider flex items-center gap-2 font-bold">
+          <i data-lucide="radio" class="w-5 h-5 text-neon-pink"></i>
+          KANAŁY I TRANSMISJE SPOŁECZNOŚCI GTA RP
+        </h1>
+        <span class="text-xs font-mono text-slate-400" id="streamers-count-label">23 TWÓRCÓW</span>
+      </div>
+
+      <div id="streamers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Renderowane przez streamers.js -->
+      </div>
+
+      <!-- Pusty stan dla streamerów -->
+      <div id="streamers-empty" class="empty-state hidden py-12 text-center">
+        <p class="font-mono text-xs text-slate-400">// Radar nie wykrył streamerów spełniających podane kryteria.</p>
+      </div>
+    </section>
+
+    <!-- Sekcja SEO & FAQ dla Twórców -->
+    <section aria-label="Poradnik dla streamerów" class="mb-12 p-6 rounded-xl bg-[#0d121f]/90 border border-white/10">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="hud-pill hud-pill-pink text-[10px] uppercase tracking-widest font-bold">DLA TWÓRCÓW</span>
+        <span class="hud-pill hud-pill-cyan text-[10px] uppercase tracking-widest font-bold">STREAMERS GUIDE</span>
+      </div>
+      <h2 class="font-display text-xl sm:text-2xl font-bold text-white uppercase tracking-wider mb-4">
+        Jak działa katalog streamerów na VIRP.pl i jak zdobyć odznakę Partnera?
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono text-slate-300 leading-relaxed">
+        <div class="p-4 rounded-lg bg-black/30 border border-white/5">
+          <div class="text-neon-pink font-bold text-sm mb-1.5 flex items-center gap-1.5">
+            <i data-lucide="zap" class="w-4 h-4"></i>
+            Automatyczne Wykrywanie LIVE
+          </div>
+          <p>
+            Nasz system w oparciu o bezpieczny Cloudflare Worker odpytuje API Twitcha i Kicka co kilkadziesiąt sekund. Gdy tylko odpalisz stream, Twój status zmieni się na czerwony punkt LIVE z aktualną liczbą widzów.
+          </p>
+        </div>
+        <div class="p-4 rounded-lg bg-black/30 border border-white/5">
+          <div class="text-neon-cyan font-bold text-sm mb-1.5 flex items-center gap-1.5">
+            <i data-lucide="trophy" class="w-4 h-4"></i>
+            Wyróżnienie w TOP 3 LIVE
+          </div>
+          <p>
+            Aktywne transmisje z GTA V i FiveM automatycznie trafiają do górnego panelu spotlight z podglądem wideo na żywo, dając Twojemu kanałowi maksymalną widoczność wśród fanów Roleplay.
+          </p>
+        </div>
+        <div class="p-4 rounded-lg bg-black/30 border border-white/5">
+          <div class="text-neon-amber font-bold text-sm mb-1.5 flex items-center gap-1.5">
+            <i data-lucide="handshake" class="w-4 h-4"></i>
+            Program Barterowy
+          </div>
+          <p>
+            Dodaj baner VIRP.pl na swoim profilu Twitch lub Kick, aby zyskać prestiżową odznakę ⭐ POLECANY STREAM oraz gwarantowane pierwszeństwo na liście twórców.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stopka -->
+    <footer class="text-center text-[11px] font-mono text-slate-500 py-6 border-t border-white/5">
+      VIRP.pl © 2026 — Społeczność GTA Roleplay w Polsce. Wszelkie prawa zastrzeżone.
+    </footer>
+  </main>
+
+  <!-- ============================================================
+       ADD STREAMER MODAL (DISCORD_WEBHOOK_2)
+       ============================================================ -->
+  <div id="add-streamer-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="streamer-modal-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="text-[10px] font-mono text-neon-pink tracking-widest uppercase block mb-0.5">
+            REKRUTACJA TWÓRCÓW // VIRP.PL
+          </span>
+          <h2 id="streamer-modal-title" class="modal-title gradient-text text-xl sm:text-2xl">
+            Zgłoszenie Streamera
+          </h2>
+        </div>
+        <button id="streamer-modal-close-btn" class="btn-icon" aria-label="Zamknij">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Pasek powitalny -->
+        <div class="mb-5 p-3.5 rounded-lg bg-pink-950/30 border border-pink-500/25 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-neon-pink/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i data-lucide="sparkles" class="w-4 h-4 text-neon-pink"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-white uppercase font-display mb-1">
+              Chcesz być na liście streamerów na naszej stronie? Zgłoś się!
+            </h4>
+            <p class="text-[11px] text-slate-300 font-mono leading-relaxed">
+              Wypełnij formularz zgłoszeniowy. Po akceptacji przez administrację Twój kanał trafi do katalogu i zyska automatyczne śledzenie statusu LIVE (Twitch &amp; Kick).
+            </p>
+          </div>
+        </div>
+
+        <form id="add-streamer-form" action="javascript:void(0);" novalidate>
+          <!-- Honeypot antybotowy -->
+          <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1; overflow: hidden;" aria-hidden="true">
+            <label for="form-streamer-hp" aria-hidden="true">Leave this field empty</label>
+            <input type="text" id="form-streamer-hp" name="streamer_hp_check" tabindex="-1" autocomplete="off" aria-hidden="true">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="form-streamer-name">Nick Twórcy / Nazwa Kanału <span class="required">*</span></label>
+              <input type="text" id="form-streamer-name" class="form-input" placeholder="np. AspenTV, Frytkaa" maxlength="60" required>
+              <p class="form-error hidden" id="error-streamer-name"></p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-streamer-platform">Główna Platforma <span class="required">*</span></label>
+              <select id="form-streamer-platform" class="form-select" required>
+                <option value="kick">🟢 Kick</option>
+                <option value="twitch">🟣 Twitch</option>
+                <option value="youtube">🔴 YouTube</option>
+                <option value="other">⚪ Inna Platforma</option>
+              </select>
+              <p class="form-error hidden" id="error-streamer-platform"></p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="form-streamer-game">Główna Kategoria / Gra <span class="required">*</span></label>
+              <input type="text" id="form-streamer-game" class="form-input" placeholder="np. GTA V RP, Just Chatting" maxlength="60" required>
+              <p class="form-error hidden" id="error-streamer-game"></p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-streamer-viewers">Średnia Liczba Widzów</label>
+              <input type="text" id="form-streamer-viewers" class="form-input" placeholder="np. 20-50 widzów (opcjonalnie)" maxlength="40">
+              <p class="form-error hidden" id="error-streamer-viewers"></p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-streamer-url">Link do Kanału <span class="required">*</span></label>
+            <input type="url" id="form-streamer-url" class="form-input" placeholder="https://kick.com/twojnick lub https://twitch.tv/twojnick" required>
+            <p class="form-hint">Na podstawie linku automatycznie wykryjemy login Twojego kanału.</p>
+            <p class="form-error hidden" id="error-streamer-url"></p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-streamer-desc">O Sobie / Serwery RP (opcjonalnie)</label>
+            <textarea id="form-streamer-desc" class="form-textarea" rows="3" placeholder="Na jakich serwerach grasz? W jakich frakcjach? Jakie akcje prowadzisz?" maxlength="400"></textarea>
+            <p class="form-hint"><span id="form-streamer-desc-count">0</span>/400 znaków</p>
+            <p class="form-error hidden" id="error-streamer-desc"></p>
+          </div>
+
+          <!-- Cloudflare Turnstile Anti-Bot Protection (Lazy Render) -->
+          <div id="turnstile-streamer-container" class="my-3 flex justify-center min-h-[65px] items-center"></div>
+
+          <button type="submit" id="form-streamer-submit-btn" class="btn-primary w-full py-3 mt-2 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-pink-500/25">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span>Wyślij Zgłoszenie Twórcy</span>
+          </button>
+
+          <p class="text-xs text-slate-500 text-center mt-3 font-mono">
+            Zgłoszenie trafi bezpośrednio do administracji VIRP na Discordzie.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TOP 3 INFO MODAL (JAK TRAFIĆ NA STRONĘ GŁÓWNĄ / BARTER)
+       ============================================================ -->
+  <div id="top3-info-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="top3-modal-title">
+    <div class="modal-content max-w-xl">
+      <div class="modal-header">
+        <div>
+          <span class="text-[10px] font-mono text-neon-cyan tracking-widest uppercase block mb-0.5">
+            PROGRAM PARTNERSKI // BARTER
+          </span>
+          <h2 id="top3-modal-title" class="modal-title gradient-text text-xl sm:text-2xl">
+            Jak Zdobyć Odznakę POLECANY i Stałe TOP 3?
+          </h2>
+        </div>
+        <button id="top3-info-modal-close-btn" class="btn-icon" aria-label="Zamknij">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="modal-body space-y-4">
+        <!-- Wstęp -->
+        <div class="p-4 rounded-lg bg-pink-950/20 border border-pink-500/25 flex items-start gap-3">
+          <div class="w-9 h-9 rounded-lg bg-neon-pink/20 flex items-center justify-center flex-shrink-0 mt-0.5 text-neon-pink">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="text-xs sm:text-sm font-bold text-white uppercase font-display mb-1">
+              Chcesz stałego miejsca w TOP 3 i odznaki ⭐ POLECANY STREAM?
+            </h4>
+            <p class="text-[11px] sm:text-xs text-slate-300 font-mono leading-relaxed">
+              Dla aktywnych twórców FiveM i GTA V prowadzimy program partnerski oparty o barter (darmową wymianę zasięgów). W zamian za dodanie panelu virp.pl na swoim kanale, zyskujesz odznakę Zweryfikowanego Partnera i gwarantowane pierwszeństwo na stronie głównej virp.pl za każdym razem, gdy prowadzisz transmisję na żywo!
+            </p>
+          </div>
+        </div>
+
+        <!-- 3 KROKI -->
+        <div class="space-y-2.5">
+          <div class="p-3 rounded-lg bg-[#0d121f] border border-white/10 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-cyan-500/20 text-neon-cyan font-mono font-bold text-xs flex items-center justify-center flex-shrink-0">1</span>
+            <div>
+              <h5 class="text-xs font-bold text-white uppercase font-display">Umieść baner virp.pl w bio</h5>
+              <p class="text-[11px] text-slate-400 font-mono mt-0.5">
+                Dodaj grafikę lub odnośnik do <strong class="text-white">https://virp.pl</strong> w panelach na swoim kanale Twitch lub Kick.
+              </p>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-lg bg-[#0d121f] border border-white/10 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-pink-500/20 text-neon-pink font-mono font-bold text-xs flex items-center justify-center flex-shrink-0">2</span>
+            <div>
+              <h5 class="text-xs font-bold text-white uppercase font-display">Zgłoś swój kanał do aktywacji</h5>
+              <p class="text-[11px] text-slate-400 font-mono mt-0.5">
+                Wypełnij formularz poniżej lub napisz do nas. Po szybkiej weryfikacji banera włączamy dla Ciebie status Zweryfikowanego Partnera.
+              </p>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-lg bg-[#0d121f] border border-white/10 flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 font-mono font-bold text-xs flex items-center justify-center flex-shrink-0">3</span>
+            <div>
+              <h5 class="text-xs font-bold text-white uppercase font-display">Odznaka ⭐ POLECANY i stały priorytet TOP 3</h5>
+              <p class="text-[11px] text-slate-400 font-mono mt-0.5">
+                Gdy tylko odpalisz stream z GTA V / FiveM, system automatycznie umieszcza Cię na szczycie strony w boksach TOP 3 z prestiżową odznaką partnera.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Akcje -->
+        <div class="pt-2 flex flex-col sm:flex-row items-center gap-3">
+          <button type="button" id="top3-modal-apply-btn" class="btn-primary w-full sm:flex-1 py-3 text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-pink-500/20">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Zgłoś Swój Kanał do Barteru</span>
+          </button>
+          <button type="button" id="top3-modal-close-action-btn" class="btn-secondary w-full sm:w-auto py-3 px-6 text-xs flex items-center justify-center cursor-pointer">
+            Zamknij
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       VICE CITY DUAL RADIO HUD (STREAM / SPOTIFY)
+       ============================================================ -->
+  <div id="vice-radio-hud" class="fixed bottom-4 left-4 right-4 sm:right-auto sm:bottom-6 sm:left-6 z-[70] transition-all duration-300 max-w-[calc(100vw-2rem)]">
+    <!-- Przycisk minimalizacji (widoczny gdy panel zwinięty) -->
+    <button id="radio-minimize-btn" class="radio-mini-btn hidden" title="Rozwiń radio" aria-label="Rozwiń radio">
+      <div class="hud-equalizer flex items-end gap-0.5 h-3 cursor-pointer">
+        <div class="hud-eq-bar bg-neon-pink" style="height:40%"></div>
+        <div class="hud-eq-bar bg-neon-cyan" style="height:70%"></div>
+        <div class="hud-eq-bar bg-neon-amber" style="height:55%"></div>
+      </div>
+    </button>
+
+    <!-- Główny panel sterowania HUD -->
+    <div id="radio-full-panel" class="hud-panel p-2.5 bg-[#0D111D]/95 border border-cyan-500/30 shadow-[0_0_25px_rgba(0,0,0,0.85)] backdrop-blur-md hud-cut flex flex-col gap-2 w-full sm:w-80 max-w-full">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2 px-1">
+        <div class="flex items-center gap-1.5">
+          <button id="src-stream-btn" class="radio-source-btn active" data-source="stream">
+            <i data-lucide="radio" class="w-3 h-3"></i> VICE FM
+          </button>
+          <button id="src-spotify-btn" class="radio-source-btn" data-source="spotify">
+            <i data-lucide="disc" class="w-3 h-3"></i> SPOTIFY
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1">
+          <button id="radio-expand-btn" class="text-slate-400 hover:text-white transition-colors p-1 cursor-pointer" title="Zwiń / Rozwiń panel" aria-label="Zwiń lub rozwiń radio">
+            <i data-lucide="chevron-down" id="radio-expand-arrow" class="w-4 h-4 transition-transform duration-300"></i>
+          </button>
+          <button id="radio-collapse-btn" class="text-slate-400 hover:text-neon-pink transition-colors p-1 cursor-pointer" title="Minimalizuj radio" aria-label="Minimalizuj radio">
+            <i data-lucide="minus" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-2 px-1">
+        <div class="flex items-center gap-2.5 cursor-pointer" id="radio-track-info-click" role="button" tabindex="0" aria-label="Włącz lub zatrzymaj radio">
+          <button id="radio-master-play" class="w-8 h-8 rounded bg-gradient-to-br from-[#FF1F7D] to-[#FF9E00] flex items-center justify-center text-white hover:scale-105 transition-transform shadow-[0_0_12px_rgba(255,31,125,0.5)] cursor-pointer" aria-label="Odtwarzaj / Zatrzymaj">
+            <i data-lucide="play" class="w-4 h-4" id="radio-master-icon"></i>
+          </button>
+
+          <div class="flex flex-col">
+            <span class="font-display text-sm text-white uppercase tracking-wider leading-none" id="radio-track-title">CHILLSYNTH // NIGHTRIDE FM</span>
+            <span class="text-[9px] text-neon-cyan font-mono tracking-wider mt-0.5" id="radio-track-status">KLIKNIJ ABY WŁĄCZYĆ</span>
+          </div>
+        </div>
+
+        <div class="hud-equalizer flex items-end gap-0.5 h-4 px-1 cursor-pointer" id="radio-eq" role="button" tabindex="0" title="Kliknij, aby włączyć/wyłączyć" aria-label="Włącz lub zatrzymaj radio">
+          <div class="hud-eq-bar bg-neon-pink"></div>
+          <div class="hud-eq-bar bg-neon-cyan"></div>
+          <div class="hud-eq-bar bg-neon-amber"></div>
+          <div class="hud-eq-bar bg-status-green"></div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 px-1 pt-1.5 border-t border-white/5">
+        <button id="radio-mute-btn" class="text-slate-400 hover:text-neon-cyan transition-colors cursor-pointer" title="Wycisz / Włącz dźwięk" aria-label="Wycisz lub włącz dźwięk">
+          <i data-lucide="volume-2" id="radio-volume-icon" class="w-3.5 h-3.5"></i>
+        </button>
+        <input type="range" id="radio-volume-slider" min="0" max="1" step="0.05" value="0.2" class="w-full accent-[#FF1F7D] h-1.5 bg-slate-800 rounded-lg cursor-pointer transition-all hover:bg-slate-700" title="Regulacja głośności" aria-label="Głośność radia">
+        <span id="radio-volume-val" class="text-[9px] font-mono text-neon-cyan w-7 text-right">20%</span>
+      </div>
+
+      <div id="radio-spotify-container" class="hidden pt-2 border-t border-white/10 mt-1">
+        <div class="flex items-center justify-between mb-2 px-1">
+          <span class="text-[10px] text-neon-cyan font-mono font-bold tracking-wider">SPOTIFY // FLASH FM VICE CITY</span>
+          <span class="hud-pill hud-pill-pink text-[9px]">PLAYLISTA</span>
+        </div>
+
+        <div id="spotify-embed-root">
+          <iframe 
+            data-testid="embed-iframe" 
+            title="Spotify Web Player - Flash FM Vice City"
+            style="border-radius:12px; border:0;" 
+            data-src="https://open.spotify.com/embed/playlist/7dKunw6i8S8cqF8DOANExj?utm_source=generator&theme=0" 
+            width="100%" 
+            height="352" 
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </div>
+
+    <audio id="bg-audio" loop preload="none">
+      <source src="https://stream.nightride.fm/chillsynth.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <!-- ============================================================
+       COOKIE CONSENT BANNER
+       ============================================================ -->
+  <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-[80] transition-all duration-500 translate-y-24 opacity-0 pointer-events-none" role="region" aria-label="Zgoda na pliki cookies">
+    <div class="p-4 rounded-xl bg-[#0d121f]/95 border border-cyan-500/30 shadow-[0_10px_35px_rgba(0,0,0,0.85)] backdrop-blur-md">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-neon-pink/20 border border-neon-pink/30 flex items-center justify-center text-neon-pink flex-shrink-0 mt-0.5">
+          <i data-lucide="cookie" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <h4 class="text-xs font-bold text-white uppercase font-display tracking-wider">
+            Pliki Cookies &amp; Pamięć Lokalna
+          </h4>
+          <p class="text-[11px] text-slate-300 font-mono mt-1 leading-relaxed">
+            VIRP.pl korzysta z pamięci lokalnej (Local Storage) oraz niezbędnych cookies w celu zapamiętania Twoich ustawień, danych formularzy i ochrony anty-botowej Cloudflare. Nie stosujemy inwazyjnych ciasteczek śledzących.
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2.5 border-t border-white/10">
+        <button type="button" id="cookie-accept-btn" class="btn-primary text-xs py-1.5 px-4 cursor-pointer shadow-md shadow-pink-500/20">
+          Rozumiem i Akceptuję
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TOAST CONTAINER
+       ============================================================ -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ============================================================
+       SCRIPTS (modular, ES6+)
+       ============================================================ -->
+  <script src="/js/app.js?v=1.6.0"></script>
+  <script src="/js/streamers.js?v=1.6.0"></script>
+
+</body>
+</html>
+

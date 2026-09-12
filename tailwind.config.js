@@ -2,8 +2,10 @@
 module.exports = {
   content: [
     "./index.html",
-    "./gta6.html",
     "./gta6/**/*.html",
+    "./klipy/**/*.html",
+    "./toolkit/**/*.html",
+    "./streamerzy/**/*.html",
     "./js/**/*.js"
   ],
   theme: {

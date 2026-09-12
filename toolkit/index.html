@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <!-- Sprzętowa detekcja GPU / Fallback dla Chrome bez akceleracji sprzętowej -->
+  <script>
+    (function() {
+      try {
+        var canvas = document.createElement('canvas');
+        var gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (!gl) {
+          document.documentElement.classList.add('no-gpu');
+          return;
+        }
+        var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        if (debugInfo) {
+          var renderer = (gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '').toLowerCase();
+          if (
+            renderer.indexOf('swiftshader') !== -1 ||
+            renderer.indexOf('llvmpipe') !== -1 ||
+            renderer.indexOf('software') !== -1 ||
+            renderer.indexOf('basic render') !== -1 ||
+            renderer.indexOf('gdi generic') !== -1 ||
+            renderer.indexOf('mesa offscreen') !== -1
+          ) {
+            document.documentElement.classList.add('no-gpu');
+          }
+        }
+      } catch (e) {
+        document.documentElement.classList.add('no-gpu');
+      }
+    })();
+  </script>
+
+  <!-- Oznaczenie sesji jako zainicjalizowanej, aby powrót na stronę główną nie wymagał ponownej inicjacji -->
+  <script>
+    try {
+      sessionStorage.setItem('virp_splash_dismissed', 'true');
+      localStorage.setItem('virp_splash_dismissed', 'true');
+    } catch (e) {}
+  </script>
+
+  <!-- ============================================================
+       VIRP.pl — RP Toolkit (Generator Postaci, Kody Radiowe, Kalkulator)
+       Statyczna podstrona SEO | HTML5 + Tailwind + Vanilla JS
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://virp-proxy.chojmarcel.workers.dev https://challenges.cloudflare.com https://frontend.cfx-services.net https://cdn.rage.mp https://api.strefarp.gg https://stream.nightride.fm https://*.spotify.com https://*.spotifycdn.com https://*.scdn.co; media-src 'self' https://stream.nightride.fm https: data: blob:; frame-src 'self' https://challenges.cloudflare.com https://open.spotify.com https://*.spotify.com https://*.scdn.co https://*.youtube.com https://*.youtube-nocookie.com https://clips.twitch.tv https://*.twitch.tv https://player.kick.com https://*.kick.com https://medal.tv https://*.medal.tv https://streamable.com https://*.streamable.com https://www.tiktok.com https://*.tiktok.com;">
+
+  <!-- SEO Primary Meta Tags -->
+  <title>RP Toolkit — Generator Postaci GTA RP, Kody Radiowe 10- &amp; Kalkulator | VIRP.pl</title>
+  <meta name="title" content="RP Toolkit — Generator Postaci GTA RP, Kody Radiowe 10- &amp; Kalkulator | VIRP.pl">
+  <meta name="description" content="Kompletny zestaw narzędzi dla graczy GTA Roleplay (FiveM, RageMP). Generator karty postaci i ID Leonida z eksportem, ściąga kodów radiowych policji i EMS oraz kalkulator ekonomii na VIRP.pl.">
+  <meta name="keywords" content="generator postaci GTA RP, kody radiowe GTA RP, kody 10 fivem, kody policyjne RP, karta postaci GTA RP, kalkulator zarobków GTA RP, podanie na whitelist fivem, RP toolkit, VIRP.pl">
+  <meta name="author" content="VIRP.pl">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://virp.pl/toolkit">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <!-- OpenGraph / Facebook / Discord -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="RP Toolkit — Generator Postaci GTA RP, Kody Radiowe 10- &amp; Kalkulator | VIRP.pl">
+  <meta property="og:description" content="Niezbędnik gracza GTA RP: Stwórz podanie na Whitelist, wygeneruj dokument ID Stanu Leonida, poznaj kody radiowe 10- i przelicz stawki prac.">
+  <meta property="og:url" content="https://virp.pl/toolkit">
+  <meta property="og:site_name" content="VIRP.pl">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:image" content="https://virp.pl/img/hero-vice.jpg">
+  <meta property="og:image:secure_url" content="https://virp.pl/img/hero-vice.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675">
+  <meta property="og:image:alt" content="RP Toolkit GTA Roleplay — VIRP.pl">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RP Toolkit — Generator Postaci GTA RP, Kody Radiowe 10- &amp; Kalkulator | VIRP.pl">
+  <meta name="twitter:description" content="Narzędzia GTA RP: Generator karty postaci, kody radiowe 10- i kalkulator ekonomii na VIRP.pl.">
+  <meta name="twitter:image" content="https://virp.pl/img/hero-vice.jpg">
+
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" sizes="48x48" href="/img/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/img/favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+
+  <!-- Precompiled Static Tailwind CSS -->
+  <link rel="stylesheet" href="/css/tailwind.min.css?v=1.6.0">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js" defer></script>
+
+  <!-- Google Fonts: Space Mono & Teko -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Teko:wght@500;600;700&display=swap">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/style.css?v=1.6.0">
+
+  <!-- Structured Data: JSON-LD (WebPage, BreadcrumbList, SoftwareApplication, FAQPage) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://virp.pl/toolkit#webpage",
+        "url": "https://virp.pl/toolkit",
+        "name": "RP Toolkit — Generator Postaci GTA RP, Kody Radiowe 10- & Kalkulator | VIRP.pl",
+        "description": "Zestaw narzędzi dla każdego gracza GTA Roleplay. Generator podania na Whitelist, generator dowodu ID Leonida, kody radiowe 10-codes i kalkulator zarobków.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://virp.pl/#website",
+          "url": "https://virp.pl/",
+          "name": "VIRP.pl"
+        },
+        "breadcrumb": {
+          "@id": "https://virp.pl/toolkit#breadcrumb"
+        },
+        "inLanguage": "pl-PL"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://virp.pl/toolkit#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "VIRP.pl",
+            "item": "https://virp.pl/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "RP Toolkit",
+            "item": "https://virp.pl/toolkit"
+          }
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://virp.pl/toolkit#app",
+        "name": "VIRP RP Toolkit",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "PLN"
+        },
+        "description": "Darmowe narzędzia online dla społeczności GTA Roleplay (FiveM, Rage:MP): generator karty postaci, kody radiowe i kalkulator stawek."
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://virp.pl/toolkit#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Jak napisać dobre podanie na Whitelist (WL) w GTA RP?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Dobre podanie na Whitelist musi zawierać zbalansowaną postać (tzw. anty-Powergaming) — postać musi posiadać realne wady charakteru, fobie i ograniczenia fizyczne. Generator na VIRP.pl pomaga w sformatowaniu historii, celów oraz wygenerowaniu estetycznego dowodu tożsamości."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Co oznacza kod 10-80 w GTA Roleplay?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Kod 10-80 w kodach radiowych policji oznacza aktywny pościg za pojazdem (Vehicle Pursuit in Progress). Pełną listę ponad 50 kodów 10-codes oraz procedur policyjnych i medycznych znajdziesz w module Kody Radiowe."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Czy mogę pobrać wygenerowany dowód tożsamości postaci?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Tak, generator VIRP.pl umożliwia natychmiastowe pobranie graficznego dowodu osobistego / prawa jazdy Stanu Leonida w formacie PNG oraz kompletnego podania w formacie PDF lub Markdown przygotowanego pod Discord."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-[#06080F] text-slate-100 font-sans antialiased selection:bg-neon-pink selection:text-white min-h-screen relative overflow-x-hidden">
+
+  <!-- Tła atmosferyczne Vice City -->
+  <div class="streamers-portal-bg"></div>
+  <div class="streamers-portal-glow"></div>
+  <div class="streamers-portal-grid"></div>
+
+  <main class="streamers-portal-container max-w-6xl mx-auto px-4 py-6 sm:py-8">
+    <!-- Górna belka nawigacyjna z logo i linkami -->
+    <header class="streamers-portal-header flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-3 group" title="Przejdź do strony głównej VIRP.pl">
+          <div class="logo-badge-vi">
+            <span class="logo-text-vi">VI</span>
+            <div class="logo-scanlines"></div>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-display text-2xl font-black text-white tracking-wider leading-none uppercase">
+              VIRP<span class="text-neon-pink">.PL</span>
+            </span>
+            <span class="font-data text-[8.5px] text-neon-cyan tracking-widest uppercase font-bold mt-0.5">
+              GTA COMMUNITY HUB
+            </span>
+          </div>
+        </a>
+        <div class="hidden sm:flex items-center ml-2 pl-3 border-l border-white/10">
+          <span class="author-glitch" data-text="M3NSI">M3NSI</span>
+        </div>
+      </div>
+
+      <!-- Szybka nawigacja między sekcjami -->
+      <nav class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" aria-label="Nawigacja podstrony">
+        <a href="/#servers" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          SERWERY
+        </a>
+        <a href="/streamerzy" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          STREAMERZY
+        </a>
+        <a href="/klipy" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:border-white/20 transition-colors whitespace-nowrap">
+          KLIPY
+        </a>
+        <a href="/gta6" class="text-xs font-mono px-3 py-1.5 rounded-lg border border-neon-pink/30 text-neon-pink hover:bg-neon-pink/10 transition-colors whitespace-nowrap font-bold">
+          GTA 6 RP
+        </a>
+        <a href="/" class="btn-vice text-xs py-1.5 px-3.5 flex items-center gap-1.5 whitespace-nowrap cursor-pointer transition-all ml-1" title="Powrót do strony głównej">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>GŁÓWNA</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- Pasek Telemetrii Narzędzi RP -->
+    <section aria-label="Telemetria RP Toolkit" class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">GENERATOR POSTACI</span>
+        <div class="streamer-stat-value text-neon-pink flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-neon-pink animate-ping"></span>
+          <span>AKTYWNY</span>
+        </div>
+      </div>
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">BAZA KODÓW 10-</span>
+        <div class="streamer-stat-value text-neon-cyan">50+ PROCEDUR</div>
+      </div>
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">EKSPORT DANYCH</span>
+        <div class="streamer-stat-value text-neon-amber">PNG / PDF / TXT</div>
+      </div>
+      <div class="streamer-stat-card">
+        <span class="streamer-stat-label">DOWÓD ID STAN LEONIDA</span>
+        <div class="streamer-stat-value text-status-green flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-status-green"></span>
+          <span>CANVAS HD</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Główny Nagłówek i Sekcja Wprowadzająca -->
+    <section id="toolkit-header-section" aria-label="Wprowadzenie do RP Toolkit" class="mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="hud-pill hud-pill-cyan text-[10px] uppercase tracking-widest font-bold">ZESTAW NARZĘDZI // VIRP.PL</span>
+            <span class="hud-pill hud-pill-pink text-[10px] uppercase tracking-widest font-bold">FIVEM &amp; RAGEMP &amp; GTA 6</span>
+          </div>
+          <h1 class="font-display text-2xl sm:text-3xl text-white uppercase tracking-wider flex items-center gap-2 font-black">
+            <i data-lucide="wrench" class="w-6 h-6 text-neon-pink"></i>
+            RP TOOLKIT — NARZĘDZIOWNIK GRACZA ROLEPLAY
+          </h1>
+          <p class="text-xs text-slate-400 font-mono mt-0.5 max-w-3xl leading-relaxed">
+            Stwórz unikalną postać i wygeneruj dowód tożsamości ID Stanu Leonida na Whitelist, sprawdź kody radiowe 10-codes policji oraz przelicz ekonomię prac i napadów na polskich serwerach RP.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toolkit Nav Cards (Przełączniki Modułów) -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <button type="button" class="toolkit-card card-pink active text-left" data-toolkit="character" id="toolkit-btn-character">
+        <div class="toolkit-icon icon-pink">
+          <i data-lucide="user-plus" class="w-6 h-6"></i>
+        </div>
+        <h2 class="font-semibold text-white mb-1 text-base">Generator Postaci</h2>
+        <p class="text-xs text-slate-400">Biografia, karta ID Leonida i podanie na Whitelist (PNG/PDF)</p>
+      </button>
+
+      <button type="button" class="toolkit-card card-purple text-left" data-toolkit="codes" id="toolkit-btn-codes">
+        <div class="toolkit-icon icon-cyan">
+          <i data-lucide="radio" class="w-6 h-6"></i>
+        </div>
+        <h2 class="font-semibold text-white mb-1 text-base">Kody Radiowe</h2>
+        <p class="text-xs text-slate-400">10-codes, procedury policyjne LSPD i medyczne EMS</p>
+      </button>
+
+      <button type="button" class="toolkit-card card-amber relative overflow-hidden text-left" data-toolkit="calculator" id="toolkit-btn-calculator">
+        <div class="caution-tape-badge">WERSJA TESTOWA</div>
+        <div class="toolkit-icon icon-amber">
+          <i data-lucide="calculator" class="w-6 h-6"></i>
+        </div>
+        <h2 class="font-semibold text-white mb-1 text-base">Kalkulator Ekonomii</h2>
+        <p class="text-xs text-slate-400">Przelicznik zarobków z prac legalnych i napadów</p>
+      </button>
+    </div>
+
+    <!-- ============ TOOLKIT PANEL: Character Generator ============ -->
+    <section id="panel-character" class="toolkit-panel active mb-12" aria-label="Generator Karty Postaci">
+      <div class="glass-card p-5 sm:p-7 lg:p-8">
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-6 border-b border-white/10 pb-4">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold flex items-center gap-2 text-white">
+              <i data-lucide="user-plus" class="w-5 h-5 text-neon-pink"></i>
+              Generator Karty Postaci &amp; Dowód ID Stanu Leonida
+            </h2>
+            <p class="text-xs text-slate-400 font-mono mt-1">Przygotuj profesjonalne podanie z balansem cech, wygeneruj graficzny dowód i wyeksportuj do PDF lub PNG.</p>
+          </div>
+          <span class="hud-pill hud-pill-cyan text-xs font-mono">LEONIDA DMV // VIRP.PL</span>
+        </div>
+
+        <!-- Pasek Szybkich Archetypów & Losowania -->
+        <div class="mb-6 p-4 bg-[#0B0F19]/90 border border-pink-500/25 rounded-lg shadow-lg">
+          <div class="flex items-center justify-between flex-wrap gap-2 mb-2.5">
+            <span class="text-xs font-mono text-neon-pink font-bold flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> GOTOWE ARCHETYPY &amp; 1-CLICK PRESETS
+            </span>
+            <button type="button" id="char-random-btn" class="btn-primary py-1 px-3 text-xs flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="dice-5" class="w-3.5 h-3.5"></i> Wylosuj Postać
+            </button>
+          </div>
+          <div class="flex items-center gap-1.5 flex-wrap" id="char-archetypes-bar">
+            <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="cop">
+              <i data-lucide="shield" class="w-3.5 h-3.5 text-blue-400"></i>
+              <span>Szeryf / LSPD</span>
+            </button>
+            <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="medic">
+              <i data-lucide="heart-pulse" class="w-3.5 h-3.5 text-red-400"></i>
+              <span>Paramedyk / EMS</span>
+            </button>
+            <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="mechanic">
+              <i data-lucide="wrench" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>Tuner / Mechanik</span>
+            </button>
+            <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="gang">
+              <i data-lucide="skull" class="w-3.5 h-3.5 text-purple-400"></i>
+              <span>Kartel / Crime</span>
+            </button>
+            <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="business">
+              <i data-lucide="briefcase" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span>Biznesmen</span>
+            </button>
+            <button type="button" class="char-preset-btn flex items-center gap-1.5" data-archetype="driver">
+              <i data-lucide="gauge" class="w-3.5 h-3.5 text-neon-pink"></i>
+              <span>Kierowca / Getaway</span>
+            </button>
+          </div>
+          <p class="mt-3 text-[10px] text-slate-400 font-mono">Archetypy są wyłącznie inspiracją — przed użyciem sprawdź regulamin konkretnego serwera RP.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Formularz tworzenia postaci -->
+          <div class="space-y-4">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="char-name">Imię i Nazwisko <span class="required">*</span></label>
+                <input type="text" id="char-name" class="form-input" placeholder="np. Marco Valentino" maxlength="50" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="char-avatar-type">Styl Wizualny / Zdjęcie ID</label>
+                <select id="char-avatar-type" class="form-select">
+                  <option value="police">Mundur Policyjny / Służby</option>
+                  <option value="medic">Kombinezon Medyczny / EMS</option>
+                  <option value="street">Streetwear / Luźny</option>
+                  <option value="suit">Garnitur / Biznes</option>
+                  <option value="racer">Kask / Kombinezon Rajdowy</option>
+                  <option value="crime">Skórzana Kurtka / Crime</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="char-age">Wiek</label>
+                <input type="number" id="char-age" class="form-input" placeholder="np. 28" min="16" max="85" value="28">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="char-gender">Płeć</label>
+                <select id="char-gender" class="form-select">
+                  <option value="Mężczyzna">Mężczyzna</option>
+                  <option value="Kobieta">Kobieta</option>
+                  <option value="Inna">Inna</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="char-origin">Pochodzenie / Miejsce Urodzenia</label>
+                <input type="text" id="char-origin" class="form-input" placeholder="np. Leonida, Włochy">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="char-job">Zawód / Rola Społeczna</label>
+                <input type="text" id="char-job" class="form-input" placeholder="np. Detektyw LSPD, Mechanik, Inwestor">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="char-traits">Zalety i Mocne Strony (oddziel przecinkami)</label>
+              <input type="text" id="char-traits" class="form-input" placeholder="np. Opanowany, lojalny, szybki refleks">
+            </div>
+
+            <!-- Klucz do zdania Whitelist: Wady, Fobie, Ograniczenia -->
+            <div class="p-3.5 bg-red-950/20 border border-red-500/20 rounded-md space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono text-red-400 font-bold flex items-center gap-1">
+                  <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> ZBALANSOWANIE POSTACI (ANTI-POWERGAMING)
+                </span>
+                <span class="text-[10px] text-slate-400 font-mono">WYMÓG WHITELIST</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label text-slate-300" for="char-flaws">Wady Charakteru <span class="text-red-400">*</span></label>
+                <input type="text" id="char-flaws" class="form-input border-red-500/30" placeholder="np. Hazardzista, impulsywny, pamiętliwy, chciwy" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label text-slate-300" for="char-phobias">Fobie i Ograniczenia Fizyczne</label>
+                <input type="text" id="char-phobias" class="form-input border-red-500/30" placeholder="np. Lęk wysokości, astma, blizna po postrzale, problem z zaufaniem">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label text-slate-300" for="char-features">Znaki Szczególne &amp; Styl</label>
+                <input type="text" id="char-features" class="form-input border-red-500/30" placeholder="np. Tatuaż z wężem na szyi, południowy akcent, garnitury retro">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="char-backstory">Historia / Backstory <span class="required">*</span></label>
+              <textarea id="char-backstory" class="form-textarea" rows="4" minlength="80" placeholder="Opisz historię życia postaci, dlaczego przyjechała do Leonida..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="char-goals">Cele i Motywacje</label>
+              <textarea id="char-goals" class="form-textarea" rows="2" placeholder="Co postać chce osiągnąć w mieście? Jakie ma plany?"></textarea>
+            </div>
+
+            <div class="flex gap-3">
+              <button type="button" id="char-generate-btn" class="btn-primary flex-1 py-3">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                Generuj Kartę &amp; Dokument ID
+              </button>
+              <button type="button" id="char-clear-btn" class="btn-secondary px-4" title="Wyczyść formularz">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="char-save-btn" class="btn-secondary text-xs py-2 px-3">Zapisz postać</button>
+              <select id="char-saved-select" class="form-select text-xs flex-1 min-w-[180px]" aria-label="Wczytaj zapisaną postać">
+                <option value="">Wczytaj zapisaną postać</option>
+              </select>
+              <button type="button" id="char-load-btn" class="btn-secondary text-xs py-2 px-3">Wczytaj</button>
+            </div>
+          </div>
+
+          <!-- Podgląd Karty Tożsamości i Podania -->
+          <div class="flex flex-col">
+            <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+              <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="contact" class="w-4 h-4 text-neon-cyan"></i>
+                Podgląd ID Stanu Leonida
+              </h3>
+              
+              <!-- Przyciski Eksportu -->
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <button type="button" id="char-export-png-btn" class="btn-ghost text-xs py-1 px-2 text-neon-cyan hover:bg-cyan-500/10 border border-cyan-500/30" title="Pobierz Kartę ID jako obraz PNG">
+                  <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                  Pobierz ID (.PNG)
+                </button>
+                <button type="button" id="char-export-pdf-btn" class="btn-ghost text-xs py-1 px-2 text-neon-pink hover:bg-pink-500/10 border border-pink-500/30" title="Pobierz Kompletne Podanie w formacie PDF">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                  Pobierz PDF
+                </button>
+                <button type="button" id="char-copy-discord-btn" class="btn-ghost text-xs py-1 px-2 text-indigo-400 hover:bg-indigo-500/10 border border-indigo-500/30" title="Kopiuj z formatowaniem pod Discord Markdown">
+                  <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                  Kopiuj na Discord
+                </button>
+                <button type="button" id="char-copy-btn" class="btn-ghost text-xs py-1 px-2" title="Kopiuj zwykły tekst">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  TXT
+                </button>
+                <button type="button" id="char-export-btn" class="btn-ghost text-xs py-1 px-2" title="Pobierz plik .txt">
+                  <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                  .TXT
+                </button>
+              </div>
+            </div>
+
+            <!-- Interaktywny Canvas: Prawo Jazdy / Karta ID Stanu Leonida -->
+            <div class="relative mb-4 bg-black/40 rounded-lg overflow-hidden border border-cyan-500/25 p-1 flex justify-center">
+              <canvas id="char-id-canvas" width="856" height="540" class="w-full max-w-[500px] h-auto rounded shadow-2xl block"></canvas>
+            </div>
+
+            <!-- Zakładki wyboru widoku podglądu tekstu -->
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono text-slate-400 uppercase">Treść podania Whitelist:</span>
+              <span class="text-[10px] font-mono text-neon-cyan font-bold">VIRP.PL</span>
+            </div>
+
+            <div id="char-output" class="character-output flex-1 min-h-[180px]">
+<span class="text-slate-500">// Wypełnij formularz lub kliknij "Wylosuj Postać" aby wygenerować dokument...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TOOLKIT PANEL: Radio Codes ============ -->
+    <section id="panel-codes" class="toolkit-panel mb-12" aria-label="Baza Kodów Radiowych">
+      <div class="glass-card p-5 sm:p-7 lg:p-8">
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-6 border-b border-white/10 pb-4">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold flex items-center gap-2 text-white">
+              <i data-lucide="radio" class="w-5 h-5 text-accent-cyan"></i>
+              Kody Radiowe &amp; Procedury Służb Mundurowych
+            </h2>
+            <p class="text-xs text-slate-400 font-mono mt-1">Podręczna ściąga kodów 10-codes, procedur pościgowych LSPD oraz protokołów ratunkowych EMS.</p>
+          </div>
+          <span class="hud-pill hud-pill-pink text-xs font-mono">COMMUNICATIONS HUB</span>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tab-nav mb-6">
+          <button type="button" class="tab-btn active" data-codes-tab="10codes">10-Codes (Ogólne)</button>
+          <button type="button" class="tab-btn" data-codes-tab="police">Procedury Policyjne (LSPD/SASD)</button>
+          <button type="button" class="tab-btn" data-codes-tab="medical">Procedury Medyczne (EMS/SAMC)</button>
+        </div>
+
+        <!-- Search -->
+        <div class="search-container mb-6">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="codes-search" class="search-input" placeholder="Szukaj kodu (np. 10-80, 10-20) lub opisu..." autocomplete="off" aria-label="Szukaj kodu lub opisu">
+        </div>
+
+        <!-- Codes Content -->
+        <div id="codes-content" class="overflow-x-auto" style="max-height: 540px; overflow-y: auto;">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TOOLKIT PANEL: Economy Calculator ============ -->
+    <section id="panel-calculator" class="toolkit-panel mb-12" aria-label="Kalkulator Ekonomii RP">
+      <div class="glass-card p-5 sm:p-7 lg:p-8">
+        <div class="flex items-center justify-between flex-wrap gap-2 mb-6 border-b border-white/10 pb-4">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold flex items-center gap-2 text-white">
+              <i data-lucide="calculator" class="w-5 h-5 text-accent-amber"></i>
+              Kalkulator Ekonomii RP &amp; Szacunkowe Zarobki
+            </h2>
+            <p class="text-xs text-slate-400 font-mono mt-1">Przelicz opłacalność prac dorywczych, stawek frakcyjnych oraz napadów z uwzględnieniem mnożnika serwera.</p>
+          </div>
+          <span class="hud-pill hud-pill-amber text-[10px] font-mono">WERSJA TESTOWA</span>
+        </div>
+
+        <!-- Pasek Ostrzegawczy: Moduł w trakcie budowy -->
+        <div class="hazard-stripe-banner mb-6 flex items-start gap-3">
+          <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0 mt-0.5">
+            <i data-lucide="hard-hat" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-xs font-bold text-amber-300 uppercase tracking-wider font-display">
+              MODUŁ W TRAKCIE KALIBRACJI STAWEK // ESTIMATED VALUES
+            </h3>
+            <p class="text-xs text-slate-300 font-mono leading-relaxed mt-0.5">
+              Stawki są stale dopasowywane na podstawie średnich gospodarczych z czołowych polskich serwerów FiveM. Skorzystaj z suwaka mnożnika serwera (x), aby dopasować kalkulator do ekonomii Twojego serwera.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Inputs -->
+          <div class="space-y-5">
+            <div class="form-group">
+              <label class="form-label" for="calc-activity">Typ Aktywności</label>
+              <select id="calc-activity" class="form-select">
+                <option value="">Wybierz aktywność...</option>
+                <optgroup label="Prace Legalne">
+                  <option value="mechanic" data-rate="250" data-unit="h">Mechanik ($250/h)</option>
+                  <option value="trucker" data-rate="180" data-unit="kurs">Kierowca TIR ($180/kurs)</option>
+                  <option value="taxi" data-rate="120" data-unit="kurs">Taksówkarz ($120/kurs)</option>
+                  <option value="fisherman" data-rate="90" data-unit="h">Rybak ($90/h)</option>
+                  <option value="miner" data-rate="200" data-unit="h">Górnik ($200/h)</option>
+                  <option value="lumberjack" data-rate="150" data-unit="h">Drwal ($150/h)</option>
+                  <option value="medic" data-rate="350" data-unit="zmiana">Paramedyk ($350/zmianę)</option>
+                  <option value="police" data-rate="400" data-unit="zmiana">Policjant ($400/zmianę)</option>
+                </optgroup>
+                <optgroup label="Nielegalne">
+                  <option value="store-rob" data-rate="2500" data-unit="napad">Napad na sklep ($2,500)</option>
+                  <option value="bank-small" data-rate="15000" data-unit="napad">Mały bank ($15,000)</option>
+                  <option value="bank-big" data-rate="50000" data-unit="napad">Duży bank ($50,000)</option>
+                  <option value="jewelry" data-rate="25000" data-unit="napad">Jubiler ($25,000)</option>
+                  <option value="drugs" data-rate="500" data-unit="sprzedaż">Sprzedaż narkotyków ($500/szt.)</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="calc-quantity">Ilość (godzin / kursów / napadów)</label>
+              <input type="number" id="calc-quantity" class="form-input" placeholder="np. 8" min="1" max="100" value="1">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="calc-multiplier">Mnożnik serwera (x)</label>
+              <div class="flex items-center gap-3">
+                <input type="range" id="calc-multiplier" min="0.5" max="5" step="0.1" value="1" aria-label="Mnożnik serwera">
+                <span id="calc-multiplier-value" class="text-sm font-mono font-semibold text-accent-amber min-w-[3rem] text-right">1.0x</span>
+              </div>
+            </div>
+
+            <button type="button" id="calc-btn" class="btn-primary w-full py-3">
+              <i data-lucide="calculator" class="w-4 h-4"></i>
+              Oblicz Zarobek
+            </button>
+          </div>
+
+          <!-- Result -->
+          <div class="flex flex-col justify-center">
+            <div class="calc-result">
+              <p class="text-sm text-slate-400 mb-2 uppercase tracking-wider font-semibold">Szacowany Zarobek</p>
+              <div class="calc-amount" id="calc-result-amount">$0</div>
+              <p class="text-sm text-slate-500 mt-2" id="calc-result-desc">Wybierz aktywność i oblicz</p>
+            </div>
+
+            <div class="mt-6 p-4 rounded-lg bg-bg-primary/50 border border-white/5">
+              <p class="text-xs text-slate-500 flex items-start gap-2 leading-relaxed">
+                <i data-lucide="info" class="w-4 h-4 mt-0.5 flex-shrink-0 text-neon-cyan"></i>
+                Wartości są orientacyjne i mogą różnić się w zależności od balansu gospodarczego danego serwera RP.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sekcja SEO: Poradnik RP & FAQ -->
+    <section aria-label="Poradnik i FAQ GTA Roleplay" class="mb-12 p-6 rounded-xl bg-[#0d121f]/90 border border-white/10">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="hud-pill hud-pill-pink text-[10px] uppercase tracking-widest font-bold">WIEDZA I PORADNIKI</span>
+        <span class="hud-pill hud-pill-cyan text-[10px] uppercase tracking-widest font-bold">WHITELIST GUIDE</span>
+      </div>
+      <h2 class="font-display text-xl sm:text-2xl font-bold text-white uppercase tracking-wider mb-4">
+        Czym jest RP Toolkit i jak pomaga zdać Whitelist w GTA RP?
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono text-slate-300 leading-relaxed">
+        <div class="p-4 rounded-lg bg-black/30 border border-white/5">
+          <div class="text-neon-pink font-bold text-sm mb-1.5 flex items-center gap-1.5">
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+            Zbalansowane Postacie
+          </div>
+          <p>
+            Komisje Whitelist odrzucają postacie bez wad (tzw. Mary Sue / Powergaming). Nasz generator zmusza do podania realnych fobii, słabości i ograniczeń fizycznych, co drastycznie podnosi szansę na zdanie WL.
+          </p>
+        </div>
+        <div class="p-4 rounded-lg bg-black/30 border border-white/5">
+          <div class="text-neon-cyan font-bold text-sm mb-1.5 flex items-center gap-1.5">
+            <i data-lucide="radio" class="w-4 h-4"></i>
+            Profesjonalna Komunikacja
+          </div>
+          <p>
+            Znajomość kodów 10-codes (np. 10-4, 10-20, 10-80) jest niezbędna w frakcjach LSPD, SASD i EMS. Baza kodów działa w trybie natychmiastowego filtrowania nawet podczas rozgrywki.
+          </p>
+        </div>
+        <div class="p-4 rounded-lg bg-black/30 border border-white/5">
+          <div class="text-neon-amber font-bold text-sm mb-1.5 flex items-center gap-1.5">
+            <i data-lucide="file-output" class="w-4 h-4"></i>
+            Gotowe do Eksportu
+          </div>
+          <p>
+            Wygenerowaną kartę możesz jednym kliknięciem skopiować z formatowaniem markdown bezpośrednio na kanał rekrutacyjny Discorda lub pobrać w formacie PDF i grafiki PNG ID.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stopka -->
+    <footer class="text-center text-[11px] font-mono text-slate-500 py-6 border-t border-white/5">
+      VIRP.pl © 2026 — Społeczność GTA Roleplay w Polsce. Wszelkie prawa zastrzeżone.
+    </footer>
+  </main>
+
+  <!-- ============================================================
+       VICE CITY DUAL RADIO HUD (STREAM / SPOTIFY)
+       ============================================================ -->
+  <div id="vice-radio-hud" class="fixed bottom-4 left-4 right-4 sm:right-auto sm:bottom-6 sm:left-6 z-[70] transition-all duration-300 max-w-[calc(100vw-2rem)]">
+    <!-- Przycisk minimalizacji (widoczny gdy panel zwinięty) -->
+    <button id="radio-minimize-btn" class="radio-mini-btn hidden" title="Rozwiń radio" aria-label="Rozwiń radio">
+      <div class="hud-equalizer flex items-end gap-0.5 h-3 cursor-pointer">
+        <div class="hud-eq-bar bg-neon-pink" style="height:40%"></div>
+        <div class="hud-eq-bar bg-neon-cyan" style="height:70%"></div>
+        <div class="hud-eq-bar bg-neon-amber" style="height:55%"></div>
+      </div>
+    </button>
+
+    <!-- Główny panel sterowania HUD -->
+    <div id="radio-full-panel" class="hud-panel p-2.5 bg-[#0D111D]/95 border border-cyan-500/30 shadow-[0_0_25px_rgba(0,0,0,0.85)] backdrop-blur-md hud-cut flex flex-col gap-2 w-full sm:w-80 max-w-full">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2 px-1">
+        <div class="flex items-center gap-1.5">
+          <button id="src-stream-btn" class="radio-source-btn active" data-source="stream">
+            <i data-lucide="radio" class="w-3 h-3"></i> VICE FM
+          </button>
+          <button id="src-spotify-btn" class="radio-source-btn" data-source="spotify">
+            <i data-lucide="disc" class="w-3 h-3"></i> SPOTIFY
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1">
+          <button id="radio-expand-btn" class="text-slate-400 hover:text-white transition-colors p-1 cursor-pointer" title="Zwiń / Rozwiń panel" aria-label="Zwiń lub rozwiń radio">
+            <i data-lucide="chevron-down" id="radio-expand-arrow" class="w-4 h-4 transition-transform duration-300"></i>
+          </button>
+          <button id="radio-collapse-btn" class="text-slate-400 hover:text-neon-pink transition-colors p-1 cursor-pointer" title="Minimalizuj radio" aria-label="Minimalizuj radio">
+            <i data-lucide="minus" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-2 px-1">
+        <div class="flex items-center gap-2.5 cursor-pointer" id="radio-track-info-click" role="button" tabindex="0" aria-label="Włącz lub zatrzymaj radio">
+          <button id="radio-master-play" class="w-8 h-8 rounded bg-gradient-to-br from-[#FF1F7D] to-[#FF9E00] flex items-center justify-center text-white hover:scale-105 transition-transform shadow-[0_0_12px_rgba(255,31,125,0.5)] cursor-pointer" aria-label="Odtwarzaj / Zatrzymaj">
+            <i data-lucide="play" class="w-4 h-4" id="radio-master-icon"></i>
+          </button>
+
+          <div class="flex flex-col">
+            <span class="font-display text-sm text-white uppercase tracking-wider leading-none" id="radio-track-title">CHILLSYNTH // NIGHTRIDE FM</span>
+            <span class="text-[9px] text-neon-cyan font-mono tracking-wider mt-0.5" id="radio-track-status">KLIKNIJ ABY WŁĄCZYĆ</span>
+          </div>
+        </div>
+
+        <div class="hud-equalizer flex items-end gap-0.5 h-4 px-1 cursor-pointer" id="radio-eq" role="button" tabindex="0" title="Kliknij, aby włączyć/wyłączyć" aria-label="Włącz lub zatrzymaj radio">
+          <div class="hud-eq-bar bg-neon-pink"></div>
+          <div class="hud-eq-bar bg-neon-cyan"></div>
+          <div class="hud-eq-bar bg-neon-amber"></div>
+          <div class="hud-eq-bar bg-status-green"></div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 px-1 pt-1.5 border-t border-white/5">
+        <button id="radio-mute-btn" class="text-slate-400 hover:text-neon-cyan transition-colors cursor-pointer" title="Wycisz / Włącz dźwięk" aria-label="Wycisz lub włącz dźwięk">
+          <i data-lucide="volume-2" id="radio-volume-icon" class="w-3.5 h-3.5"></i>
+        </button>
+        <input type="range" id="radio-volume-slider" min="0" max="1" step="0.05" value="0.2" class="w-full accent-[#FF1F7D] h-1.5 bg-slate-800 rounded-lg cursor-pointer transition-all hover:bg-slate-700" title="Regulacja głośności" aria-label="Głośność radia">
+        <span id="radio-volume-val" class="text-[9px] font-mono text-neon-cyan w-7 text-right">20%</span>
+      </div>
+
+      <div id="radio-spotify-container" class="hidden pt-2 border-t border-white/10 mt-1">
+        <div class="flex items-center justify-between mb-2 px-1">
+          <span class="text-[10px] text-neon-cyan font-mono font-bold tracking-wider">SPOTIFY // FLASH FM VICE CITY</span>
+          <span class="hud-pill hud-pill-pink text-[9px]">PLAYLISTA</span>
+        </div>
+
+        <div id="spotify-embed-root">
+          <iframe 
+            data-testid="embed-iframe" 
+            title="Spotify Web Player - Flash FM Vice City"
+            style="border-radius:12px; border:0;" 
+            data-src="https://open.spotify.com/embed/playlist/7dKunw6i8S8cqF8DOANExj?utm_source=generator&theme=0" 
+            width="100%" 
+            height="352" 
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </div>
+
+    <audio id="bg-audio" loop preload="none">
+      <source src="https://stream.nightride.fm/chillsynth.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <!-- ============================================================
+       COOKIE CONSENT BANNER
+       ============================================================ -->
+  <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-[80] transition-all duration-500 translate-y-24 opacity-0 pointer-events-none" role="region" aria-label="Zgoda na pliki cookies">
+    <div class="p-4 rounded-xl bg-[#0d121f]/95 border border-cyan-500/30 shadow-[0_10px_35px_rgba(0,0,0,0.85)] backdrop-blur-md">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-neon-pink/20 border border-neon-pink/30 flex items-center justify-center text-neon-pink flex-shrink-0 mt-0.5">
+          <i data-lucide="cookie" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <h4 class="text-xs font-bold text-white uppercase font-display tracking-wider">
+            Pliki Cookies &amp; Pamięć Lokalna
+          </h4>
+          <p class="text-[11px] text-slate-300 font-mono mt-1 leading-relaxed">
+            VIRP.pl korzysta z pamięci lokalnej (Local Storage) oraz niezbędnych cookies w celu zapamiętania Twoich ustawień, danych formularzy i ochrony anty-botowej Cloudflare. Nie stosujemy inwazyjnych ciasteczek śledzących.
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2.5 border-t border-white/10">
+        <button type="button" id="cookie-accept-btn" class="btn-primary text-xs py-1.5 px-4 cursor-pointer shadow-md shadow-pink-500/20">
+          Rozumiem i Akceptuję
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TOAST CONTAINER
+       ============================================================ -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ============================================================
+       SCRIPTS (modular, ES6+)
+       ============================================================ -->
+  <script src="/js/app.js?v=1.6.0"></script>
+  <script src="/js/toolkit.js?v=1.6.0"></script>
+
+</body>
+</html>
+
