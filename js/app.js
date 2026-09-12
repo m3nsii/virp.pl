@@ -56,7 +56,7 @@ window.safeUrl = safeUrl;
  */
 const VIRP = {
   /** Wersja aplikacji */
-  version: '1.5.0',
+  version: '1.5.1',
 
   /** Sprawdza, czy użytkownik zaakceptował zewnętrzne multimedia. */
   hasCookieConsent() {
@@ -559,25 +559,8 @@ const VIRP = {
     // Definicja globalnej funkcji zwalniającej ekran powitalny
     window.dismissSplashGateway = () => {
       const splash = document.getElementById('splash-gate');
-      const bgAudio = document.getElementById('bg-audio');
-      const radioEq = document.getElementById('radio-eq');
-      const radioStatus = document.getElementById('radio-track-status');
-      const radioIcon = document.getElementById('radio-master-icon');
 
-      // 1. Bezpieczny autostart audio
-      if (bgAudio) {
-        bgAudio.play().then(() => {
-          if (radioIcon) radioIcon.setAttribute('data-lucide', 'pause');
-          if (radioEq) radioEq.classList.add('is-playing');
-          if (radioStatus) {
-            radioStatus.textContent = 'ON AIR // CHILLSYNTH';
-            radioStatus.style.color = '#00FF66';
-          }
-          if (typeof lucide !== 'undefined') lucide.createIcons();
-        }).catch((err) => console.log('Autoplay info:', err));
-      }
-
-      // 2. Płynne ukrycie bramki powitalnej
+      // Płynne ukrycie bramki powitalnej (radio pozostaje wyłączone na starcie — użytkownik włącza je ręcznie)
       if (splash) {
         splash.classList.add('is-dismissed');
         setTimeout(() => {
@@ -639,7 +622,7 @@ const VIRP = {
           if (radioEq) radioEq.classList.add('is-playing');
         } else {
           if (trackStatus) {
-            trackStatus.textContent = 'STACJA ZATRZYMANA';
+            trackStatus.textContent = 'KLIKNIJ ABY WŁĄCZYĆ';
             trackStatus.style.color = '#00F0FF';
           }
           if (playIcon) playIcon.setAttribute('data-lucide', 'play');
@@ -694,7 +677,7 @@ const VIRP = {
       if (playIcon) playIcon.setAttribute('data-lucide', 'play');
       if (radioEq) radioEq.classList.remove('is-playing');
       if (trackStatus) {
-        trackStatus.textContent = 'STACJA ZATRZYMANA';
+        trackStatus.textContent = 'KLIKNIJ ABY WŁĄCZYĆ';
         trackStatus.style.color = '#00F0FF';
       }
       if (typeof lucide !== 'undefined') lucide.createIcons({ root: playBtn?.parentElement || undefined });
