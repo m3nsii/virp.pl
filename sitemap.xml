@@ -44,4 +44,20 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- Spoke GTA 6: Data Premiery, Platformy & Ceny -->
+  <url>
+    <loc>https://virp.pl/gta6/premiera</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Spoke GTA 6: Mapa Stanu Leonida, Vice City & Nowe Lokacje -->
+  <url>
+    <loc>https://virp.pl/gta6/mapa</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
 </urlset>
