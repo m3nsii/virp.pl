@@ -75,17 +75,17 @@ const StreamersHub = {
       isFeaturedSample: true
     },
     {
-      id: 'kick-xmerghani-01M1AME5XWDGRVFQWT7JT1S8CP',
-      title: 'Sprawdź klip na Kicku — xmerghani',
+      id: 'kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP',
+      title: 'explain something',
       streamer: 'xmerghani',
       streamerLogin: 'xmerghani',
       streamerAvatar: '/img/streamers/xmerghani.webp',
       platform: 'kick',
-      url: 'https://kick.com/xmerghani/clips/clip_01M1AME5XWDGRVFQWT7JT1S8CP',
-      thumbnail: '',
-      duration: '0:44',
-      views: 4780,
-      votes: 118,
+      url: 'https://kick.com/xmerghani/clips/clip_01M2BRH7NV04D42EQEVKV3BZBP',
+      thumbnail: 'https://clips.kick.com/clips/e5/clip_01M2BRH7NV04D42EQEVKV3BZBP/thumbnail.webp',
+      duration: '0:42',
+      views: 6180,
+      votes: 154,
       isFeaturedSample: true
     }
   ],
@@ -1891,7 +1891,16 @@ const ClipViewerModal = {
       return;
     }
 
-    // 3. Fallback: Karta podglądu z bezpośrednim przyciskiem otwarcia
+    // 3. Kick Clip
+    const kickClipMatch = url.match(/kick\.com\/[^/]+\/clips\/(clip_[a-zA-Z0-9]+)/i);
+    if (kickClipMatch && kickClipMatch[1]) {
+      this.containerEl.innerHTML = `
+        <iframe class="w-full h-full border-0" src="https://player.kick.com/clips/${kickClipMatch[1]}?autoplay=true" allow="autoplay; fullscreen" allowfullscreen></iframe>
+      `;
+      return;
+    }
+
+    // 4. Fallback: Karta podglądu z bezpośrednim przyciskiem otwarcia
     this.containerEl.innerHTML = `
       <div class="relative w-full h-full flex flex-col items-center justify-center p-6 text-center bg-cover bg-center" style="background-image: linear-gradient(rgba(6, 8, 15, 0.8), rgba(6, 8, 15, 0.9)), url('${safeThumb}');">
         <div class="max-w-md p-6 bg-[#0d121f]/90 border border-white/15 rounded-xl shadow-2xl backdrop-blur-md">
