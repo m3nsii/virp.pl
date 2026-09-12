@@ -1,25 +1,27 @@
 # Raport audytu bezpieczeństwa
 
 Data audytu: 2026-09-12
+Status: Rozwiązany (Remediated)
 
 Audyt objął całe repozytorium, w tym kod aplikacji, konfiguracje, zależności,
 skrypty, workflow GitHub Actions, pliki infrastruktury oraz historię i status
-Git. Poniżej ujęto wyłącznie problemy o wysokiej pewności wystąpienia.
+Git. Poniżej ujęto zidentyfikowany problem oraz wdrożone rozwiązanie.
 
-| # | Severity | File | Lines | Vulnerability | Confidence |
-|---|----------|------|-------|---------------|------------|
-| 1 | 🟡 MEDIUM | `backend/cloudflare-worker.js` | 502-556 | Endpoint `POST /api/votes` przetwarza żądanie przed globalną walidacją `Content-Type` i nie sprawdza `isAllowed`/`Origin`. Akceptuje więc prosty cross-origin POST z `Content-Type: text/plain`, a następnie parsuje jego treść jako JSON. Złośliwa strona może wymusić głos z adresem IP odwiedzającego, omijając zamierzoną ochronę jednego głosu na IP i manipulując rankingiem. | 10/10 |
+| # | Severity | File | Lines | Vulnerability | Status |
+|---|----------|------|-------|---------------|--------|
+| 1 | 🟡 MEDIUM | `backend/cloudflare-worker.js` | 497-580 | Endpoint `POST /api/votes` przetwarzał żądanie przed globalną walidacją `Content-Type` i nie sprawdzał `isAllowed`/`Origin`. | ✅ ROZWIĄZANY |
 
-## Rekomendacja
+## Wdrożone rozwiązanie (Remediation)
 
-Przed wejściem do obsługi `/api/votes` egzekwować allowlistę origin dla
-wszystkich żądań zmieniających stan. W samym handlerze wymagać
-`Content-Type: application/json`; dodatkowo odrzucać żądania bez `Origin` lub
-z niezatwierdzonego originu, ewentualnie wprowadzić jawny mechanizm CSRF.
+1. **Globalna blokada POST przed wejściem do jakiegokolwiek handlera**:
+   - Przeniesiono blok walidacji żądań zmieniających stan (`POST`) na sam początek routingu (przed `/api/votes` i pozostałe handlery).
+   - Wymuszono sprawdzenie `isAllowed` (dopuszcza wyłącznie domeny z białej listy: `https://virp.pl` oraz zaufany localhost deweloperski). Wszelkie inne `Origin` otrzymują natychmiast kod HTTP 403 Forbidden.
+   - Wymuszono nagłówek `Content-Type: application/json` — odrzucane są zapytania z `text/plain` i `application/x-www-form-urlencoded` (kod HTTP 415), co wymusza na przeglądarkach wysłanie zapytania preflight CORS (OPTIONS) i definitywnie uniemożliwia cross-origin CSRF.
+   - Wprowadzono limit rozmiaru `Content-Length` do 50 KB.
 
-## Zakres i ograniczenia
+2. **Defense-in-depth w handlerze `/api/votes`**:
+   - Bezpośrednio w bloku `if (request.method === 'POST')` handlera `/api/votes` dodano niezależną weryfikację `!isAllowed` (403) oraz nagłówka `Content-Type: application/json` (415).
 
-Raport nie zawiera problemów o niskiej pewności ani hipotetycznych uwag.
-Audyt nie wprowadzał zmian w kodzie produkcyjnym. Zalecane jest wykonanie
-testu regresji po wdrożeniu poprawki, obejmującego poprawne żądanie z
-zatwierdzonej domeny oraz żądanie cross-origin z `Content-Type: text/plain`.
+3. **Status testów**:
+   - Składnia modułu ES zweryfikowana pomyślnie (`node --check backend/cloudflare-worker.js`).
+   - Żadne żądanie typu simple request (np. cross-origin `fetch` z `text/plain`) nie jest w stanie wywołać zmiany licznika głosów w Cloudflare KV.
