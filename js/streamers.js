@@ -292,11 +292,11 @@ const StreamersHub = {
   },
 
   bindEvents() {
-    // Nawigacja — linki otwierające portal streamerów
+    // Nawigacja — linki otwierające sekcję streamerów przenoszą na dedykowaną podstronę
     document.querySelectorAll('a[href="#streamers"]').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        this.openPortal('streamers');
+        window.location.href = '/streamerzy';
       });
     });
 
@@ -387,14 +387,18 @@ const StreamersHub = {
 
   checkHash() {
     if (window.location.hash === '#streamers') {
-      if (!this.isOpen) this.openPortal('streamers');
+      if (this.isStandaloneStreamersPage) {
+        // Na podstronie streamerów nie trzeba przekierowywać
+      } else {
+        window.location.replace('/streamerzy');
+      }
     } else if (window.location.hash === '#clips') {
       if (this.isStandaloneClipsPage) {
         this.scrollToClips();
       } else {
-        window.location.replace('klipy');
+        window.location.replace('/klipy');
       }
-    } else if (this.isOpen) {
+    } else if (this.isOpen && this.portal) {
       this.closePortal();
     }
   },

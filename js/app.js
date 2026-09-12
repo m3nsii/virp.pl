@@ -271,11 +271,7 @@ const VIRP = {
     streamerLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        if (window.StreamersHub && window.StreamersHub.openPortal) {
-          window.StreamersHub.openPortal();
-        } else {
-          window.location.hash = 'streamers';
-        }
+        window.location.href = '/streamerzy';
       });
     });
   },
