@@ -12,8 +12,13 @@ backend/
 notes/
 cloudflareworker/
 
-# Systemowe pliki tymczasowe i logi
+# Systemowe pliki tymczasowe, zrzuty ekranu i cache narzędzi
 *.log
 .DS_Store
 Thumbs.db
 Desktop.ini
+scratch/
+temp/
+tmp/
+screenshot_*.png
+screenshot*.png

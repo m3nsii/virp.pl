@@ -182,7 +182,7 @@ const StreamersHub = {
       hash = (hash * 31 + idStr.charCodeAt(i)) & 0xffffffff;
     }
     const absHash = Math.abs(hash);
-    const calculated = Math.round(Math.sqrt(views) * 1.35) + (absHash % 24) + 14;
+    const calculated = Math.round(Math.sqrt(views) * 1.31) + (absHash % 24) + 8;
     return Math.max(18, Math.min(185, calculated));
   },
 
