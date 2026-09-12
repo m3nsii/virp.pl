@@ -197,9 +197,7 @@
             </span>
           </div>
         </a>
-        <div class="hidden sm:flex items-center ml-2 pl-3 border-l border-white/10">
-          <span class="author-glitch" data-text="M3NSI">M3NSI</span>
-        </div>
+
       </div>
 
       <!-- Szybka nawigacja między sekcjami -->
@@ -231,7 +229,7 @@
       </div>
       <div class="streamer-stat-card">
         <span class="streamer-stat-label">ODDANE GŁOSY</span>
-        <div id="clips-stat-votes" class="streamer-stat-value text-neon-pink">2 380+</div>
+        <div id="clips-stat-votes" class="streamer-stat-value text-neon-pink">2 873</div>
       </div>
       <div class="streamer-stat-card">
         <span class="streamer-stat-label">ŁĄCZNE WYŚWIETLENIA</span>
@@ -239,9 +237,9 @@
       </div>
       <div class="streamer-stat-card">
         <span class="streamer-stat-label">NAGRODY DLA TOP 3</span>
-        <div class="streamer-stat-value text-status-green flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-status-green animate-ping"></span>
-          <span>SEZON AKTYWNY 🔥</span>
+        <div class="streamer-stat-value text-slate-300 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+          <span>W PRZYSZŁOŚCI</span>
         </div>
       </div>
     </section>
@@ -287,7 +285,7 @@
         </div>
       </div>
 
-      <!-- BANER INFORMACYJNY: STREFA TWÓRCÓW & NAGRODY DLA TOP 3 -->
+      <!-- BANER INFORMACYJNY: STREFA TWÓRCÓW SPOŁECZNOŚCI -->
       <div class="mb-6 p-4 sm:p-5 rounded-xl bg-gradient-to-r from-[#0d121f]/95 via-[#131929]/95 to-[#0d121f]/95 border border-cyan-500/30 shadow-[0_4px_25px_rgba(0,0,0,0.6)] backdrop-blur-md relative overflow-hidden">
         <div class="absolute -top-12 -right-12 w-48 h-48 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
         <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-neon-pink/10 rounded-full blur-2xl pointer-events-none"></div>
@@ -295,29 +293,29 @@
         <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="flex items-start gap-3.5">
             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-cyan/20 to-blue-600/20 border border-neon-cyan/40 flex items-center justify-center text-neon-cyan flex-shrink-0 mt-0.5 shadow-[0_0_15px_rgba(0,240,255,0.25)]">
-              <i data-lucide="trophy" class="w-5 h-5"></i>
+              <i data-lucide="film" class="w-5 h-5"></i>
             </div>
             <div>
               <div class="flex items-center gap-2 flex-wrap mb-1">
-                <span class="hud-pill hud-pill-cyan text-[10px] font-bold tracking-wider uppercase">CIEKAWOSTKA &amp; PLANY SPOŁECZNOŚCI</span>
-                <span class="text-[10px] font-mono text-neon-pink font-semibold flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-neon-pink animate-pulse"></span>
-                  NAGRODY DLA TOP 3 KLIPÓW
+                <span class="hud-pill hud-pill-cyan text-[10px] font-bold tracking-wider uppercase">SPOŁECZNOŚĆ // VIRP.PL</span>
+                <span class="text-[10px] font-mono text-neon-cyan font-semibold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                  RANKING SPOŁECZNOŚCIOWY
                 </span>
               </div>
               <h2 class="font-display text-base sm:text-lg text-white tracking-wide uppercase">
-                Wrzucasz klipy z serwerów RP? W przyszłości czekają nagrody dla najlepszych twórców!
+                Dziel się swoimi klipami z serwerów RP ze społecznością!
               </h2>
               <p class="text-xs text-slate-300 font-mono mt-1 leading-relaxed max-w-3xl">
-                Wraz z rozwojem VIRP.pl i pozyskaniem partnerów sponsorskich, dla autorów <strong class="text-neon-cyan font-bold">TOP 3</strong> najwyżej ocenianych klipów planujemy nagrody rzeczowe i promocyjne.
+                VIRP.pl to niezależna przestrzeń tworzona przez graczy. Ewentualne nagrody dla twórców mogą pojawić się w przyszłości wraz z rozwojem serwisu — obecnie liczy się promocja Waszych streamów, akcji i wspólna zabawa.
               </p>
               <div class="flex items-center gap-2 mt-2.5 text-[11px] font-mono text-slate-300 flex-wrap">
-                <span class="inline-flex items-center gap-1.5 text-amber-400 bg-amber-950/40 border border-amber-500/30 px-2 py-0.5 rounded font-semibold">
-                  <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                  Zasada weryfikacji autorstwa:
+                <span class="inline-flex items-center gap-1.5 text-cyan-400 bg-cyan-950/40 border border-cyan-500/30 px-2 py-0.5 rounded font-semibold">
+                  <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                  Zasada zgłoszeń:
                 </span>
                 <span class="text-slate-400">
-                  Wymagana będzie <strong class="text-slate-200">zgodność nicku</strong> z Twitch/Kick i oficjalnego Discorda VIRP.pl oraz potwierdzenie, że to Twój klip.
+                  Wymagana jest <strong class="text-slate-200">zgodność nicku</strong> z platformą Twitch/Kick lub oficjalnym Discordem oraz potwierdzenie autorstwa akcji.
                 </span>
               </div>
             </div>
@@ -349,8 +347,8 @@
             </div>
           </div>
           <div class="clip-body">
-            <h3 class="clip-title clip-play-action cursor-pointer hover:text-neon-cyan transition-colors" data-clip-id="kick-neexcsgo-01M1VV2FVDBFEEWT12QZF8SEYA" title="Epicki pościg za LSPD przez autostradę Del Perro">
-              Epicki pościg za LSPD przez autostradę Del Perro
+            <h3 class="clip-title clip-play-action cursor-pointer hover:text-neon-cyan transition-colors" data-clip-id="kick-neexcsgo-01M1VV2FVDBFEEWT12QZF8SEYA" title="Sprawdź klip na Kicku — neexcsgo">
+              Sprawdź klip na Kicku — neexcsgo
             </h3>
             <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
               <div class="flex items-center gap-2 overflow-hidden">
@@ -361,7 +359,7 @@
               </div>
               <button type="button" class="clip-vote-btn" data-clip-id="kick-neexcsgo-01M1VV2FVDBFEEWT12QZF8SEYA" aria-label="Zagłosuj na klip">
                 <i data-lucide="flame" class="w-4 h-4 text-neon-pink fill-neon-pink"></i>
-                <span class="clip-vote-count font-mono font-bold text-xs text-neon-pink">128</span>
+                <span class="clip-vote-count font-mono font-bold text-xs text-neon-pink">127</span>
               </button>
             </div>
           </div>
@@ -381,8 +379,8 @@
             </div>
           </div>
           <div class="clip-body">
-            <h3 class="clip-title clip-play-action cursor-pointer hover:text-neon-cyan transition-colors" data-clip-id="kick-lequ-01M1F9HYVGFN3WBANQ6RSN2QVE" title="Napad na skarbiec bankowy i ewakuacja helikopterem">
-              Napad na skarbiec bankowy i ewakuacja helikopterem
+            <h3 class="clip-title clip-play-action cursor-pointer hover:text-neon-cyan transition-colors" data-clip-id="kick-lequ-01M1F9HYVGFN3WBANQ6RSN2QVE" title="Sprawdź klip na Kicku — lequ">
+              Sprawdź klip na Kicku — lequ
             </h3>
             <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
               <div class="flex items-center gap-2 overflow-hidden">
@@ -393,7 +391,7 @@
               </div>
               <button type="button" class="clip-vote-btn" data-clip-id="kick-lequ-01M1F9HYVGFN3WBANQ6RSN2QVE" aria-label="Zagłosuj na klip">
                 <i data-lucide="flame" class="w-4 h-4 text-neon-pink fill-neon-pink"></i>
-                <span class="clip-vote-count font-mono font-bold text-xs text-neon-pink">105</span>
+                <span class="clip-vote-count font-mono font-bold text-xs text-neon-pink">104</span>
               </button>
             </div>
           </div>
@@ -413,8 +411,8 @@
             </div>
           </div>
           <div class="clip-body">
-            <h3 class="clip-title clip-play-action cursor-pointer hover:text-neon-cyan transition-colors" data-clip-id="kick-niter-01M1HM5ZEZSY8MEWXZ6XGBYW4V" title="Negocjacje policyjne z gangiem w Sandy Shores">
-              Negocjacje policyjne z gangiem w Sandy Shores
+            <h3 class="clip-title clip-play-action cursor-pointer hover:text-neon-cyan transition-colors" data-clip-id="kick-niter-01M1HM5ZEZSY8MEWXZ6XGBYW4V" title="Sprawdź klip na Kicku — niter">
+              Sprawdź klip na Kicku — niter
             </h3>
             <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
               <div class="flex items-center gap-2 overflow-hidden">
@@ -425,7 +423,7 @@
               </div>
               <button type="button" class="clip-vote-btn" data-clip-id="kick-niter-01M1HM5ZEZSY8MEWXZ6XGBYW4V" aria-label="Zagłosuj na klip">
                 <i data-lucide="flame" class="w-4 h-4 text-neon-pink fill-neon-pink"></i>
-                <span class="clip-vote-count font-mono font-bold text-xs text-neon-pink">86</span>
+                <span class="clip-vote-count font-mono font-bold text-xs text-neon-pink">89</span>
               </button>
             </div>
           </div>

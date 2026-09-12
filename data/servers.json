@@ -15,13 +15,18 @@
       "basePlayers": 154,
       "maxClients": 300
     },
-    "tags": ["FiveM", "Hardcore RP", "WL ON", "Autorskie Skrypty"],
+    "tags": [
+      "FiveM",
+      "Hardcore RP",
+      "WL ON",
+      "Autorskie Skrypty"
+    ],
     "description": "Czołowy polski projekt FiveM RP. Precyzyjnie zbalansowana ekonomia, zaawansowane procedury frakcji LSPD i EMS oraz wysokie wymagania selekcji Whitelist gwarantujące wysoki poziom immersji.",
     "shortDescription": "Klasyk polskiego FiveM — restrykcyjna Whitelist, immersja i wysoki poziom RP.",
     "discord": "https://discord.gg/strefarp",
     "website": "https://strefarp.gg",
     "slots": 300,
-    "votes": 284,
+    "votes": 0,
     "featured": false,
     "createdAt": "2024-03-01"
   },
@@ -41,13 +46,18 @@
       "basePlayers": 128,
       "maxClients": 250
     },
-    "tags": ["FiveM", "Hardcore RP", "WL ON", "Classic"],
+    "tags": [
+      "FiveM",
+      "Hardcore RP",
+      "WL ON",
+      "Classic"
+    ],
     "description": "Najdłużej działający polski serwer Role Play w GTA V na platformie FiveM. Zrównoważona ekonomia, aktywna selekcja Whitelist i oddana społeczność odgrywająca wielowątkowe historie.",
     "shortDescription": "Najstarszy polski projekt FiveM RP — klasyczna rozgrywka i zaufana społeczność.",
     "discord": "https://discord.gg/vlife",
     "website": "https://v-life.pl",
     "slots": 250,
-    "votes": 247,
+    "votes": 0,
     "featured": false,
     "createdAt": "2024-03-02"
   },
@@ -68,13 +78,18 @@
       "basePlayers": 185,
       "maxClients": 500
     },
-    "tags": ["Text RP", "RAGE:MP", "Rozbudowana Fabuła", "Gospodarka"],
+    "tags": [
+      "Text RP",
+      "RAGE:MP",
+      "Rozbudowana Fabuła",
+      "Gospodarka"
+    ],
     "description": "Największy polski serwer tekstowego Role Play na platformie GTA V. Cechuje się niezwykle bogatym światem, naciskiem na kreatywne odgrywanie postaci, autorskim panelem gracza oraz dynamicznym rynkiem biznesów i frakcji.",
     "shortDescription": "Czołowy polski projekt Text RP — głębokie wątki fabularne i rozbudowany świat postaci.",
     "discord": "https://discord.gg/vibe-rp",
     "website": "https://v-rp.pl",
     "slots": 500,
-    "votes": 156,
+    "votes": 0,
     "featured": false,
     "createdAt": "2024-03-03"
   },
@@ -94,13 +109,18 @@
       "basePlayers": 265,
       "maxClients": 500
     },
-    "tags": ["FiveM", "Voice RP", "WL OFF", "Mega Społeczność"],
+    "tags": [
+      "FiveM",
+      "Voice RP",
+      "WL OFF",
+      "Mega Społeczność"
+    ],
     "description": "Jeden z najpopularniejszych polskich projektów FiveM gromadzący dziesiątki tysięcy graczy. Błyskawiczny start bez whitelisty, zrównoważona ekonomia, dynamiczne akcje policyjne i przestępcze oraz bogaty park maszynowy.",
     "shortDescription": "Jeden z największych serwerów FiveM w Polsce — potężna społeczność i dynamiczna akcja.",
     "discord": "https://discord.gg/hyperp",
     "website": "https://hyperp.pl",
     "slots": 500,
-    "votes": 178,
+    "votes": 0,
     "featured": false,
     "createdAt": "2024-03-04"
   },
@@ -120,13 +140,18 @@
       "basePlayers": 210,
       "maxClients": 300
     },
-    "tags": ["FiveM", "Hardcore RP", "Autorskie Skrypty", "WL ON"],
+    "tags": [
+      "FiveM",
+      "Hardcore RP",
+      "Autorskie Skrypty",
+      "WL ON"
+    ],
     "description": "Wyjątkowy serwer role-play stawiający na zgrane i zaangażowane community. Dedykowany zespół 15+ deweloperów nieustannie rozwija unikalne skrypty, wnętrza, customowe ubrania i pojazdy w Los Santos.",
     "shortDescription": "Dopracowany projekt FiveM z autorskimi skryptami, interiorami i dojrzałym community.",
     "discord": "https://discord.gg/77roleplay",
     "website": "https://77roleplay.pl",
     "slots": 300,
-    "votes": 194,
+    "votes": 0,
     "featured": false,
     "createdAt": "2024-03-05"
   },
@@ -146,13 +171,18 @@
       "basePlayers": 160,
       "maxClients": 670
     },
-    "tags": ["FiveM", "Voice RP", "WL OFF", "Custom Economy"],
+    "tags": [
+      "FiveM",
+      "Voice RP",
+      "WL OFF",
+      "Custom Economy"
+    ],
     "description": "Dynamicznie rozwijający się polski projekt FiveM stawiający na płynną rozgrywkę, innowacyjne systemy frakcyjne, rozbudowaną gospodarkę i szybki start dla każdego gracza.",
     "shortDescription": "Nowoczesny serwer FiveM z autorskimi rozwiązaniami i dynamiczną rozgrywką.",
     "discord": "https://discord.gg/futurerppl",
     "website": "https://futurerp.pl",
     "slots": 670,
-    "votes": 128,
+    "votes": 0,
     "featured": false,
     "createdAt": "2024-03-06"
   },
@@ -172,13 +202,18 @@
       "basePlayers": 650,
       "maxClients": 750
     },
-    "tags": ["FiveM", "Voice RP", "WL OFF", "Dzienne Nagrody"],
+    "tags": [
+      "FiveM",
+      "Voice RP",
+      "WL OFF",
+      "Dzienne Nagrody"
+    ],
     "description": "Jeden z największych polskich serwerów FiveM RolePlay z 4-letnią tradycją. Ogromna społeczność licząca blisko 100 000 graczy na Discordzie, dynamiczna gospodarka, darmowy pojazd na start oraz codzienne nagrody za aktywność na serwerze.",
     "shortDescription": "Czołowy polski projekt FiveM z 4-letnią tradycją — ogromna społeczność i dynamiczny start.",
     "discord": "https://discord.gg/osloroleplay",
     "website": "https://www.oslorp.pl",
     "slots": 750,
-    "votes": 98,
+    "votes": 0,
     "featured": false,
     "createdAt": "2024-03-07"
   },
@@ -198,13 +233,18 @@
       "basePlayers": 300,
       "maxClients": 700
     },
-    "tags": ["FiveM", "Voice RP", "WL OFF", "Custom Biznesy"],
+    "tags": [
+      "FiveM",
+      "Voice RP",
+      "WL OFF",
+      "Custom Biznesy"
+    ],
     "description": "Jeden z czołowych polskich projektów FiveM gromadzący blisko 50 tysięcy członków. Wysoki poziom optymalizacji, zakazana bojówka, możliwość tworzenia autorskich biznesów, organizacji przestępczych oraz rozbudowane procedury frakcyjne.",
     "shortDescription": "Potężna społeczność FiveM — zbalansowana ekonomia, własne biznesy i organizacje.",
     "discord": "https://discord.gg/myrp",
     "website": "https://myrp.pl",
     "slots": 700,
-    "votes": 84,
+    "votes": 0,
     "featured": false,
     "createdAt": "2024-03-08"
   },
@@ -224,13 +264,18 @@
       "basePlayers": 200,
       "maxClients": 400
     },
-    "tags": ["FiveM", "Voice RP", "WL OFF", "Klimat Los Santos"],
+    "tags": [
+      "FiveM",
+      "Voice RP",
+      "WL OFF",
+      "Klimat Los Santos"
+    ],
     "description": "Przyjazny i dynamicznie rozwijający się serwer FiveM Roleplay z ponad 20-tysięczną społecznością. Otwarty zarówno dla początkujących, jak i doświadczonych graczy RP, oferujący dopracowane skrypty, stabilny framerate i ciekawe wątki fabularne.",
     "shortDescription": "Przyjazny serwer FiveM otwarty dla każdego — dopracowana rozgrywka i zaufana społeczność.",
     "discord": "https://discord.gg/exoticrp",
     "website": "https://www.exoticrp.pl",
     "slots": 400,
-    "votes": 67,
+    "votes": 0,
     "featured": false,
     "createdAt": "2024-03-09"
   },
@@ -250,13 +295,18 @@
       "basePlayers": 215,
       "maxClients": 218
     },
-    "tags": ["FiveM", "Hardcore RP", "WL ON", "Innowacje"],
+    "tags": [
+      "FiveM",
+      "Hardcore RP",
+      "WL ON",
+      "Innowacje"
+    ],
     "description": "Nowy, innowacyjny polski projekt FiveM RP z restrykcyjną selekcją Whitelist. Nacisk na wysoki poziom immersji, unikalne systemy dźwiękowe i interakcji, profesjonalne procedury służb mundurowych oraz głębokie wątki fabularne w Los Santos.",
     "shortDescription": "Innowacyjny projekt FiveM z restrykcyjną Whitelistą i zaawansowanym poziomem immersji.",
     "discord": "https://discord.com/invite/onbeat",
     "website": "https://onbeat.gg",
     "slots": 218,
-    "votes": 52,
+    "votes": 0,
     "featured": false,
     "createdAt": "2024-03-10"
   },
@@ -276,13 +326,18 @@
       "basePlayers": 280,
       "maxClients": 300
     },
-    "tags": ["FiveM", "Hardcore RP", "WL ON", "NoPixel V"],
+    "tags": [
+      "FiveM",
+      "Hardcore RP",
+      "WL ON",
+      "NoPixel V"
+    ],
     "description": "Najbardziej wpływowy i rozpoznawalny na świecie serwer GTA V Roleplay, stworzony we współpracy z Rockstar Games. Prekursor nowoczesnego RP, gromadzący czołowych globalnych streamerów, z autorską technologią 'NoPixel V' i restrykcyjną Whitelistą.",
     "shortDescription": "Legendarny globalny projekt GTA RP tworzony we współpracy z Rockstar Games.",
     "discord": "https://discord.gg/nopixel",
     "website": "https://www.nopixel.net",
     "slots": 300,
-    "votes": 142,
+    "votes": 0,
     "featured": false,
     "createdAt": "2024-03-11"
   }

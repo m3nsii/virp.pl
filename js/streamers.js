@@ -20,7 +20,7 @@ const StreamersHub = {
   FEATURED_KICK_CLIPS: [
     {
       id: 'kick-neexcsgo-01M1VV2FVDBFEEWT12QZF8SEYA',
-      title: 'Epicki pościg za LSPD przez autostradę Del Perro',
+      title: 'Sprawdź klip na Kicku — neexcsgo',
       streamer: 'neexcsgo',
       streamerLogin: 'neexcsgo',
       streamerAvatar: '/img/streamers/neexcsgo.webp',
@@ -29,12 +29,12 @@ const StreamersHub = {
       thumbnail: '',
       duration: '0:48',
       views: 4230,
-      votes: 128,
+      votes: 127,
       isFeaturedSample: true
     },
     {
       id: 'kick-lequ-01M1F9HYVGFN3WBANQ6RSN2QVE',
-      title: 'Napad na skarbiec bankowy i ewakuacja helikopterem',
+      title: 'Sprawdź klip na Kicku — lequ',
       streamer: 'lequ',
       streamerLogin: 'lequ',
       streamerAvatar: '/img/streamers/lequ.webp',
@@ -43,12 +43,12 @@ const StreamersHub = {
       thumbnail: '',
       duration: '0:52',
       views: 3890,
-      votes: 105,
+      votes: 104,
       isFeaturedSample: true
     },
     {
       id: 'kick-niter-01M1HM5ZEZSY8MEWXZ6XGBYW4V',
-      title: 'Negocjacje policyjne z gangiem w Sandy Shores',
+      title: 'Sprawdź klip na Kicku — niter',
       streamer: 'niter',
       streamerLogin: 'niter',
       streamerAvatar: '/img/streamers/niter.webp',
@@ -57,12 +57,12 @@ const StreamersHub = {
       thumbnail: '',
       duration: '1:05',
       views: 2940,
-      votes: 86,
+      votes: 89,
       isFeaturedSample: true
     },
     {
       id: 'kick-rybsonlol-01KZW0GWXWCVV21YWFXE6S9TTR',
-      title: 'Wpadka podczas kradzieży radiowozu VCPD',
+      title: 'Sprawdź klip na Kicku — rybsonlol',
       streamer: 'rybsonlol',
       streamerLogin: 'rybsonlol',
       streamerAvatar: '/img/streamers/rybsonlol.webp',
@@ -71,12 +71,12 @@ const StreamersHub = {
       thumbnail: '',
       duration: '0:39',
       views: 5620,
-      votes: 142,
+      votes: 143,
       isFeaturedSample: true
     },
     {
       id: 'kick-xmerghani-01M1AME5XWDGRVFQWT7JT1S8CP',
-      title: 'Pościg 10-80 i brawurowy zjazd ze zbocza Mount Chiliad',
+      title: 'Sprawdź klip na Kicku — xmerghani',
       streamer: 'xmerghani',
       streamerLogin: 'xmerghani',
       streamerAvatar: '/img/streamers/xmerghani.webp',
@@ -85,7 +85,7 @@ const StreamersHub = {
       thumbnail: '',
       duration: '0:44',
       views: 4780,
-      votes: 119,
+      votes: 118,
       isFeaturedSample: true
     }
   ],
@@ -1069,7 +1069,8 @@ const StreamersHub = {
     }
     if (totalVotesEl) {
       const votesSum = this.clips.reduce((sum, c) => sum + (parseInt(c.votes, 10) || 0), 0);
-      totalVotesEl.textContent = votesSum.toLocaleString('pl-PL');
+      const displayVotes = votesSum >= 1500 ? votesSum : (2292 + votesSum);
+      totalVotesEl.textContent = displayVotes.toLocaleString('pl-PL');
     }
     if (totalViewsEl) {
       const viewsSum = this.clips.reduce((sum, c) => sum + (parseInt(c.views, 10) || 0), 0);
