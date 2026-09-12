@@ -31,23 +31,6 @@
     })();
   </script>
 
-  <!-- Natychmiastowe pominięcie ekranu powitalnego dla powracających użytkowników -->
-  <script>
-    (function() {
-      try {
-        var isDismissed = sessionStorage.getItem('virp_splash_dismissed') === 'true' ||
-                          localStorage.getItem('virp_splash_dismissed') === 'true' ||
-                          (document.referrer && document.referrer.indexOf(window.location.host) !== -1) ||
-                          (window.location.hash && window.location.hash.length > 1) ||
-                          (new URLSearchParams(window.location.search).get('nosplash') === '1');
-        if (isDismissed) {
-          document.documentElement.classList.add('splash-bypassed');
-          sessionStorage.setItem('virp_splash_dismissed', 'true');
-          localStorage.setItem('virp_splash_dismissed', 'true');
-        }
-      } catch (e) {}
-    })();
-  </script>
 
   <!-- ============================================================
        VIRP.pl — Polski Hub i Katalog Społeczności GTA Roleplay
@@ -58,9 +41,6 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://virp-proxy.chojmarcel.workers.dev https://challenges.cloudflare.com https://frontend.cfx-services.net https://cdn.rage.mp https://api.strefarp.gg https://stream.nightride.fm https://*.spotify.com https://*.spotifycdn.com https://*.scdn.co; media-src 'self' https://stream.nightride.fm https: data: blob:; frame-src 'self' https://challenges.cloudflare.com https://open.spotify.com https://*.spotify.com https://*.scdn.co https://*.youtube.com https://*.youtube-nocookie.com https://clips.twitch.tv https://*.twitch.tv;">
   <title>Serwery GTA RP Polska — Lista Serwerów FiveM &amp; Polski Hub GTA VI | VIRP.pl</title>
   <meta name="referrer" content="strict-origin-when-cross-origin">
-
-  <!-- Cloudflare Turnstile Anti-Bot API (Explicit Render) -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 
   <!-- SEO Meta (Zoptymalizowane pod wyszukiwania Google w Polsce) -->
   <meta name="description" content="Największy polski katalog i ranking serwerów GTA Roleplay (FiveM, Rage:MP). Sprawdź statusy live graczy, klipy ze streamów, kody radiowe 10- oraz hub GTA 6 RP na VIRP.pl.">
@@ -243,7 +223,7 @@
   </script>
 
   <!-- Precompiled Static Tailwind CSS (0ms JIT, 0 MutationObservers, 120 FPS in Chrome) -->
-  <link rel="stylesheet" href="css/tailwind.min.css?v=1.6.0">
+  <link rel="stylesheet" href="css/tailwind.min.css?v=1.6.1">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js" defer></script>
@@ -261,59 +241,10 @@
   <link rel="preload" as="image" href="img/hero-vice.jpg" fetchpriority="high">
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/style.css?v=1.6.0">
+  <link rel="stylesheet" href="css/style.css?v=1.6.1">
 </head>
 <body>
 
-  <!-- ============================================================
-       LEONIDA CITY 2026 // SPLASH GATEWAY
-       ============================================================ -->
-  <div id="splash-gate" class="splash-overlay">
-    <script>
-      if (document.documentElement.classList.contains('splash-bypassed')) {
-        var _sg = document.getElementById('splash-gate');
-        if (_sg) _sg.style.display = 'none';
-      }
-    </script>
-    <div class="splash-bg-glow"></div>
-    <div class="splash-grid"></div>
-
-    <div class="splash-content">
-      <!-- Status telemetryczny -->
-      <div class="splash-sys-bar">
-        <span class="pulse-dot"></span>
-        <span class="font-mono text-xs text-neon-cyan">SYS_READY // LEONIDA_STATE_NET</span>
-      </div>
-
-      <!-- Tarcza Logo VI -->
-      <div class="logo-badge-vi splash-logo">
-        <span class="logo-text-vi text-3xl">VI</span>
-        <div class="logo-scanlines"></div>
-      </div>
-
-      <!-- Tytuł i Podtytuł -->
-      <div role="heading" aria-level="2" class="font-display text-4xl sm:text-5xl text-white tracking-widest uppercase mb-2">
-        VIRP<span class="text-neon-pink">.PL</span>
-      </div>
-      <p class="font-data text-xs text-slate-400 mb-8 max-w-sm mx-auto leading-relaxed">
-        POLSKI HUB SPOŁECZNOŚCI GTA, GTA VI &amp; SERWERÓW ROLEPLAY i ONLINE
-      </p>
-
-      <!-- Przycisk Wejścia -->
-      <button id="splash-enter-btn" class="btn-vice text-base py-3 px-8 splash-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2 flex-shrink-0">
-          <path d="M12 2v10"></path>
-          <path d="M18.4 6.6a9 9 0 1 1-12.77.04"></path>
-        </svg>
-        <span>INICJUJ POŁĄCZENIE</span>
-      </button>
-
-      <!-- Prompt informacyjny -->
-      <div class="font-mono text-[10px] text-slate-500 mt-6 tracking-widest uppercase">
-        // KLIKNIJ ABY AKTYWOWAĆ INTERFEJS &amp; AUDIO
-      </div>
-    </div>
-  </div>
 
   <!-- ============================================================
        NAVIGATION
@@ -2943,10 +2874,10 @@
   <!-- ============================================================
        SCRIPTS (modular, ES6+)
        ============================================================ -->
-  <script src="js/app.js?v=1.6.0"></script>
-  <script src="js/servers.js?v=1.6.0"></script>
-  <script src="js/streamers.js?v=1.6.0"></script>
-  <script src="js/modal.js?v=1.6.0"></script>
+  <script src="js/app.js?v=1.6.1"></script>
+  <script src="js/servers.js?v=1.6.1"></script>
+  <script src="js/streamers.js?v=1.6.1"></script>
+  <script src="js/modal.js?v=1.6.1"></script>
 
 </body>
 </html>

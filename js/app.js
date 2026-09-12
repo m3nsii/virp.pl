@@ -60,7 +60,7 @@ window.safeUrl = safeUrl;
  */
 const VIRP = {
   /** Wersja aplikacji */
-  version: '1.6.0',
+  version: '1.6.1',
 
   /** Sprawdza, czy użytkownik zaakceptował zewnętrzne multimedia. */
   hasCookieConsent() {
@@ -91,6 +91,29 @@ const VIRP = {
   turnstileWidgets: Object.create(null),
 
   /**
+   * Leniwe dynamiczne wstrzykiwanie skryptu Cloudflare Turnstile (on-demand).
+   * Zapobiega błędom przekierowań i wyzwaniom anty-botowym podczas skanowania strony przez Googlebot.
+   */
+  ensureTurnstileScript() {
+    if (typeof window.turnstile !== 'undefined' || document.getElementById('cf-turnstile-script')) {
+      return Promise.resolve();
+    }
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.id = 'cf-turnstile-script';
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => resolve();
+      script.onerror = () => {
+        console.warn('[VIRP] Nie udało się pobrać skryptu Cloudflare Turnstile.');
+        resolve();
+      };
+      document.head.appendChild(script);
+    });
+  },
+
+  /**
    * Leniwe renderowanie Cloudflare Turnstile w danym kontenerze.
    * Renderuje widget dopiero po otwarciu danego okna modalnego.
    * @param {string} containerId - ID kontenera DOM
@@ -104,8 +127,10 @@ const VIRP = {
       return this.turnstileWidgets[containerId];
     }
 
+    this.ensureTurnstileScript();
+
     let attempts = 0;
-    const maxAttempts = 25; // max 5 sekund oczekiwania (25 * 200ms)
+    const maxAttempts = 30; // max 6 sekund oczekiwania (30 * 200ms)
 
     const doRender = () => {
       if (typeof window.turnstile !== 'undefined' && typeof window.turnstile.render === 'function') {
@@ -618,68 +643,16 @@ const VIRP = {
   },
 
   /* ----------------------------------------------------------
-     SPLASH GATEWAY
+     SPLASH GATEWAY (CLEANUP)
      ---------------------------------------------------------- */
 
   /**
-   * Obsługa ekranu wejściowego i odblokowanie audio
+   * Czyszczenie pozostałości bramki powitalnej (strona otwarta bezpośrednio pod SEO i UX)
    */
   initSplashScreen() {
     const splash = document.getElementById('splash-gate');
-
-    // Jeśli strona nie posiada bramki powitalnej (np. podstrony /klipy, /toolkit, /gta6),
-    // zapamiętujemy wejście do portalu, aby powrót na stronę główną nie wymagał ponownej inicjacji
-    if (!splash) {
-      try {
-        sessionStorage.setItem('virp_splash_dismissed', 'true');
-        localStorage.setItem('virp_splash_dismissed', 'true');
-      } catch (_) {}
-      return;
-    }
-
-    const shouldBypass = () => {
-      try {
-        if (sessionStorage.getItem('virp_splash_dismissed') === 'true') return true;
-        if (localStorage.getItem('virp_splash_dismissed') === 'true') return true;
-        if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) return true;
-        if (window.location.hash && window.location.hash.length > 1) return true;
-        if (new URLSearchParams(window.location.search).get('nosplash') === '1') return true;
-      } catch (_) {}
-      return false;
-    };
-
-    if (shouldBypass()) {
-      try {
-        sessionStorage.setItem('virp_splash_dismissed', 'true');
-        localStorage.setItem('virp_splash_dismissed', 'true');
-      } catch (_) {}
-      document.documentElement.classList.add('splash-bypassed');
-      if (splash.parentNode) splash.remove();
-      return;
-    }
-
-    // Definicja globalnej funkcji zwalniającej ekran powitalny
-    window.dismissSplashGateway = () => {
-      try {
-        sessionStorage.setItem('virp_splash_dismissed', 'true');
-        localStorage.setItem('virp_splash_dismissed', 'true');
-      } catch (_) {}
-
-      // Płynne ukrycie bramki powitalnej (radio pozostaje wyłączone na starcie — użytkownik włącza je ręcznie)
-      if (splash) {
-        splash.classList.add('is-dismissed');
-        setTimeout(() => {
-          if (splash.parentNode) splash.remove();
-        }, 500);
-      }
-    };
-
-    const enterBtn = document.getElementById('splash-enter-btn');
-    if (enterBtn) {
-      enterBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.dismissSplashGateway();
-      });
+    if (splash && splash.parentNode) {
+      splash.remove();
     }
   },
 

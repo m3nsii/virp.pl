@@ -31,14 +31,6 @@
     })();
   </script>
 
-  <!-- Oznaczenie sesji jako zainicjalizowanej, aby powrót na stronę główną nie wymagał ponownej inicjacji -->
-  <script>
-    try {
-      sessionStorage.setItem('virp_splash_dismissed', 'true');
-      localStorage.setItem('virp_splash_dismissed', 'true');
-    } catch (e) {}
-  </script>
-
   <!-- ============================================================
        VIRP.pl — Najlepsze Klipy i Akcje GTA RP (Polska Scena Roleplay)
        Statyczna podstrona SEO | HTML5 + Tailwind + Vanilla JS
@@ -56,9 +48,6 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://virp.pl/klipy">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-
-  <!-- Cloudflare Turnstile Anti-Bot API (Explicit Render) -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 
   <!-- OpenGraph / Facebook / Discord -->
   <meta property="og:type" content="website">
@@ -89,7 +78,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
 
   <!-- Precompiled Static Tailwind CSS -->
-  <link rel="stylesheet" href="/css/tailwind.min.css?v=1.6.0">
+  <link rel="stylesheet" href="/css/tailwind.min.css?v=1.6.1">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js" defer></script>
@@ -100,7 +89,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Teko:wght@500;600;700&display=swap">
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="/css/style.css?v=1.6.0">
+  <link rel="stylesheet" href="/css/style.css?v=1.6.1">
 
   <!-- Structured Data: JSON-LD (WebPage, BreadcrumbList, CollectionPage) -->
   <script type="application/ld+json">
@@ -704,8 +693,8 @@
   <!-- ============================================================
        SCRIPTS (modular, ES6+)
        ============================================================ -->
-  <script src="/js/app.js?v=1.6.0"></script>
-  <script src="/js/streamers.js?v=1.6.0"></script>
+  <script src="/js/app.js?v=1.6.1"></script>
+  <script src="/js/streamers.js?v=1.6.1"></script>
 
 </body>
 </html>
