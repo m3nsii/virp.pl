@@ -201,6 +201,25 @@ const StreamersHub = {
         }
       });
     } catch (_) {}
+    this.syncSpotlightCardVotes();
+  },
+
+  syncSpotlightCardVotes() {
+    const spotlightCard = document.getElementById('spotlight-clip-card');
+    if (!spotlightCard) return;
+    spotlightCard.querySelectorAll('.clip-vote-btn').forEach(btn => {
+      const clipId = btn.dataset.clipId;
+      const clip = this.clips.find(c => c.id === clipId);
+      if (!clip) return;
+      const hasVoted = this.userVotedClips.has(clipId);
+      btn.classList.toggle('voted', hasVoted);
+      const countEl = btn.querySelector('.clip-vote-count');
+      if (countEl) countEl.textContent = clip.votes;
+      const iconEl = btn.querySelector('i, svg');
+      if (iconEl) {
+        iconEl.setAttribute('class', `w-4 h-4 ${hasVoted ? 'text-neon-pink fill-neon-pink' : 'text-slate-400'}`);
+      }
+    });
   },
 
   async fetchLiveStatusFromWorker() {
@@ -407,6 +426,28 @@ const StreamersHub = {
     if (bannerClipBtn) {
       bannerClipBtn.addEventListener('click', () => ClipApplicationModal.open());
     }
+
+    // Globalna delegacja dla przycisków głosowania klipów (działa dla siatki i kart wyróżnionych)
+    document.addEventListener('click', (e) => {
+      const voteBtn = e.target.closest('.clip-vote-btn');
+      if (voteBtn) {
+        e.stopPropagation();
+        e.preventDefault();
+        const clipId = voteBtn.dataset.clipId;
+        if (clipId) {
+          this.handleClipVote(clipId, voteBtn);
+        }
+        return;
+      }
+
+      const playBtn = e.target.closest('.clip-play-action');
+      if (playBtn) {
+        e.preventDefault();
+        const clipId = playBtn.dataset.clipId;
+        const clip = this.clips.find(c => c.id === clipId);
+        if (clip) ClipViewerModal.open(clip);
+      }
+    });
 
     window.addEventListener('hashchange', () => this.checkHash());
     window.addEventListener('popstate', () => this.checkHash());
@@ -916,24 +957,6 @@ const StreamersHub = {
 
     grid.innerHTML = filteredClips.map((clip, index) => this.renderClipCard(clip, index + 1)).join('');
     if (typeof lucide !== 'undefined') lucide.createIcons({ root: grid });
-
-    // Podepnij akcje kliknięcia w odtwarzacz i głosowanie
-    grid.querySelectorAll('.clip-play-action').forEach(el => {
-      el.addEventListener('click', (e) => {
-        e.preventDefault();
-        const clipId = el.dataset.clipId;
-        const clip = this.clips.find(c => c.id === clipId);
-        if (clip) ClipViewerModal.open(clip);
-      });
-    });
-
-    grid.querySelectorAll('.clip-vote-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const clipId = btn.dataset.clipId;
-        this.handleClipVote(clipId, btn);
-      });
-    });
   },
 
   getClipTimestamp(clip) {
@@ -1052,22 +1075,20 @@ const StreamersHub = {
       }
     } catch (_) {}
 
-    // Optymalizacja aktualizacji DOM bez niszczenia całej siatki
-    if (btnElement) {
-      const hasVotedNow = this.userVotedClips.has(clipId);
-      btnElement.classList.toggle('voted', hasVotedNow);
-      const countEl = btnElement.querySelector('.clip-vote-count');
+    // Synchronizacja wszystkich przycisków powiązanych z tym klipem na stronie (siatka, karta wyróżniona itp.)
+    const hasVotedNow = this.userVotedClips.has(clipId);
+    document.querySelectorAll(`.clip-vote-btn[data-clip-id="${clipId}"]`).forEach(btn => {
+      btn.classList.toggle('voted', hasVotedNow);
+      const countEl = btn.querySelector('.clip-vote-count');
       if (countEl) {
         countEl.textContent = clip.votes;
         countEl.className = `clip-vote-count font-mono font-bold text-xs ${hasVotedNow ? 'text-neon-pink' : 'text-slate-300'}`;
       }
-      const iconEl = btnElement.querySelector('i, svg');
+      const iconEl = btn.querySelector('i, svg');
       if (iconEl) {
         iconEl.setAttribute('class', `w-4 h-4 ${hasVotedNow ? 'text-neon-pink fill-neon-pink' : 'text-slate-400'}`);
       }
-    } else {
-      this.renderClips();
-    }
+    });
 
     // Jeśli otwarty jest podgląd tego klipu, zaktualizuj też licznik w modalu
     ClipViewerModal.updateVoteState(clip);

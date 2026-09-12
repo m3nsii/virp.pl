@@ -335,7 +335,7 @@
       </div>
 
       <!-- KARTA WYRÓŻNIONA: KATEGORIA OSTATNIO POPULARNE // ŚWIEŻY HIT -->
-      <div class="mb-6 p-4 rounded-xl bg-gradient-to-r from-[#180d1e]/90 via-[#101426]/90 to-[#0c1322]/90 border border-rose-500/30 shadow-[0_4px_20px_rgba(255,31,125,0.12)] backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div id="spotlight-clip-card" class="mb-6 p-4 rounded-xl bg-gradient-to-r from-[#180d1e]/90 via-[#101426]/90 to-[#0c1322]/90 border border-rose-500/30 shadow-[0_4px_20px_rgba(255,31,125,0.12)] backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div class="flex items-center gap-3.5">
           <div class="relative w-20 h-14 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer clip-play-action group border border-rose-500/40" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP" style="background-image: url('https://clips.kick.com/clips/e5/clip_01M2BRH7NV04D42EQEVKV3BZBP/thumbnail.webp'); background-size: cover; background-position: center;">
             <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 flex items-center justify-center transition-colors">
@@ -356,14 +356,24 @@
             <h3 class="text-sm sm:text-base font-bold text-white hover:text-neon-cyan transition-colors cursor-pointer clip-play-action" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP">
               explain something — xmerghani
             </h3>
-            <div class="flex items-center gap-3 text-[11px] font-mono text-slate-400 mt-1">
+            <div class="flex items-center gap-3 text-[11px] font-mono text-slate-400 mt-1 flex-wrap">
               <span class="flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i> 1 840 wyświetleń</span>
-              <span class="flex items-center gap-1 text-neon-pink font-semibold"><i data-lucide="flame" class="w-3 h-3 text-neon-pink fill-neon-pink"></i> 54 głosy</span>
+              <button type="button" class="clip-vote-btn inline-flex items-center gap-1 px-2 py-0.5 rounded bg-pink-950/40 border border-pink-500/30 text-neon-pink font-semibold hover:bg-pink-900/50 cursor-pointer transition-colors" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP" aria-label="Oddaj ogień na ten klip" title="Kliknij, aby oddać ogień na ten klip">
+                <i data-lucide="flame" class="w-3 h-3 text-neon-pink fill-neon-pink"></i>
+                <span class="clip-vote-count font-mono font-bold text-neon-pink">54</span>
+                <span>głosy</span>
+              </button>
               <span class="text-slate-500 hidden sm:inline">• 0:42</span>
             </div>
           </div>
         </div>
-        <div class="flex items-center gap-2 flex-shrink-0 self-start sm:self-center">
+        <div class="flex items-center gap-2.5 flex-shrink-0 self-start sm:self-center">
+          <!-- Dedykowany przycisk ognia / like -->
+          <button type="button" class="clip-vote-btn px-3.5 py-1.5 rounded-lg border border-pink-500/40 bg-pink-950/40 hover:bg-pink-900/60 text-xs flex items-center gap-2 cursor-pointer transition-all shadow-md group" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP" aria-label="Oddaj ogień na ten klip" title="Oddaj ogień na ten klip">
+            <i data-lucide="flame" class="w-4 h-4 text-neon-pink fill-neon-pink group-hover:scale-125 transition-transform"></i>
+            <span class="clip-vote-count font-mono font-bold text-xs text-neon-pink">54</span>
+            <span class="text-[11px] font-mono text-slate-200 font-bold tracking-wide">OGIEŃ</span>
+          </button>
           <button type="button" class="btn-vice py-1.5 px-3.5 text-xs clip-play-action flex items-center gap-1.5 cursor-pointer shadow-md" data-clip-id="kick-xmerghani-01M2BRH7NV04D42EQEVKV3BZBP">
             <i data-lucide="play" class="w-3.5 h-3.5 fill-white"></i>
             <span>ODTWÓRZ KLIP</span>
