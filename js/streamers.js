@@ -1780,6 +1780,19 @@ const ClipViewerModal = {
     const rawPlatform = clip.platform ? String(clip.platform).toUpperCase() : 'WIDEO';
     const safePlatform = typeof sanitize === 'function' ? sanitize(rawPlatform) : rawPlatform;
 
+    if (typeof VIRP !== 'undefined' && !VIRP.hasCookieConsent()) {
+      this.containerEl.innerHTML = `
+        <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#0d121f]">
+          <i data-lucide="shield-check" class="w-10 h-10 text-neon-cyan mb-3"></i>
+          <h3 class="text-base font-bold text-white mb-2 font-display uppercase">Zgoda wymagana</h3>
+          <p class="text-xs text-slate-300 font-mono max-w-sm">Odtwarzacz zewnętrzny zostanie załadowany dopiero po zaakceptowaniu zgody na multimedia.</p>
+        </div>
+      `;
+      VIRP.showCookieBanner();
+      if (typeof lucide !== 'undefined') lucide.createIcons({ root: this.containerEl });
+      return;
+    }
+
     // 1. YouTube Video / Shorts / Clip
     const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/|clip\/))([\w-]{11})/);
     if (ytMatch && ytMatch[1]) {

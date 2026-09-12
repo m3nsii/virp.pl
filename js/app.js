@@ -58,6 +58,24 @@ const VIRP = {
   /** Wersja aplikacji */
   version: '1.5.0',
 
+  /** Sprawdza, czy użytkownik zaakceptował zewnętrzne multimedia. */
+  hasCookieConsent() {
+    try {
+      return localStorage.getItem('virp_cookie_consent') === 'true';
+    } catch (_) {
+      return false;
+    }
+  },
+
+  /** Pokazuje panel zgody, gdy funkcja wymaga zewnętrznego dostawcy. */
+  showCookieBanner() {
+    const banner = document.getElementById('cookie-banner');
+    if (!banner) return;
+    banner.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+    banner.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    if (typeof lucide !== 'undefined') lucide.createIcons({ root: banner });
+  },
+
   /** Czy aplikacja jest zainicjalizowana */
   initialized: false,
 
@@ -704,6 +722,13 @@ const VIRP = {
         if (streamBtn) streamBtn.classList.remove('active');
         if (spotifyContainer) spotifyContainer.classList.remove('hidden');
         if (expandArrow) expandArrow.classList.add('rotate-180');
+
+        if (!this.hasCookieConsent()) {
+          if (spotifyContainer) spotifyContainer.classList.add('hidden');
+          this.showCookieBanner();
+          this.showToast('Zaakceptuj zgodę na zewnętrzne multimedia, aby uruchomić Spotify.', 'info');
+          return;
+        }
 
         // Lazy-load Spotify iframe: przenieś data-src → src przy pierwszym użyciu
         const spotifyIframe = spotifyContainer?.querySelector('iframe[data-src]');
