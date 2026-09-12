@@ -719,10 +719,10 @@ const VIRP = {
           return;
         }
 
-        // Lazy-load Spotify iframe: przenieś data-src → src przy pierwszym użyciu
-        const spotifyIframe = spotifyContainer?.querySelector('iframe[data-src]');
+        // Lazy-load Spotify iframe: przypisanie zweryfikowanego adresu embed Spotify
+        const spotifyIframe = spotifyContainer?.querySelector('iframe');
         if (spotifyIframe && !spotifyIframe.src) {
-          spotifyIframe.src = spotifyIframe.getAttribute('data-src');
+          spotifyIframe.src = 'https://open.spotify.com/embed/playlist/7dKunw6i8S8cqF8DOANExj?utm_source=generator&theme=0';
           spotifyIframe.removeAttribute('data-src');
         }
 

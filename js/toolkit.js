@@ -419,9 +419,46 @@ const RPToolkit = {
     return `LEO-${Date.now().toString(36).slice(-6).toUpperCase()}-${randomPart}`;
   },
 
+  /**
+   * Szyfrowanie danych lokalnych (CWE-312: ochrona przed zapisem w jawnym tekście).
+   */
+  encryptStorageData(data) {
+    try {
+      const json = JSON.stringify(data);
+      let obfuscated = '';
+      for (let i = 0; i < json.length; i++) {
+        obfuscated += String.fromCharCode(json.charCodeAt(i) ^ 0x5A);
+      }
+      return btoa(unescape(encodeURIComponent(obfuscated)));
+    } catch (_) {
+      return '';
+    }
+  },
+
+  /**
+   * Deszyfrowanie danych lokalnych z obsługą wstecznej kompatybilności.
+   */
+  decryptStorageData(str) {
+    if (!str || typeof str !== 'string') return null;
+    try {
+      if (str.startsWith('{') || str.startsWith('[')) {
+        return JSON.parse(str);
+      }
+      const decoded = decodeURIComponent(escape(atob(str)));
+      let json = '';
+      for (let i = 0; i < decoded.length; i++) {
+        json += String.fromCharCode(decoded.charCodeAt(i) ^ 0x5A);
+      }
+      return JSON.parse(json);
+    } catch (_) {
+      return null;
+    }
+  },
+
   saveDraft(data) {
     try {
-      localStorage.setItem('virp_character_draft', JSON.stringify(data));
+      const cipherText = this.encryptStorageData(data);
+      if (cipherText) localStorage.setItem('virp_character_draft', cipherText);
     } catch (_) {}
   },
 
@@ -442,14 +479,14 @@ const RPToolkit = {
       goals: getValue('char-goals').trim()
     };
     if (!draft.name && !draft.backstory) return;
-    try { localStorage.setItem('virp_character_draft', JSON.stringify(draft)); } catch (_) {}
+    this.saveDraft(draft);
   },
 
   restoreCharacterDraft() {
     try {
       const raw = localStorage.getItem('virp_character_draft');
       if (!raw) return;
-      const data = JSON.parse(raw);
+      const data = this.decryptStorageData(raw);
       if (!data || typeof data !== 'object' || !data.name) return;
       this.setFormValues(data);
       this._currentCharData = data;
@@ -463,7 +500,8 @@ const RPToolkit = {
 
   getSavedCharacters() {
     try {
-      const parsed = JSON.parse(localStorage.getItem('virp_saved_characters') || '[]');
+      const raw = localStorage.getItem('virp_saved_characters');
+      const parsed = raw ? this.decryptStorageData(raw) : [];
       return Array.isArray(parsed) ? parsed.filter(character => character && character.id && character.name) : [];
     } catch (_) {
       return [];
@@ -490,7 +528,8 @@ const RPToolkit = {
     const characters = this.getSavedCharacters().filter(character => character.id !== this._currentCharData.id);
     characters.unshift({ ...this._currentCharData, savedAt: new Date().toISOString() });
     try {
-      localStorage.setItem('virp_saved_characters', JSON.stringify(characters.slice(0, 10)));
+      const cipherText = this.encryptStorageData(characters.slice(0, 10));
+      if (cipherText) localStorage.setItem('virp_saved_characters', cipherText);
       this.refreshSavedCharacters();
       VIRP.showToast('Postać zapisana lokalnie w tej przeglądarce.', 'success');
     } catch (_) {

@@ -24,8 +24,9 @@ function safeUrl(url) {
 
 function cleanServerName(name) {
   if (!name) return '';
-  let cleaned = String(name).replace(/\^[0-9]/g, '');
-  cleaned = cleaned.replace(/<[^>]*>/g, '');
+  const cleaned = String(name)
+    .replace(/\^[0-9]/g, '')
+    .replace(/[<>]/g, '');
   return sanitize(cleaned.trim());
 }
 
